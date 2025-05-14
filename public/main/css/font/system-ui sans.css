@@ -1,0 +1,108 @@
+.system-ui-sans-thin * {
+    font-family: var(--main-font-sans);
+    font-weight: 100;
+    font-style: normal;
+}
+
+.system-ui-sans-extralight * {
+    font-family: var(--main-font-sans);
+    font-weight: 200;
+    font-style: normal;
+}
+
+.system-ui-sans-light *{
+    font-family: var(--main-font-sans);
+    font-weight: 300;
+    font-style: normal;
+}
+
+.system-ui-sans-regular * {
+    font-family: var(--main-font-sans);
+    font-weight: 400;
+    font-style: normal;
+}
+
+.system-ui-sans-medium * {
+    font-family: var(--main-font-sans);
+    font-weight: 500;
+    font-style: normal;
+}
+
+.system-ui-sans-semibold * {
+    font-family: var(--main-font-sans);
+    font-weight: 600;
+    font-style: normal;
+}
+
+.system-ui-sans-bold * {
+    font-family: var(--main-font-sans);
+    font-weight: 700;
+    font-style: normal;
+}
+
+.system-ui-sans-extrabold * {
+    font-family: var(--main-font-sans);
+    font-weight: 800;
+    font-style: normal;
+}
+
+.system-ui-sans-black * {
+    font-family: var(--main-font-sans);
+    font-weight: 900;
+    font-style: normal;
+}
+
+.system-ui-sans-thin-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 100;
+    font-style: italic;
+}
+
+.system-ui-sans-extralight-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 200;
+    font-style: italic;
+}
+
+.system-ui-sans-light-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 300;
+    font-style: italic;
+}
+
+.system-ui-sans-regular-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 400;
+    font-style: italic;
+}
+
+.system-ui-sans-medium-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 500;
+    font-style: italic;
+}
+
+.system-ui-sans-semibold-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 600;
+    font-style: italic;
+}
+
+.system-ui-sans-bold-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 700;
+    font-style: italic;
+}
+
+.system-ui-sans-extrabold-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 800;
+    font-style: italic;
+}
+
+.system-ui-sans-black-italic * {
+    font-family: var(--main-font-sans);
+    font-weight: 900;
+    font-style: italic;
+}
+  

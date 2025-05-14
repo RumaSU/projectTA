@@ -1,0 +1,140 @@
+:root {
+    --main-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --main-font-poppins: "Poppins", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: var(--main-font-poppins);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--main-font-poppins);
+    font-kerning: auto;
+    text-rendering: optimizeLegibility;
+    text-shadow: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.selectDisable {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.hide-input-arrow {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.hide-input-arrow::-webkit-outer-spin-button,
+.hide-input-arrow::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.dragDisable {
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+.aspect-square {
+    aspect-ratio: 1/1;
+}
+.backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: 0;
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+body::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+}
+body::-webkit-scrollbar-thumb {
+    background-color: #94a3b8;
+}
+body::-webkit-scrollbar-thumb:hover {
+    background-color: #334155;
+}
+
+.overflow-c::-webkit-scrollbar {
+    width: 5px;
+}
+.overflow-c::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+}
+
+.overflow-c-gray::-webkit-scrollbar-thumb {
+    background-color: #94a3b8;
+}
+.overflow-c-gray::-webkit-scrollbar-thumb:hover {
+    background-color: #334155;
+}
+
+.after-colon {
+    position: relative;
+}
+
+.after-colon::after {
+    position: absolute;
+    right: 0;
+    top: 0;
+    /* transform: translate(0, -50%); */
+    content: ':';
+    
+    /* font-size: 1.15rem; */
+    font-weight: bold;
+}
+
+.h-500-important {
+    height: 400px !important;
+}
+
+
+/* Element same like div */
+ag-user, ag-product, ag-image, ag-avatar, ag-icon {
+    display: block;
+}
+
+/* Element content */
+ag-user-content, ag-product-content, ag-image-content, ag-avatar-content {
+    display: block;
+}
+
+/* Element for icon */
+/* 
+ * ag-icon : ag-icon > i // for icon element
+ */
+/* ag-icon {
+    display: block;
+} */
+
+/* Element for button same like <button></button> */
+ag-button {
+    display: block;
+    cursor: pointer;
+}
+
+/* Element for change page same like <a></a> */
+ag-link, ag-navigate {
+    display: inline;
+    cursor: default;
+    user-select: none;
+}
+
+ag-link[href], ag-navigate[href] {
+    cursor: pointer;
+}

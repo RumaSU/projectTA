@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="PT.LASUARINDO.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.39187386"
+     inkscape:cx="376.39663"
+     inkscape:cy="590.75133"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1"
+       style="fill:#ff0000;fill-opacity:0.802771;stroke-width:0.363008"
+       d="m 101.48693,78.02993 a 58.07869,58.07869 0 0 0 -58.078623,58.07863 58.07869,58.07869 0 0 0 58.078623,58.07862 58.07869,58.07869 0 0 0 58.07862,-58.07862 58.07869,58.07869 0 0 0 -10.77763,-33.67185 47.242096,46.210609 0 0 1 6.76031,23.81715 47.242096,46.210609 0 0 1 -47.24208,46.21062 47.242096,46.210609 0 0 1 -47.242073,-46.21062 47.242096,46.210609 0 0 1 47.242073,-46.210616 47.242096,46.210609 0 0 1 16.95607,3.094385 58.07869,58.07869 0 0 0 -23.77529,-5.107699 z" />
+    <path
+       id="path1-0"
+       style="fill:#ff6600;fill-opacity:0.802771;stroke-width:0.363008"
+       d="m 109.09658,162.46038 a 36.830039,36.830039 0 0 0 36.82999,-36.83 36.830039,36.830039 0 0 0 -36.82999,-36.829998 36.830039,36.830039 0 0 0 -36.829999,36.829998 36.830039,36.830039 0 0 0 6.83453,21.35268 29.958118,29.304011 0 0 1 -4.286985,-15.10342 29.958118,29.304011 0 0 1 29.958114,-29.30402 29.958118,29.304011 0 0 1 29.95809,29.30402 29.958118,29.304011 0 0 1 -29.95809,29.30401 29.958118,29.304011 0 0 1 -10.752537,-1.96227 36.830039,36.830039 0 0 0 15.076877,3.239 z" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.87777px;font-family:Dimension;-inkscape-font-specification:Dimension;fill:#000000;fill-opacity:0.802771;stroke-width:0.363008"
+       x="62.714397"
+       y="221.56335"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87777px;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke-width:0.363008"
+         x="62.714397"
+         y="221.56335">PT.LASUARINDO</tspan></text>
+  </g>
+</svg>
