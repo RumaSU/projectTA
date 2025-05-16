@@ -13,7 +13,8 @@
 @endsection
 
 @push('default-aditional-prop-body')
-    class="bg-[#f1f1f1]"
+    class="bg-[#f1f1f1] @stack('dashboard-attr-class-val-body')"
+    @stack('dashboard-attr-body')
 @endpush
 
 @section('default-layout-body-content')
@@ -31,7 +32,6 @@
                         {{-- Optional content: custom via @yield --}}
                         @yield('dashboard-child-template')
                         
-                        
                         @stack('dashboard-bottom-main-content')
                         
                         {{-- Custom content --}}
@@ -44,5 +44,18 @@
     
     @livewireScripts
     @livewireScriptConfig
+    <script data-navigate-once>
+        const NOW_URL = window.location.href;
+        // function callWhatWireLocation() {
+        //     document.addEventListener('livewire:initialized', (e) => {
+        //         console.log(e.target.location);
+        //     });
+        // }
+        document.addEventListener('livewire:navigated', (e) => {
+            
+            // console.log(e.target.location);
+            
+        });
+    </script>
     @stack('dashboard-body-script')
 @endsection

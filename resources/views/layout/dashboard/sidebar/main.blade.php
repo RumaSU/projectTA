@@ -8,9 +8,9 @@
 
 <div class="mainNavAside">
     <div class="itmNvAside">
-        <a href="{{ route('dashboard.main') }}"
-            {{-- class="homeFieldDashboard block p-2 text-gray-300 rounded-lg overflow-hidden relative transition-all group {{ Route::is('dashboard.main') ? $routeActive : $routeNotActive }}" --}}
-            class="homeFieldDashboard block py-2 px-4 text-white rounded-lg overflow-hidden relative transition-all group {{ Route::is('dashboard.main') ? $routeActive : $routeNotActive }}"
+        <a href="{{ route('dashboard.home') }}"
+            {{-- class="homeFieldDashboard block p-2 text-gray-300 rounded-lg overflow-hidden relative transition-all group {{ Route::is('dashboard.home') ? $routeActive : $routeNotActive }}" --}}
+            class="homeFieldDashboard block py-2 px-4 text-white rounded-lg overflow-hidden relative transition-all group {{ Route::is('dashboard.home') ? $routeActive : $routeNotActive }}"
             role="link"
             aria-label="Navigate to Home Dashboard"
             wire:navigate>
@@ -25,7 +25,7 @@
                     <p>Home</p>
                 </div>
             </div>
-            <div class="stickActive w-1.5 h-3/4 rounded-full bg-[#E6BF3C] absolute left-0 top-1/2 -translate-y-1/2 transition-all {{ Route::is('dashboard.main') ? $routeStickActive : $routeStickNotActive }}"></div>
+            <div class="stickActive w-1.5 h-3/4 rounded-full bg-[#E6BF3C] absolute left-0 top-1/2 -translate-y-1/2 transition-all {{ Route::is('dashboard.home') ? $routeStickActive : $routeStickNotActive }}"></div>
         </a>
     </div>
 </div>
@@ -35,11 +35,18 @@
         (object) array(
             'titleGroup' => 'general',
             'lstNavAside' => [
+                // (object) array(
+                //     'titleNav' => 'inbox',
+                //     'icon' => 'fas fa-inbox',
+                //     'routeNav' => route('inbox.main'),
+                //     'activeRoute' => 'inbox',
+                //     'wireNavigate' => true,
+                // ),
                 (object) array(
-                    'titleNav' => 'inbox',
-                    'icon' => 'fas fa-inbox',
-                    'routeNav' => route('inbox.main'),
-                    'activeRoute' => 'inbox',
+                    'titleNav' => 'mail',
+                    'icon' => 'fas fa-envelope',
+                    'routeNav' => route('mail.main'),
+                    'activeRoute' => 'mail',
                     'wireNavigate' => true,
                 ),
                 (object) array(

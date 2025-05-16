@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class Main extends Component
 {
-    #[Attributes\Layout('livewire.layout.dashboard.inbox')]
+    #[Attributes\Layout('livewire.layout.dashboard.inbox.main')]
     public function render()
     {
         return view('livewire.app.inbox.main');

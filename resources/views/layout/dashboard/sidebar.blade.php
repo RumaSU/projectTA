@@ -8,7 +8,7 @@
                     @include('layout.dashboard.sidebar.additional')
                 </div>
             </div>
-            <nav class="ctrNav-sidebarApp mt-4 px-4 py-12 bg-[#1565C0] h-[38rem] rounded-r-[2rem] shadow-md shadow-black/40">
+            <nav class="ctrNav-sidebarApp mt-4 px-4 py-[1.6rem] bg-[#1565C0] h-[34rem] rounded-r-[2rem] shadow-md shadow-black/40">
                 <div class="cNav-sidebarApp">
                     @include('layout.dashboard.sidebar.main')
                 </div>

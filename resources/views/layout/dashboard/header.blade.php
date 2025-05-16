@@ -1,9 +1,9 @@
 {{-- <header class="bg-[#121212] py-2 px-4 z-[1000] sticky top-0"> --}}
 {{-- <header class="bg-[#002366] py-2 px-4 z-[1000] sticky top-0"> --}}
-<header class="bg-[#E4E4E4] py-2 px-40 z-[1000] sticky top-0">
+<header class="bg-[#E4E4E4] py-2 px-40 z-[1000] sticky top-0" wire:ignore.self>
     <div class="cHeaderDashboard flex justify-between items-center">
         <div class="homeHeaderDashboard">
-            <a href="{{ route('dashboard.main') }}" class="hrefHomeDashboard block" wire:navigate>
+            <a href="{{ route('dashboard.home') }}" class="hrefHomeDashboard block" wire:navigate>
                 <div class="cHrefHomeDashboard flex items-center gap-4">
                     <div class="icnHomeDashboard">
                         <img src="{{ asset('components/icon/logo/main/logo.png') }}" alt="" class="object-center object-cover size-14">

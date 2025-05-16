@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('main/css/s.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('main/css/font/poppins.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('main/css/font/system-ui sans.css') }}" type="text/css">
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/flasher/flasher.min.css') }}" data-navigate-once> --}}
     @yield('default-layout-head-field')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
@@ -23,7 +24,9 @@
         window.$jq = jq;
     </script>
 </head>
-<body @stack('default-aditional-prop-body') >
+<body @stack('default-aditional-prop-body')>
     @yield('default-layout-body-content')
+    {{-- <script src="{{ asset('vendor/flasher/flasher.min.js') }}" data-navigate-once></script> --}}
+    {{-- {!! \Flasher\Laravel\Facade\Flasher::render('html') !!} --}}
 </body>
 </html>

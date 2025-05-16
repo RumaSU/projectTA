@@ -90,7 +90,7 @@
     @endphp
     
     
-    <section class="sec-userMainInfo mt-8 grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 pb-4 border-b-2 border-slate-200">
+    <section class="sec-userMainInfo mt-8 grid gap-6 2xl:grid-cols-4 sm:grid-cols-3 grid-cols-1 pb-4 border-b-2 border-slate-200">
         @foreach ($listInfoAction as $itemInfoAction)
             <div class="itm-cardInfoAction{{ implode('', explode(' ', $itemInfoAction->title)) }}
                     px-4 py-3 {{ $itemInfoAction->bgColor }} text-white rounded-xl shadow-md shadow-black/40
@@ -426,4 +426,4 @@
     
 @endpush
 
-<div>tes</div>
+<div></div>
