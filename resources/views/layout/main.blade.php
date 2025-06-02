@@ -19,10 +19,7 @@
     @yield('default-layout-head-field')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
-    <script>
-        const jq = jQuery.noConflict();
-        window.$jq = jq;
-    </script>
+    <script src="{{ asset('main/js/jqueryNoConflict.js') }}"></script>
 </head>
 <body @stack('default-aditional-prop-body')>
     @yield('default-layout-body-content')

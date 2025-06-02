@@ -52,7 +52,7 @@
                 (object) array(
                     'titleNav' => 'documents',
                     'icon' => 'fas fa-book-open',
-                    'routeNav' => '',
+                    'routeNav' => route('documents.main'),
                     'activeRoute' => 'documents',
                     'wireNavigate' => true,
                 ),

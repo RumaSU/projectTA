@@ -32,5 +32,6 @@ Route::prefix('mail')->name('mail.')->group(function() {
 // Route::get('/dashboard', App\Livewire\App\Dashboard\Main\Main::class)->name('dashboard');
 
 Route::prefix('documents')->name('documents.')->group(function() {
-    Route::get('/', App\Livewire\App\Dashboard\Documents\Main\Main::class)->name('main');
+    // Route::get('/', App\Livewire\App\Dashboard\Documents\Main\Main::class)->name('main');
+    Route::get('/', App\Livewire\App\Documents\Main::class)->name('main');
 });

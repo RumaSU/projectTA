@@ -7,6 +7,29 @@
 
 @section('default-layout-head-field')
     @stack('dashboard-head-script')
+    <script src="{{ asset('main/js/urlUtils.js') }}"></script>
+    <script src="{{ asset('main/js/cookieUtils.js') }}"></script>
+    <script>
+        function dispatchingDataTo($dispatchKey, $dispatchData) {
+            if (typeof $dispatchData !== 'object') {
+                alert('Please set the dispatch data to object type');
+                return {
+                    page: window.location.href,
+                    status: 'failed',
+                    key: $dispatchKey,
+                    data: $dispatchData,
+                };
+            }
+            
+            Livewire.dispatch($dispatchKey, [$dispatchData]);
+            return {
+                page: window.location.href,
+                status: 'success',
+                key: $dispatchKey,
+                data: $dispatchData,
+            };
+        }
+    </script>
     @stack('dashboard-head-css')
     
     @livewireStyles
@@ -45,7 +68,6 @@
     @livewireScripts
     @livewireScriptConfig
     <script data-navigate-once>
-        const NOW_URL = window.location.href;
         // function callWhatWireLocation() {
         //     document.addEventListener('livewire:initialized', (e) => {
         //         console.log(e.target.location);

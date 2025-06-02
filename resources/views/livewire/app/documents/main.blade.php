@@ -1,20 +1,20 @@
 @once
     @push('dashboard-top-main-content')
         <nav class="navMailDashboard">
-            @include('livewire.app.mail.partial.nav')
+            @include('livewire.app.documents.partial.nav')
         </nav>
     @endpush
 @endonce
 
 @section('dashboard-child-template')
-    <div class="wrapper-mailAppDashboard mt-12 p-4 bg-gray-200 rounded-xl">
+    <div class="wrapper-mailAppDashboard mt-6 p-4 bg-gray-200 rounded-xl">
         <div class="ctr-headerMailAppDashboard px-6 py-4 bg-white rounded-3xl">
             <div class="cHeaderMailAppDashboard">
-                @include('livewire.app.mail.partial.filter')
+                @include('livewire.app.documents.partial.filter')
             </div>
         </div>
         <div class="ctr-mainContentMailAppDashbaord mt-8">
-            @livewire('app.mail.data')
+            @livewire('app.documents.data')
         </div>
     </div>
 @endsection

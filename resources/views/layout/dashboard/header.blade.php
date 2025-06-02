@@ -6,7 +6,7 @@
             <a href="{{ route('dashboard.home') }}" class="hrefHomeDashboard block" wire:navigate>
                 <div class="cHrefHomeDashboard flex items-center gap-4">
                     <div class="icnHomeDashboard">
-                        <img src="{{ asset('components/icon/logo/main/logo.png') }}" alt="" class="object-center object-cover size-14">
+                        <img src="{{ asset('main/icon/logo.png') }}" alt="" class="object-center object-cover size-14">
                     </div>
                     {{-- <div class="txHomeDashboard poppins-semibold text-[#FFD700]"> --}}
                     <div class="txHomeDashboard -space-y-1.5">
