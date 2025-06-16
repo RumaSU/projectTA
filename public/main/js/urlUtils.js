@@ -6,20 +6,53 @@ function isParamQueryExists($pQuery) {
     return new URLSearchParams(window.location.search).has($pQuery);
 }
 
-function setParamsQuery($keyQuery, $valueQuery) {
+function setParamsQuery($keyQuery, $valueQuery, $isHistoryPushstate = true, $stateObj = {}) {
+    if (!$valueQuery) {
+        removeParamsQuery($keyQuery);
+        return;
+    }
+    
     const newUrl = new URL(window.location.href);
     // return new URLSearchParams(window.location.href).set($keyQuery, $valueQuery);
     
     newUrl.searchParams.set($keyQuery, $valueQuery);
-    window.history.pushState({}, '', newUrl);
+    
+    if ($isHistoryPushstate) {
+        window.history.pushState($stateObj, '', newUrl);
+    } else {
+        window.history.replaceState($stateObj, '', newUrl);
+    }
 }
 
-function removeParamsQuery($pQuery) {
+// $arrObj = [
+//     {
+//         key: '', 
+//         value: ''
+//     },
+// ]
+function setBulkParamsQuery($paramsArrObj, $isHistoryPushstate = true, $stateObj) {
+    const newUrl = new URL(window.location.href);
+
+    $paramsArrObj.forEach((x) => {
+        newUrl.searchParams.set(x.key, x.value);
+    });
+
+    if ($isHistoryPushstate) {
+        window.history.pushState($stateObj, '', newUrl);
+    } else {
+        window.history.replaceState($stateObj, '', newUrl);
+    }
+}
+
+function removeParamsQuery($pQuery, $isHistoryPushtate = true) {
     const newUrl = new URL(window.location.href);
     // return new URLSearchParams(window.location.href).set($keyQuery, $valueQuery);
     
     newUrl.searchParams.delete($pQuery);
-    window.history.pushState({}, '', newUrl);
+
+    if ($isHistoryPushtate) {
+        window.history.pushState({}, '', newUrl);
+    }
 }
 
 

@@ -8,7 +8,7 @@ use Livewire\Attributes;
 
 class Main extends Component
 {
-    #[Attributes\Layout('livewire.auth.layout')]
+    #[Attributes\Layout('livewire.auth.layout.template')]
     public function render()
     {
         return view('livewire.auth.register.main');

@@ -16,7 +16,7 @@
             });
             // Alpine-Init-Filter-Document
             // $dispatch('Alpine-Init-Filter-Document', {message: 'Call event filter document'})
-            // dispatchingDataTo('Alpine-Init-Filter-Document', {message: 'Call event filter document'});
+            // dispatchingDataLivewireTo('Alpine-Init-Filter-Document', {message: 'Call event filter document'});
         </script>
     @endpush
 @endonce

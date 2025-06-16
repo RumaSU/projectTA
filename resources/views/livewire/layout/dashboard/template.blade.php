@@ -10,7 +10,7 @@
     <script src="{{ asset('main/js/urlUtils.js') }}"></script>
     <script src="{{ asset('main/js/cookieUtils.js') }}"></script>
     <script>
-        function dispatchingDataTo($dispatchKey, $dispatchData) {
+        function dispatchingDataLivewireTo($dispatchKey, $dispatchData) {
             if (typeof $dispatchData !== 'object') {
                 alert('Please set the dispatch data to object type');
                 return {
@@ -30,6 +30,8 @@
             };
         }
     </script>
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> --}}
     @stack('dashboard-head-css')
     
     @livewireStyles
@@ -76,8 +78,11 @@
         document.addEventListener('livewire:navigated', (e) => {
             
             // console.log(e.target.location);
+            console.log(window.history)
             
         });
     </script>
     @stack('dashboard-body-script')
 @endsection
+
+{{-- <div class="">sa</div> --}}

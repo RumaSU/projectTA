@@ -32,12 +32,20 @@ class Data extends Component
     public function mailSearch($dataDispatch) {
         $localData = (object)$dataDispatch;
         
-        // dump($dataDispatch);
+        dump($dataDispatch);
         $this->searchMail = $localData->search;
         
         // $this->typeMail = $localData->page;
         // Flasher::success('Dispatch success');
         // flash()->success('Dispatch success');
+    }
+    
+    #[Attributes\On('Mail-Filter-Data')]
+    public function mailFilter($dataDispatch) {
+        $localData = (object)$dataDispatch;
+        
+        // dump($dataDispatch);
+        // $this->searchMail = $localData->search;
     }
     
     public function render()

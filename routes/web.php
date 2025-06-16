@@ -6,9 +6,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::prefix('auth')->name('auth.')->group(function() {
     Route::get('/login', App\Livewire\Auth\Login\Main::class)->name('login');
+    
+    route::prefix('/register/step')->name('register.')->group(function() {
+       Route::get('/name', App\Livewire\Auth\Register\Form\Fullname::class)->name('name'); 
+    });
+    
     Route::get('/register', App\Livewire\Auth\Register\Main::class)->name('register');
 });
 
