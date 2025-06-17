@@ -1,4 +1,11 @@
-<div class="cMainContentMailAppDashbaord">
+<div class="cMainContentMailAppDashbaord" x-data="dispatchFilterMail">
+    <div class="outputDump">
+        <div class="output">
+            @foreach ($testDataHaveValue as $itmDataHaveValue)
+                @dump($itmDataHaveValue)
+            @endforeach
+        </div>
+    </div>
     <ul class="listMailAppDashboard space-y-0.5">
         @for ($i = 0; $i < $randMail; $i++)
             @php
@@ -48,3 +55,21 @@
         @endfor
     </ul>
 </div>
+
+@once
+    @push('dashboard-body-script')
+        <script data-navigate-once>
+            Alpine.data('dispatchFilterMail', () => {
+                console.log('Init Data Mail');
+                return {
+                    init() {
+                        this.$dispatch('alpineinitfiltermail', {message: 'Call event filter Mail'});
+                    },
+                } 
+            });
+            // Alpine-Init-Filter-Document
+            // $dispatch('Alpine-Init-Filter-Document', {message: 'Call event filter document'})
+            // dispatchingDataLivewireTo('Alpine-Init-Filter-Document', {message: 'Call event filter document'});
+        </script>
+    @endpush
+@endonce

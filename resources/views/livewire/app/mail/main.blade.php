@@ -1,7 +1,8 @@
 @once
     @push('dashboard-top-main-content')
         <nav class="navMailDashboard">
-            @include('livewire.app.mail.partial.nav')
+            {{-- @include('livewire.app.mail.partial.nav') --}}
+            @livewire('app.mail.partial.nav')
         </nav>
     @endpush
 @endonce

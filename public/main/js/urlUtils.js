@@ -30,7 +30,7 @@ function setParamsQuery($keyQuery, $valueQuery, $isHistoryPushstate = true, $sta
 //         value: ''
 //     },
 // ]
-function setBulkParamsQuery($paramsArrObj, $isHistoryPushstate = true, $stateObj) {
+function setBulkParamsQuery($paramsArrObj, $isHistoryPushstate = true, $stateObj = {}) {
     const newUrl = new URL(window.location.href);
 
     $paramsArrObj.forEach((x) => {
@@ -44,14 +44,16 @@ function setBulkParamsQuery($paramsArrObj, $isHistoryPushstate = true, $stateObj
     }
 }
 
-function removeParamsQuery($pQuery, $isHistoryPushtate = true) {
+function removeParamsQuery($pQuery, $isHistoryPushtate = true, $stateObj = {}) {
     const newUrl = new URL(window.location.href);
     // return new URLSearchParams(window.location.href).set($keyQuery, $valueQuery);
     
     newUrl.searchParams.delete($pQuery);
 
     if ($isHistoryPushtate) {
-        window.history.pushState({}, '', newUrl);
+        window.history.pushState($stateObj, '', newUrl);
+    } else {
+        window.history.replaceState($stateObj, '', newUrl);
     }
 }
 

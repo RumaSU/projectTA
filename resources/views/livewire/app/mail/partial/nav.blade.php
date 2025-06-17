@@ -31,6 +31,7 @@
     <div class="cNavMailDashboard flex justify-between" 
         x-data="filterMail"
         @popstate.window='handlePopstate($event)'
+        @alpineinitfiltermail.window='handleDataFirstInit($event)'
         >
         <div class="ctr-leftNavMailDashboard">
             <div class="cLeftNavMailDashboard">
@@ -58,7 +59,7 @@
                                     
                                     data-filter-type="type"
                                     data-filter-value="{{ $itmNavMailDashboard->page }}"
-                                    
+                                    value="{{ $itmNavMailDashboard->page }}"
                                     >
                                     
                                     <div class="cHrefNavMailDashboard-{{ $itmNavMailDashboard->label }}
@@ -126,61 +127,6 @@
     @push('dashboard-body-script')
         <script data-navigate-once>
             
-            
-            // Livewire.directive('spamail', ({ el, directive, component, cleanup }) => {
-            //     // Event handler saat elemen diklik
-            //     let content =  directive.expression;
-                
-            //     let onClick = e => {
-                    
-            //         if (spamail(content)) {
-            //             console.group('Livewire.directive - spamail');
-            //             console.log('Element (el):', el);
-            //             console.log('Directive:', directive);
-            //             console.log('Component:', component);
-            //             console.log('Cleanup function:', cleanup);
-            //             console.log('Event:', e);
-            //         }
-                    
-            //         console.group('Livewire.directive - spamail');
-            //         console.log('Element (el):', el);
-            //         console.log('Directive:', directive);
-            //         console.log('Component:', component);
-            //         console.log('Cleanup function:', cleanup);
-            //         console.log('Event:', e);
-            //         // console.groupEnd();
-                    
-            //         const url = new URL(window.location.href);
-            //         url.searchParams.set('folder', folder);
-            //         window.history.pushState({}, '', url);
-                    
-            //         // // Misal: aksi tambahan
-            //         // const folder = directive.expression; // contoh isi: "inbox"
-            //         // Livewire.dispatch('change-folder', { folder });
-            //     };
-
-            //     // Pasang listener dengan capture true agar bisa mencegat lebih awal
-            //     el.addEventListener('click', onClick, { capture: true });
-
-            //     // Hapus listener jika elemen dihapus dari DOM
-            //     cleanup(() => {
-            //         el.removeEventListener('click', onClick);
-            //     });
-            // });
-            
-            // Livewire.directive('testdirective', (el, directive, component, cleanup) => {
-            //     console.log('testdirective');
-            // });
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             Alpine.data('filterMail', () => {
                 const csrf_token = '{{ csrf_token() }}';
                 const page_state = window.history.state;
@@ -199,6 +145,7 @@
                         param: 'p',
                     }
                 ]
+                let bulkDataParam = [];
                 
                 return {
                     $filterMail: [
@@ -210,8 +157,6 @@
                     
                     init() {
                         console.log('Filter Mail Initialized');
-                        
-                        let bulkDataParam = [];
                         let isPushstate = false;
                         
                         // check parameter query
@@ -227,50 +172,21 @@
                             if (valParamQuery) {
                                 bulkDataParam.push( {key: v.param, value: valParamQuery} );
                             }
-                            
-                            
-                            // if (isParamQueryExists(v.param)) {
-                            //     let valParamQuery = whatParamQueryValue(v.param);
-                            //     let cpFilterMail = this.$filterMail.find(x => x.name == v.name);
-                                
-                            //     if ( (v.name == 'type') ) {
-                            //         valParamQuery = v.list.includes(valParamQuery) ? valParamQuery : v.list[0];
-                            //     }
-                                
-                            //     if ( v.name == 'page' ) {
-                            //         valParamQuery = valParamQuery < 1 ? 1 : valParamQuery;
-                            //     }
-                                
-                            //     cpFilterMail.value = valParamQuery;
-                            // }
-                            
                         });
-                        
+                    },
+                    
+                    handleDataFirstInit($event) {
                         this.handleDispatchData();
                         this.handleBulkSetParamUrl(bulkDataParam, false);
-                        
-                        // this.$filterMail.forEach((v) => {
-                        //     let cpFilterMail = this.$filterMail.find(x => x.name == v.name);
-                            
-                        //     if (v.value) {
-                                
-                        //         // console.log
-                        //     }
-                        // });
-                        
-                        
                     },
                     
                     handleEventChange(event) {
                         const eTarget = event.currentTarget;
                         const eDataset = eTarget.dataset;
                         
-                        // console.dir(eTarget);
-                        // console.log(eDataset);
-                        
                         let cpFilterMail = this.$filterMail.find(x => x.name == eDataset.filterType);
                         let cpFilterList = filterList.find(x => x.name == cpFilterMail.name);
-                        let isPushState = true;
+                        let isPushState = false;
                         let currentValue;
                         
                         if (cpFilterMail.name == 'type') {
@@ -287,17 +203,13 @@
                             cpFilterMail.value = (cpFilterMail.value == eTarget.value) ? cpFilterMail.value : eTarget.value;
                         }
                         
-                        if (currentValue == cpFilterMail.value) {
-                            isPushState = false;
-                        }
+                        // if (currentValue == cpFilterMail.value) {
+                        //     isPushState = false;
+                        // }
                         
                         this.handleDispatchData();
                         this.handleSetParamUrl(cpFilterList.param, cpFilterMail.value, isPushState);
                         console.log(window.history.state);
-                        // console.dir(event.currentTarget);
-                        // console.log(typeof event.currentTarget);
-                        // console.log(event.currentTarget.dataset.filterType);
-                        // console.log(event.currentTarget.dataset.filterValue);
                     },
                     
                     handleDispatchData() {
@@ -342,7 +254,7 @@
                     
                     handlePopstate(event) {
                         console.log('handlePopstate: ', event);
-                        const filterPopstate
+                        // const filterPopstate
                     },
                     
                     // setParamUrl($keyPar, $valPar, $isDispatch = true) {
@@ -360,116 +272,7 @@
                 
             });
             
-            // window.addEventListener('popstate', (event) => {
-            //     console.log('Popstate: ', event);
-            // });
             
-            // Alpine.data('spa_mail', () => {
-            //     // let newUrl = new URL(NOW_URL);
-            //     let paramQV = new URLSearchParams(window.location.href);
-            //     const paramList = ['inbox', 'sent', 'draft', 'all'];
-            //     // console.log(JSON.parse(JSON.stringify(newUrl)));
-            //     // console.log(newUrl);
-            //     // console.log(new URLSearchParams(newUrl.search).get('t'));
-            //     return {
-            //         activePage: paramQV,
-            //         init() {
-            //             console.log('SPA Mail initialized');
-            //             this.activePage = whatParamQueryValue('t');
-            //             console.log(this.activePage);
-                        
-            //             if (!paramList.includes(this.activePage)) this.setParamUrl(paramList[0]);
-            //             else this.dispatchInitial(this.activePage);
-                        
-            //             console.log(this.activePage);
-            //         },
-            //         setParamUrl($valPar) {
-            //             this.activePage = $valPar; // ← update active state
-            //             setParamsQuery('t', $valPar);
-                        
-            //             // console.log('Dispatch after click:', { page: $valPar });
-            //             Livewire.dispatch('Mail-SPA-Page', [{ page: $valPar }]);
-            //         },
-            //         dispatchInitial(page) {
-            //             this.activePage = page;
-            //             // console.log('Initial dispatch:', { page: page });
-            //             Livewire.dispatch('Mail-SPA-Page', [{ page: page }]);
-            //         },
-            //     };
-            // });
-            
-            // Alpine.data('search_mail', () => {
-            //     const csrf_token = '{{ csrf_token() }}';
-                
-            //     return {
-            //         inpSearch: null,
-            //         dataSearch: {
-            //             search: this.inpSearch,
-            //             _token: csrf_token,
-            //         },
-            //         init() {
-            //             this.inpSearch = whatParamQueryValue('s') ?? '';
-            //             if (this.inpSearch) {
-            //                 this.handleSearchMail(this.inpSearch);
-            //             }
-            //         },
-            //         handleSearchMail(event, isDispatch = true) {
-            //             const valInp = event.target?.value ?? event;
-            //             setParamsQuery('s', valInp);
-                        
-            //             $dataSearch = {
-            //                 search: valInp,
-            //                 _token: csrf_token,
-            //             }
-                        
-            //             if (isDispatch) {
-            //                 Livewire.dispatch('Mail-Search-Page', [$dataSearch]);
-            //             }
-            //         },
-            //     };
-            // });
-            
-            // function dispatchingDataLivewireTo($dispatchKey, $dispatchData) {
-            //     if (typeof $dispatchData !== 'object') {
-            //         alert('Please set the dispatch data to object type');
-            //         return {
-            //             page: window.location.href,
-            //             status: 'failed',
-            //             key: $dispatchKey,
-            //             data: $dispatchData,
-            //         };
-            //     }
-                
-            //     Livewire.dispatch($dispatchKey, [$dispatchData]);
-            //     return {
-            //         page: window.location.href,
-            //         status: 'success',
-            //         key: $dispatchKey,
-            //         data: $dispatchData,
-            //     };
-            // }
-            
-            // function intialLivewireDispatch($keyDispatch, $valueDispatch) {
-            //     Livewire.hook('message.processed', (message, component) => {
-            //         // if (paramQV && !window.__search_dispatched) {
-            //         //     Livewire.dispatch('Mail-Search-Page', [dataParam]);
-            //         //     window.__search_dispatched = true;
-            //         //     console.log('Dispatching data to: Mail-Search after Livewire ready');
-            //         // }
-            //     });
-            // }
-            
-            // Livewire.hook('component.init', (component, cleanup) => {
-            //     console.log({
-            //         // LHookMessage: message,
-            //         LHookComponent: component,
-            //         LHookCleanup: cleanup,
-            //     });
-            // })
-            
-            // function whatParamQueryValue($pQuery) {
-            //     return new URLSearchParams(window.location.href).get($pQuery);
-            // }
         </script>
     @endpush
 @endonce
