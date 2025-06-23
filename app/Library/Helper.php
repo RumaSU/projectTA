@@ -41,9 +41,9 @@ class Helper {
             while (!$isUnique) {
                 if (! $model::where($column, '=', $dataUuid)->exists()) {
                     $isUnique = true;
+                } else {
+                    $dataUuid = $instance->getRamseyUuid($uuidVer, $randLength);
                 }
-                
-                $dataUuid = $instance->getRamseyUuid($uuidVer, $randLength);
             }
         }
         

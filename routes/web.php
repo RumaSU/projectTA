@@ -7,10 +7,21 @@ Route::get('/', function () {
 });
 
 Route::prefix('auth')->name('auth.')->group(function() {
+    // Route::prefix('/login')->group(function() {
+    //     Route::prefix('/step')->group(function() {
+    //         Route::get('', App\Livewire\Auth\Login\Main::class);
+    //     });
+    // });
     Route::get('/login', App\Livewire\Auth\Login\Main::class)->name('login');
+    // Route::get('/login{step}', App\Livewire\Auth\Login\Main::class)->name('login');
+    // Route::get('/login/{$step}', App\Livewire\Auth\Login\Main::class)->name('login');
     
-    route::prefix('/register/step')->name('register.')->group(function() {
-       Route::get('/name', App\Livewire\Auth\Register\Form\Fullname::class)->name('name'); 
+    route::prefix('/register/lifecycle')->name('register.')->group(function() {
+        route::prefix('/step')->name('step.')->group(function() {
+            Route::get('/fullname', App\Livewire\Auth\Register\Form\Fullname::class)->name('fullname');
+            Route::get('/birthdaygender', App\Livewire\Auth\Register\Form\BirthAndGender::class)->name('birth_gender'); 
+            
+        });
     });
     
     Route::get('/register', App\Livewire\Auth\Register\Main::class)->name('register');

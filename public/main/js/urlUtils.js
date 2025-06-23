@@ -65,3 +65,8 @@ function getWindowLocHref() {
 function getWindowLocSearch() {
     return window.location.search;
 }
+
+
+function whatsNowLocationURL() {
+    return window.location;
+}

@@ -36,7 +36,7 @@
 @endsection
 
 @push('default-aditional-prop-body')
-    class="bg-[#f1f1f1] @stack('auth-attr-class-val-body')"
+    {{-- @stack('auth-attr-class-val-body')" --}}
     @stack('auth-attr-body')
 @endpush
 
@@ -45,30 +45,52 @@
     <div class="app">
         <div class="cApp ">
             
-            <div class="headerApp px-4 py-4">
+            <div class="headerApp px-6 py-8">
                 <div class="txHeader text-xl">
                     <p class="font-semibold">Digital Signature</p>
                 </div>
             </div>
             
-            <div class="wrapper-mainApp border border-black flex justify-center">
-                <main class="mainApp border border-black">
-                    <div class="cmainApp">
-                        @stack('auth-top-main-content')
+            <div class="wrapper-detailApp mt-16">
+                <div class="detailApp w-96 mx-auto">
+                    
+                    <header class="ctr-headerDetailApp">
                         
-                        @yield('auth-child-template')
+                        @livewire('layout.auth.partial.header')
                         
-                        @stack('auth-bottom-main-content')
+                    </header>
+                    
+                    <main class="mainApp mt-14">
+                        <div class="cMainApp">
+                            @stack('auth-top-main-content')
+                            
+                            @yield('auth-child-template')
+                            
+                            {{ $slot }}
+                            
+                            @stack('auth-bottom-main-content')
+                            
+                            @stack('auth-custom-main-content')
+                        </div>
+                    </main>
+                    
+                    
+                    <footer>
                         
-                        @stack('auth-custom-main-content')
-                    </div>
-                </main>
-                <footer></footer>
+                    </footer>
+                </div>
             </div>
+            
             
             
         </div>
     </div>
+    
+    @persist('custom_notification')
+        @include('livewire.layout.partial.toast-notification')
+    @endpersist()
+    
+    
     
     @stack('additional-auth-body-content')
     
@@ -77,7 +99,8 @@
     <script data-navigate-once>
         document.addEventListener('livewire:navigated', (e) => {
             
-            console.log(e.target.location);
+            // console.log(e.target.location);
+            console.log(window.history)
             
         });
     </script>

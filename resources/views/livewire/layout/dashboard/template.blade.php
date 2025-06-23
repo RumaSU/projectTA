@@ -67,6 +67,8 @@
         </div>
     </div>
     
+    @include('livewire.layout.partial.toast-notification')
+    
     @livewireScripts
     @livewireScriptConfig
     <script data-navigate-once>

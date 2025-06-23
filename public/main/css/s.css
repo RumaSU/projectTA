@@ -103,38 +103,38 @@ body::-webkit-scrollbar-thumb:hover {
     height: 400px !important;
 }
 
-
-/* Element same like div */
-ag-user, ag-product, ag-image, ag-avatar, ag-icon {
-    display: block;
+@layer base {
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+        background-color: transparent;
+        /* -webkit-text-fill-color: transparent; */
+    }
 }
 
-/* Element content */
-ag-user-content, ag-product-content, ag-image-content, ag-avatar-content {
-    display: block;
+.input-transparent:is(:-webkit-autofill, :autofill) {
+    background-color: transparent !important;
 }
 
-/* Element for icon */
-/* 
- * ag-icon : ag-icon > i // for icon element
- */
-/* ag-icon {
-    display: block;
-} */
-
-/* Element for button same like <button></button> */
-ag-button {
-    display: block;
-    cursor: pointer;
+.bg-input-autofill:autofill {
+    background-color: transparent !important;
+}
+.bg-input-autofill:autofill:hover {
+    background-color: transparent !important;
+}
+.bg-input-autofill:autofill:focus {
+    background-color: transparent !important;
 }
 
-/* Element for change page same like <a></a> */
-ag-link, ag-navigate {
-    display: inline;
-    cursor: default;
-    user-select: none;
+.text-input-autofill:autofill {
+    font-size: auto !important;
 }
 
-ag-link[href], ag-navigate[href] {
-    cursor: pointer;
-}
+

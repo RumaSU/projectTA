@@ -20,15 +20,19 @@ return new class extends Migration
                 $table->timestamps();
                 
                 $table->index('id_user');
+                $table->index('email');
+                $table->index('username');
             });
         }
         
         if (!Schema::hasTable('user_personal')) { // data dasar user
             Schema::create('user_personal', function (Blueprint $table) {
                 $table->uuid('id_user')->primary();
-                $table->string('full_name');
-                $table->enum('gender', ['Man', 'Woman', '']);
-                $table->timestamp('birthday_date');
+                // $table->string('first_name');
+                // $table->string('last_name');
+                $table->string('fullname');
+                $table->enum('gender', ['Man', 'Woman', 'Prefer not to say'])->default('Prefer not to say');
+                $table->date('birthday_date');
                 $table->timestamps();
                 
                 $table->index('id_user');
@@ -38,7 +42,9 @@ return new class extends Migration
         if (!Schema::hasTable('user_data')) { // data dasar user
             Schema::create('user_data', function (Blueprint $table) {
                 $table->uuid('id_user')->primary();
-                $table->string('nim')->unique();
+                $table->string('job_regis_number');
+                $table->string('job_type');
+                $table->string('job_institute');
                 // ...
                 $table->timestamps();
                 
@@ -52,6 +58,31 @@ return new class extends Migration
                 $table->uuid('id_user');
                 $table->string('phone_number');
                 $table->enum('phone_type', ['Personal']); // 'Office', 'Home', 'Other'
+                $table->timestamps();
+                
+                $table->index('id_user');
+            });
+        }
+        
+        // if (!Schema::hasTable('user_address')) { // data nomor telepon user
+        //     Schema::create('user_address', function (Blueprint $table) {
+        //         $table->uuid('id_user_address')->primary();
+        //         $table->uuid('id_user');
+        //         $table->string('phone_number');
+        //         $table->enum('phone_type', ['Personal']); // 'Office', 'Home', 'Other'
+        //         $table->timestamps();
+                
+        //         $table->index('id_user');
+        //     });
+        // }
+        
+        if (!Schema::hasTable('user_social_media')) { // data nomor telepon user
+            Schema::create('user_social_media', function (Blueprint $table) {
+                $table->uuid('id_user_social_media')->primary();
+                $table->uuid('id_user');
+                $table->string('social_name');
+                $table->longText('social_link');
+                $table->boolean('social_status')->default(true);
                 $table->timestamps();
                 
                 $table->index('id_user');

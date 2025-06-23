@@ -7,7 +7,7 @@ use App\Library\SessionHelper;
 use Livewire\Attributes;
 use Livewire\Component;
 
-class Fullname extends Component
+class BirthAndGender extends Component
 {
     // Input Form
     public $inp_fullname;
@@ -27,7 +27,7 @@ class Fullname extends Component
         ];
         
         $this->initMountSession();
-        
+        dump($this->stepRegister);
     }
     
     public function submit_step() {
@@ -64,7 +64,7 @@ class Fullname extends Component
     #[Attributes\Layout('livewire.layout.auth.template')]
     public function render()
     {
-        return view('livewire.auth.register.form.fullname');
+        return view('livewire.auth.register.form.birth-and-gender');
     }
     
     
@@ -92,5 +92,5 @@ class Fullname extends Component
             $this->{$key} = trim($this->{$key});
         }
     }
-
+    
 }

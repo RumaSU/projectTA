@@ -24,7 +24,7 @@
                 
                 @yield('child-main-form-login-template')
                 
-                {{ $slot }}
+                {{-- {{ $slot }} --}}
                 
             </form>
         </div>
@@ -36,3 +36,5 @@
         <a href="{{ route('auth.register') }}" wire:navigate>Go to register</a>
     </div>
 @endsection
+
+<div></div>
