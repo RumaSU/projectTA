@@ -8,7 +8,7 @@
     
         >
         <template x-for="(notification, index) in notifications" x-bind:key="notification.id">
-            <!-- root div holds all of the notifications  -->    
+            
             <div>
                 <div 
                     class="pointer-events-auto relative rounded-md border"
@@ -21,7 +21,7 @@
                     x-on:resume-auto-dismiss.window=" timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, notification.notifDuration)" 
                     x-init="$nextTick(() => { isVisible = true }), (timeout = setTimeout(() => { isVisible = false, removeNotification(notification.id)}, notification.notifDuration))" 
                     x-transition:enter="transition duration-300 ease-out" 
-                    x-transition:enter-end="translate-y-0"  
+                    x-transition:enter-end="translate-y-0" 
                     x-transition:enter-start="translate-y-8" 
                     x-transition:leave="transition duration-300 ease-in" 
                     x-transition:leave-end="-translate-x-24 opacity-0 md:translate-x-24" 
@@ -76,7 +76,6 @@
 @once
     <script data-navigate-once>
         window.addEventListener('alpine:init', () => {
-            console.log('Alpine init');
             Alpine.data('notificationElemnt', () => {
                 // info, success, warning, danger
                 const variantsNotifElement = [

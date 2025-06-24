@@ -10,8 +10,10 @@ return [
                     'l_ariaLabelledBy' => 'fullnameForm',
                     'l_text' => 'Fullname',
                 ],
+                'type_input' => 'default',
                 'input' => [
                     'i_type' => 'text',
+                    'i_type_as' => 'text',
                     'i_id' => 'fullnameFormRegister',
                     'i_required' => true,
                     'i_placeholder' => 'Fullname',
@@ -28,13 +30,15 @@ return [
         'birth_gender' => [
             [
                 'name' => 'birthday',
-                'icon' => 'fas fa-user',
+                'icon' => 'fas fa-calendar-days',
                 'label' => [
                     'l_ariaLabelledBy' => 'birthdayForm',
                     'l_text' => 'Birthday',
                 ],
+                'type_input' => 'default',
                 'input' => [
-                    'i_type' => 'date',
+                    'i_type' => 'text',
+                    'i_type_as' => 'date',
                     'i_id' => 'birthdayFormRegister',
                     'i_required' => false,
                     'i_placeholder' => 'Birthday',
@@ -47,25 +51,35 @@ return [
                 ],
             ],
             [
-                'name' => 'fullname',
-                'icon' => 'fas fa-user',
+                'name' => 'gender',
+                'type' => 'single',
+                // 'icon' => 'fas fa-venus-mars',
                 'label' => [
-                    'l_ariaLabelledBy' => 'fullnameForm',
-                    'l_text' => 'Fullname',
+                    'l_ariaLabelledBy' => 'genderForm',
+                    'l_text' => 'Gender',
                 ],
+                'type_input' => 'select',
                 'input' => [
-                    'i_type' => 'text',
-                    'i_id' => 'fullnameFormRegister',
+                    'i_id' => 'genderFormRegister',
                     'i_required' => false,
-                    'i_placeholder' => 'Fullname',
+                    'i_placeholder' => 'Gender',
+                    'i_selectType' => 'default', // custom or default
+                    'i_select_registered' => [
+                        // ['id' => 'genderFormValTitle', 'text' => 'Gender', 'value' => null, 'selected' => true, 'disabled' => true], 
+                        ['id' => 'genderFormValMale', 'text' => 'Male', 'value' => 'male', 'selected' => false, 'disabled' => false], 
+                        ['id' => 'genderFormValFemale', 'text' => 'Female', 'value' => 'female', 'selected' => false, 'disabled' => false], 
+                        ['id' => 'genderFormValNotSay', 'text' => 'Prefer not to say', 'value' => 'not_say', 'selected' => false, 'disabled' => false], 
+                    ],
                 ],
                 'wire_model' => [
-                    'var_model' => 'inp_fullname',
+                    'var_model' => 'inp_gender',
                 ],
                 'error' => [
-                    'key' => 'inp_fullname',
+                    'key' => 'inp_gender',
                 ],
             ],
         ],
     ],
+    
+    
 ];

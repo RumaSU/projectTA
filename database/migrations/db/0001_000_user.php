@@ -31,7 +31,7 @@ return new class extends Migration
                 // $table->string('first_name');
                 // $table->string('last_name');
                 $table->string('fullname');
-                $table->enum('gender', ['Man', 'Woman', 'Prefer not to say'])->default('Prefer not to say');
+                $table->enum('gender', ['Male', 'Female', 'Prefer not to say'])->default('Prefer not to say');
                 $table->date('birthday_date');
                 $table->timestamps();
                 

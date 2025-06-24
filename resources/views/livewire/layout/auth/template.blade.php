@@ -90,6 +90,9 @@
         @include('livewire.layout.partial.toast-notification')
     @endpersist()
     
+    @if (! session()->exists('timezone'))
+        @livewire('layout.partial.set-timezone')
+    @endif
     
     
     @stack('additional-auth-body-content')

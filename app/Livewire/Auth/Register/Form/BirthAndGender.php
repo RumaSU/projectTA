@@ -4,18 +4,27 @@ namespace App\Livewire\Auth\Register\Form;
 
 use App\Library\SessionHelper;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 use Livewire\Attributes;
 use Livewire\Component;
+
+use Carbon\Carbon;
 
 class BirthAndGender extends Component
 {
     // Input Form
-    public $inp_fullname;
+    public $inp_birthday;
+    public $inp_gender;
     
     // Additional Variable Components
     public $stepRegister;
     public $requestRouteName;
     public $listInputForm;
+    
+    // additional private Variable
+    private $validSelectGender = ['male', 'female', 'not_say'];
     
     public function mount() {
         $this->requestRouteName = request()->route()->getName();
@@ -23,42 +32,51 @@ class BirthAndGender extends Component
         
         $this->stepRegister = end($requestExplode);
         $this->listInputForm = [
-            'inp_fullname' => 'fullname',
+            'inp_birthday' => 'birthday',
+            'inp_gender' => 'gender',
         ];
         
         $this->initMountSession();
-        dump($this->stepRegister);
     }
     
     public function submit_step() {
         $this->trimInputForm();
+        
         $this->validate([
-            'inp_fullname' => 'required|string|min:1|max:255',
+            'inp_birthday' => 'required',
+            'inp_gender' => ['required', Rule::in($this->validSelectGender)],
         ], [
-            'inp_fullname.required' => 'Please enter your full name.',
-            'inp_fullname.min' => 'Your full name must contain at least 1 character.',
-            'inp_fullname.max' => 'Your full name cannot be longer than 255 characters.',
+            'inp_birthday.required' => 'Please enter your :attribute',
+            'inp_gender.required' => 'Please select your :attribute.',
+            'inp_gender.in' => 'Please make sure to select the :attribute that is registered.',
         ], [
-            'inp_fullname' => 'full name',
+            'inp_birthday' => 'Birthday',
+            'inp_gender' => 'Gender',
         ]);
         
-        $keyStep = 'step_' . $this->stepRegister;
+        foreach($this->listInputForm as $key => $val) {
+            dump((object)[
+                $key => $this->{$key},
+            ]);
+        }
         
-        $valueStep = [
-            'route_name' => $this->requestRouteName,
-            'fullname' => $this->inp_fullname,
-        ];
+        // $keyStep = 'step_' . $this->stepRegister;
         
-        SessionHelper::UpdateSession('register_step', $keyStep, $valueStep);
+        // $valueStep = [
+        //     'route_name' => $this->requestRouteName,
+        //     'fullname' => $this->inp_fullname,
+        // ];
         
-        $this->dispatch('customnotify', (object) [
-            'variant' => 'info',
-            'sender' => 'System',
-            'title' => 'Fullname filled',
-            'message' => 'Next step to basic information',
-        ]);
+        // SessionHelper::UpdateSession('register_step', $keyStep, $valueStep);
         
-        $this->redirectRoute('auth.register.step.birth_gender', navigate: true);
+        // $this->dispatch('customnotify', (object) [
+        //     'variant' => 'info',
+        //     'sender' => 'System',
+        //     'title' => 'Fullname filled',
+        //     'message' => 'Next step to basic information',
+        // ]);
+        
+        // $this->redirectRoute('auth.register.step.birth_gender', navigate: true);
     }
     
     #[Attributes\Layout('livewire.layout.auth.template')]
