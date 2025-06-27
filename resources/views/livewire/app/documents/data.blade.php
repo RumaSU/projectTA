@@ -1,6 +1,8 @@
 <div>
     <div class="" x-data="dispatchFilterDocument">Div Call Dispatch Filter Document</div>
     Data document
+    {{-- @dump(Cookie::get())
+    @dump(session()->all()) --}}
 </div>
 
 

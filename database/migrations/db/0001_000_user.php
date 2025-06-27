@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('user')) {
-            Schema::create('user', function (Blueprint $table) {
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
                 $table->uuid('id_user')->primary();
                 $table->string('email')->unique();
                 $table->string('username')->unique();
@@ -25,22 +25,22 @@ return new class extends Migration
             });
         }
         
-        if (!Schema::hasTable('user_personal')) { // data dasar user
-            Schema::create('user_personal', function (Blueprint $table) {
+        if (!Schema::hasTable('users_personal')) { // data dasar user
+            Schema::create('users_personal', function (Blueprint $table) {
                 $table->uuid('id_user')->primary();
                 // $table->string('first_name');
                 // $table->string('last_name');
                 $table->string('fullname');
                 $table->enum('gender', ['Male', 'Female', 'Prefer not to say'])->default('Prefer not to say');
-                $table->date('birthday_date');
+                $table->date('birthdate');
                 $table->timestamps();
                 
                 $table->index('id_user');
             });
         }
         
-        if (!Schema::hasTable('user_data')) { // data dasar user
-            Schema::create('user_data', function (Blueprint $table) {
+        if (!Schema::hasTable('users_data')) { // data dasar user
+            Schema::create('users_data', function (Blueprint $table) {
                 $table->uuid('id_user')->primary();
                 $table->string('job_regis_number');
                 $table->string('job_type');
@@ -52,8 +52,8 @@ return new class extends Migration
             });
         }
         
-        if (!Schema::hasTable('user_phone')) { // data nomor telepon user
-            Schema::create('user_phone', function (Blueprint $table) {
+        if (!Schema::hasTable('users_phone')) { // data nomor telepon user
+            Schema::create('users_phone', function (Blueprint $table) {
                 $table->uuid('id_user_phone')->primary();
                 $table->uuid('id_user');
                 $table->string('phone_number');
@@ -76,8 +76,8 @@ return new class extends Migration
         //     });
         // }
         
-        if (!Schema::hasTable('user_social_media')) { // data nomor telepon user
-            Schema::create('user_social_media', function (Blueprint $table) {
+        if (!Schema::hasTable('users_social_media')) { // data nomor telepon user
+            Schema::create('users_social_media', function (Blueprint $table) {
                 $table->uuid('id_user_social_media')->primary();
                 $table->uuid('id_user');
                 $table->string('social_name');
@@ -89,20 +89,8 @@ return new class extends Migration
             });
         }
         
-        if (!Schema::hasTable('user_remember_token')) { // remember token yang bisa dibanyak device seperti ada fitur switch akun kedepannya
-            Schema::create('user_remember_token', function (Blueprint $table) {
-                $table->uuid('id_user_remember_token')->primary();
-                $table->uuid('id_user');
-                $table->string('remember_token');
-                $table->timestamp('expired_date');
-                $table->timestamps();
-                
-                $table->index('id_user');
-            });
-        }
-        
-        if (!Schema::hasTable('user_account_status')) { // seluruh status seperti email nomor telepon dan sejenisnya yang sudah terkonfirmasi
-            Schema::create('user_account_status', function (Blueprint $table) {
+        if (!Schema::hasTable('users_account_status')) { // seluruh status seperti email nomor telepon dan sejenisnya yang sudah terkonfirmasi
+            Schema::create('users_account_status', function (Blueprint $table) {
                 $table->uuid('id_user_account_status')->primary();
                 $table->uuid('id_user');
                 $table->enum('type', ['Email', 'Phone Number']);
@@ -165,6 +153,27 @@ return new class extends Migration
         //         $table->index('id_user');
         //     });
         // }
+        
+        if (!Schema::hasTable('users_remember_token')) { // remember token yang bisa dibanyak device seperti ada fitur switch akun kedepannya
+            Schema::create('users_remember_token', function (Blueprint $table) {
+                $table->uuid('id_user_remember_token')->primary();
+                $table->uuid('id_user');
+                $table->string('remember_token');
+                $table->string('user_agent')->nullable(); // opsional
+                $table->string('user_agent_hash')->nullable(); // opsional // just hash random string and encrypt in to cookies
+                $table->ipAddress('ip_address')->nullable(); // opsional
+                $table->timestamp('last_used_at')->nullable();
+                $table->timestamp('expired_date');
+
+                $table->timestamps();
+                
+                $table->index('id_user');
+            });
+        }
+        
+        Schema::table('sessions', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
+        });
     }
 
     /**

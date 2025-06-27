@@ -22,10 +22,13 @@ class Header extends Component
         [
             'routeMain' => 'register',
             'value' => [
-                ['name' => 'fullname', 'mainText' => 'Create an account', 'additionalText' => 'Enter your fullname'],
-                ['name' => 'birth_gender', 'mainText' => 'Basic information', 'additionalText' => 'Enter your birthday and gender'],
-                ['name' => 'email', 'mainText' => 'How you’ll sign in', 'additionalText' => 'Enter yout email address for signing in to your Digital Signature Account'],
-                ['name' => 'password', 'mainText' => 'Create a strong password', 'additionalText' => 'Create a strong password with a mix of letters, numbers and symbols'],
+                ['name' => 'basic_info', 'mainText' => 'Create an account', 'additionalText' => 'Tell us a bit about yourself — your name, birthdate, and gender'],
+                // ['name' => 'fullname', 'mainText' => 'Create an account', 'additionalText' => 'Enter your fullname'],
+                // ['name' => 'birth_gender', 'mainText' => 'Basic information', 'additionalText' => 'Enter your birthday and gender'],
+                // ['name' => 'email_password', 'mainText' => 'Set your login details', 'additionalText' => 'Enter your email and create a strong password. This will be used to access your account later'],
+                ['name' => 'credentials', 'mainText' => 'Set your login details', 'additionalText' => 'This will be used to access your account later'],
+                // ['name' => 'email', 'mainText' => 'How you’ll sign in', 'additionalText' => 'Enter yout email address for signing in to your Digital Signature Account'],
+                // ['name' => 'password', 'mainText' => 'Create a strong password', 'additionalText' => 'Create a strong password with a mix of letters, numbers and symbols'],
             ]
         ],
     ];

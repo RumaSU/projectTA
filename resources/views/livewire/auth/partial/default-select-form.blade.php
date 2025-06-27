@@ -1,10 +1,18 @@
 <div 
-    class="itm-inpForm mt-1" 
+    class="itm-inpForm" 
     aria-labelledby="{{ $itmForm->label->l_ariaLabelledBy }}"
     {{ $errors->first($itmForm->error->key) ? 'data-input-error' : '' }}
-    x-data="{showSelectModal: false, textSelectModal: 'Select {{ $defaultSelect ?? 'Value' }}', }"
-
+    {{-- x-data="{showSelectModal: false, textSelectModal: '{{ ${$itmForm->wire_model->var_model} ?  $itmForm->input->i_select_registered[array_search(${$itmForm->wire_model->var_model}, array_column($itmForm->input->i_select_registered, 'value'))]->text : ('Select ' . $defaultSelect ?? ' Value') }}', }" --}}
+    x-data="{showSelectModal: false, textSelectModal: '{{ $defaultSelect ?? 'Select Value' }}', }"
 >
+
+    {{-- @php
+        dump(array_column($itmForm->input->i_select_registered, 'value'));
+        dump(array_search(${$itmForm->wire_model->var_model}, array_column($itmForm->input->i_select_registered, 'value')));
+        dump( $itmForm->input->i_select_registered[array_search(${$itmForm->wire_model->var_model}, array_column($itmForm->input->i_select_registered, 'value'))]->text );
+        dump($itmForm);
+    @endphp --}}
+    
     <div 
         class="cItm-inpForm" 
         data-name-form="{{ $itmForm->name }}"
@@ -134,7 +142,10 @@
                 <div class="ctr-listOptionSelect bg-white rounded-sm shadow-sm shadow-black/40 mt-1 py-2 overflow-auto">
                     <div class="cListOptionSelect">
                         @foreach ($itmForm->input->i_select_registered as $optionSelect)
-                            <div class="ctr-itmOptionSelect group">
+                            <div 
+                                class="ctr-itmOptionSelect group"
+                                
+                                >
                                 <div class="cItmOptionSelect">
                                     <label for="{{ $optionSelect->id }}" class="lblOptionSelect block px-2 py-1.5 group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-slate-200">
                                         <div class="cLblOptionSelect flex items-center gap-2">
@@ -161,7 +172,7 @@
                                         @change="textSelectModal = $event.target.dataset.textOption; showSelectModal = false; handleInput($event)"
                                         data-text-option="{{ $optionSelect->text }}"
                                         wire:model.defer='{{ $itmForm->wire_model->var_model }}'
-                                        {{-- {{ $optionSelect->value == $itmForm->wire_model->var_model ? 'selected' : '' }} --}}
+                                        {{ $optionSelect->value == $itmForm->wire_model->var_model ? 'selected' : '' }}
                                         
                                         {{-- {{ $optionSelect->selected ? 'selected' : '' }} --}}
                                     >
@@ -174,7 +185,7 @@
         </div>
         
         
-        <div class="wrapper-additional h-6 mt-0.5 border border-black">
+        <div class="wrapper-additional min-h-6 mt-0.5">
             @error($itmForm->error->key)
                 <div class="ctr-errorInpForm ml-4">
                     <div class="cErrorInpForm text-red-600">

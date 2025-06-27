@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models\Users;
+
+use Illuminate\Database\Eloquent\Model;
+
+class UserData extends Model
+{
+    protected $table = 'users_data'; // Nama tabel
+
+    protected $primaryKey = 'id_user'; // Primary key
+    protected $guard = 'web';
+    protected $hidden = [
+        'id_user',
+    ];
+
+    protected $fillable = [
+        'id_user',
+        'job_regis_number',
+        'job_type',
+        'job_institute',
+    ];
+    protected function casts(): array
+    {
+        return [
+            'id_user' => 'string',
+        ];
+    }
+
+    // Relasi terbalik ke DbUser
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\Users\User::class, 'id_user', 'id_user');
+    }
+}

@@ -3,17 +3,24 @@
 @endpush
 
 <div class="ctr-mainFormRegister-{{ $stepRegister }}">
-    <div class="cMainFormRegister-{{ $stepRegister }}">
+    <div class="cMainFormRegister-{{ $stepRegister }}">        
         
         <form
-            x-data="formAuthLogin_{{ $stepRegister }}" 
+            x-data="formAuthLogin_{{ $stepRegister }}"
             wire:submit.prevent='submit_step' 
             data-form-name="Register-Step-{{ ucfirst($stepRegister) }}"
         >
+            
             <div class="mainFormRegister-input">
                 @php
                     $listFormConfig = json_decode(json_encode( config("custom_register_form.steps.$this->stepRegister", []) ));
                     
+                    if (session()->has($sessionKey)) {
+                        $sessionValue = session()->get($sessionKey);
+                        if (array_key_exists($sessionKeyStep, $sessionValue)) {
+                            $sessionValue = session()->get($sessionKey)[$sessionKeyStep];
+                        }
+                    }
                 @endphp
                 
                 
@@ -23,7 +30,7 @@
                         @include('livewire.auth.partial.default-input-form', ['itmForm' => $itmForm])
                     @endif
                     @if ($itmForm->type_input == 'select')
-                        @include('livewire.auth.partial.default-select-form', ['itmForm' => $itmForm, 'defaultSelect' => 'Gender'])
+                        @include('livewire.auth.partial.default-select-form', [ 'itmForm' => $itmForm, 'defaultSelect' => $sessionValue[$itmForm->name]['text'] ?? 'Select Value' ])
                     @endif
                     
                 @endforeach
@@ -100,16 +107,89 @@
                 
                 return {
                     isShowPassword: false,
-                    isShowpickerSelect: false,
-                    
                     
                     init() {
-                        
+                        console.log('Alpine form registered step-{{ $stepRegister }} initialized');
                         this.initInputDate();
                         
+                        // window.addEventListener('popstate', this.handlePopstate.bind(this));
                     },
                     
                     initInputDate() {
+                        this.setupInitVanillaCalendar();
+                        
+                        // document.addEventListener('livewire:load', () => {
+                        //     this.setupInitVanillaCalendar();
+                        // });
+
+                        // Livewire.hook('message.processed', () => {
+                        //     this.setupInitVanillaCalendar();
+                        // });
+                    },
+                    
+                    handleViewPassword(e) {
+                        const elmntCurr = e.currentTarget;
+                        
+                        const jqElemntCur = $jq(elmntCurr);
+                        const jqIconAct = jqElemntCur.find('.icn');
+                        
+                        const idInpForm = jqElemntCur.data('idInputForm');
+                        
+                        const jqItmForm = jqElemntCur.closest('.itm-inpForm');
+                        const jqInpForm = jqItmForm.find('input#' + idInpForm);
+                        
+                        this.isShowPassword = !this.isShowPassword;
+                        
+                        if (this.isShowPassword) {
+                            jqInpForm.attr('type', 'text');
+                            
+                            jqIconAct.find('svg').remove();
+                            jqIconAct.append(svgEye);
+                            
+                            
+                        } else {
+                            jqInpForm.attr('type', 'password');
+                            
+                            jqIconAct.find('svg').remove();
+                            jqIconAct.append(svgEyeSlash);
+                            
+                        }
+                    },
+                    
+                    handleInput($e) {
+                        const $eCurTarget = $e.currentTarget;
+                        
+                        const $jqCurTarget = $jq($eCurTarget);
+                        const $jqParElemnt = $jqCurTarget.closest('.itm-inpForm');
+                        
+                        if (! $jqParElemnt[0].hasAttribute('data-input-error')) {
+                            return;
+                        }
+                        
+                        const $jqInpSectionElement = $jqParElemnt.find('.ctr-inpSecForm');
+                        const $jqInpSectionIconElement = $jqInpSectionElement.find('.icnInpForm');
+                        
+                        const $jqInpErrorSection = $jqParElemnt.find('.wrapper-additional');
+                        
+                        $jqParElemnt.removeAttr('data-input-error');
+                        // 'outline outline-[2.5px] outline-red-600 bg-red-50' : 'focus-within:outline-blue-600 focus-within:bg-white'
+                        $jqInpSectionElement.removeClass('outline outline-[2.5px] outline-red-600 bg-red-50').addClass('focus-within:outline-blue-600 focus-within:bg-white');
+                        
+                        // 'text-red-600' : 'text-black/70'
+                        $jqInpSectionIconElement.find('.icn').removeClass('text-red-600').addClass('text-black/70');
+                        
+                        // 'text-red-400' : 'text-gray-400'
+                        $jqCurTarget.removeClass('placeholder:text-red-400').addClass('placeholder:text-gray-400');
+                        $jqInpErrorSection.empty();
+                        
+                    },
+                    
+                    setupInitVanillaCalendar() {
+                        
+                        console.log(' ');
+                        console.log('Vanilla Calendar Init');
+                        console.log(' ');
+                        
                         const $findInputDate = $jq(this.$root).find('input[data-type-as="date"]');
                         const $todayDate = new Date();
                         
@@ -118,11 +198,11 @@
                         }
                         
                         $findInputDate.each(($idx, $val) => {
-                            const $jqInputDate = $jq($val);
-                            const $idInputDate = $jqInputDate.attr('id');
+                            const $jqOriInputDate = $jq($val);
+                            const $idInputDate = $jqOriInputDate.attr('id');
                             
                             // set input type from date to text for trigger vanilla calendar
-                            $jqInputDate.attr('type', 'text');
+                            $jqOriInputDate.attr('type', 'text');
                             
                             const calendarInput = new Calendar(`#${$idInputDate}`, {
                                 inputMode: true,
@@ -150,67 +230,6 @@
                             
                             calendarInput.init();
                         });
-                        
-                    },
-                    
-                    handleViewPassword(e) {
-                        const elmntCurr = e.currentTarget;
-                        
-                        const jqElemntCur = $jq(elmntCurr);
-                        const jqIconAct = jqElemntCur.find('.icn');
-                        
-                        const idInpFormLogin = jqElemntCur.data('idInputForm');
-                        
-                        const jqItmFormLogin = jqElemntCur.closest('.itm-inpFormLogin');
-                        const jqInpFormLogin = jqItmFormLogin.find('input#' + idInpFormLogin);
-                        
-                        this.isShowPassword = !this.isShowPassword;
-                        
-                        if (this.isShowPassword) {
-                            jqInpFormLogin.attr('type', 'text');
-                            
-                            jqIconAct.find('svg').remove();
-                            jqIconAct.append(svgEye);
-                            
-                            
-                        } else {
-                            jqInpFormLogin.attr('type', 'password');
-                            
-                            jqIconAct.find('svg').remove();
-                            jqIconAct.append(svgEyeSlash);
-                            
-                        }
-                    },
-                    
-                    handleInput($e) {
-                        
-                        console.log($e);
-                        
-                        const $eCurTarget = $e.currentTarget;
-                        
-                        const $jqCurTarget = $jq($eCurTarget);
-                        const $jqParElemnt = $jqCurTarget.closest('.itm-inpForm');
-                        
-                        if (! $jqParElemnt[0].hasAttribute('data-input-error')) {
-                            return;
-                        }
-                        
-                        const $jqInpSectionElement = $jqParElemnt.find('.ctr-inpSecForm');
-                        const $jqInpSectionIconElement = $jqInpSectionElement.find('.icnInpForm');
-                        
-                        const $jqInpErrorSection = $jqParElemnt.find('.wrapper-additional');
-                        
-                        $jqParElemnt.removeAttr('data-input-error');
-                        // 'outline outline-[2.5px] outline-red-600 bg-red-50' : 'focus-within:outline-blue-600 focus-within:bg-white'
-                        $jqInpSectionElement.removeClass('outline outline-[2.5px] outline-red-600 bg-red-50').addClass('focus-within:outline-blue-600 focus-within:bg-white');
-                        
-                        // 'text-red-600' : 'text-black/70'
-                        $jqInpSectionIconElement.find('.icn').removeClass('text-red-600').addClass('text-black/70');
-                        
-                        // 'text-red-400' : 'text-gray-400'
-                        $jqCurTarget.removeClass('placeholder:text-red-400').addClass('placeholder:text-gray-400');
-                        $jqInpErrorSection.empty();
-                        
                     },
                     
                 }

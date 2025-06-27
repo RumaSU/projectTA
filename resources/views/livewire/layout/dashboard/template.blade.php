@@ -67,7 +67,13 @@
         </div>
     </div>
     
-    @include('livewire.layout.partial.toast-notification')
+    @persist('custom_notification')
+        @include('livewire.layout.partial.toast-notification')
+    @endpersist()
+    
+    @if (! session()->exists('timezone') || ! Cookie::get('timezone'))
+        @livewire('layout.partial.set-timezone')
+    @endif
     
     @livewireScripts
     @livewireScriptConfig
@@ -81,7 +87,11 @@
             
             // console.log(e.target.location);
             console.log(window.history)
-            
+            const CalendarClass = window?.VanillaCalendarPro?.Calendar;
+            if (CalendarClass?.memoizedElements?.clear) {
+                CalendarClass.memoizedElements.clear(); // aman, cepat
+                console.log('[Calendar] Memoized elements cleared after Livewire navigated');
+            }
         });
     </script>
     @stack('dashboard-body-script')

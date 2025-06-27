@@ -1,10 +1,11 @@
-<div x-data="notificationElemnt"
+<div 
+    x-data="notificationElemnt"
     @customnotify.window="addNotification($event)"
 >
     <div 
         x-on:mouseenter="$dispatch('pause-auto-dismiss')" 
         x-on:mouseleave="$dispatch('resume-auto-dismiss')" 
-        class="group pointer-events-none fixed inset-x-8 top-0 z-99 flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:left-[unset] md:right-0 md:max-w-md"
+        class="{{ Str::contains(request()->route()->getName(), 'app') ? 'mt-20' : '' }} group pointer-events-none z-40 border border-black fixed inset-x-8 top-0 flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:left-[unset] md:right-0 md:max-w-md"
     
         >
         <template x-for="(notification, index) in notifications" x-bind:key="notification.id">
@@ -31,7 +32,10 @@
                         class="flex w-full items-center gap-2.5 rounded-radius p-4 transition-all duration-300"
                         :class="notification.notificationStyle.styleColor.contentElement"
                     >
-
+                    
+                    {{-- @dump(Str::contains(request()->route()->getName(), 'dashboard'), request()->route()->getName())
+                    val: {{ !Str::contains(request()->route()->getName(), 'dashboard') }} 
+                    {{ !Str::contains(request()->route()->getName(), 'dashboard') ? 'contains' : 'not contains' }} --}}
                         <!-- Icon -->
                         <div 
                             class="rounded-full p-0.5 text-info"
@@ -145,6 +149,8 @@
                         if ( Array.isArray(valueEventParam) ) {
                             valueEventParam = valueEventParam[0];
                         }
+                        console.log('original value: ', JSON.parse(JSON.stringify($val)));
+                        console.log('detail value: ', JSON.parse(JSON.stringify(valueEventParam)));
                         
                         console.log('Add notification ' + valueEventParam.variant);
                         

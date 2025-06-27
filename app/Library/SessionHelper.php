@@ -65,6 +65,14 @@ class SessionHelper {
         return Session::get($nameSession, $default);
     }
     
+    public static function getAllSession() {
+        return Session::all();
+    }
+    
+    public static function hasSession($nameSession) {
+        return Session::has($nameSession);
+    }
+    
     public static function putSession($nameSession, $value) {
         Session::put($nameSession, $value);
     }

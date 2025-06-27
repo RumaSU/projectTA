@@ -224,7 +224,7 @@
                     handleSetParamUrl($kPar, $vPar, $isPushtate = true) {
                         const stateObject = {
                             ...page_state,
-                            custom_data: {
+                            custom_data_mail: {
                                 page: 'mail',
                                 typeSet: 'Single',
                                 filter: JSON.parse(JSON.stringify(this.$filterMail)),
@@ -239,7 +239,7 @@
                     handleBulkSetParamUrl($dataBulkSet = [], $isPushstate = true) {
                         const stateObject = {
                             ...page_state,
-                            custom_data: {
+                            custom_data_mail: {
                                 page: 'mail',
                                 typeSet: 'Bulk',
                                 filter: JSON.parse(JSON.stringify(this.$filterMail)),

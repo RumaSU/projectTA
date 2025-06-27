@@ -1,5 +1,5 @@
 <div 
-    class="itm-inpForm mt-1" 
+    class="itm-inpForm"
     aria-labelledby="{{ $itmForm->label->l_ariaLabelledBy }}"
     {{ $errors->first($itmForm->error?->key) ? 'data-input-error' : '' }}
     
@@ -60,18 +60,22 @@
                                 <div 
                                     class="setInpForm flex-grow py-1 {{ !(property_exists($itmForm->input, 'i_addiSingleAct')) ? 'mr-5' : '' }}"
                                 >
-                                    <div class="mainSetInp">
+                                    <div class="mainSetInp relative">
                                         <input 
                                             type="{{ $itmForm->input->i_type }}" 
-                                            name="{{ $itmForm->label->l_ariaLabelledBy }}" 
+                                            {{-- name="{{ $itmForm->label->l_ariaLabelledBy }}"  --}}
                                             id="{{ $itmForm->input->i_id }}" 
                                             placeholder="{{ $itmForm->input->i_placeholder }}"
                                             {{ $itmForm->input->i_required ? 'required' : '' }}
                                             wire:model.defer='{{ $itmForm->wire_model->var_model }}'
                                             class="text-sm w-full p-2.5 border-0 outline-none bg-transparent placeholder:text-xs placeholder:{{ $errors->first($itmForm->error->key) ? 'text-red-400' : 'text-gray-400' }}"
                                             @input='handleInput'
-                                            autocomplete="off"
                                             data-type-as="{{ $itmForm->input->i_type_as }}"
+                                            {{ property_exists($itmForm->input, 'i_autocomplete') ? "autocomplete=" . $itmForm->input->i_autocomplete : '' }}
+                                            {{ property_exists($itmForm->input, 'i_aria_autocomplete') ? "aria-autocomplete=" . $itmForm->input->i_aria_autocomplete : '' }}
+                                            {{-- {{ $isPropertyExists ? $autoComplete : '' }}
+                                            {{ $isPropertyExists ? $ariaAutoComplete : '' }} --}}
+                                            {{ $itmForm->input->i_type != $itmForm->input->i_type_as ? 'readonly' : '' }}
                                         >
                                     </div>
                                 </div>
@@ -106,7 +110,7 @@
             </div>
         </div>
         
-        <div class="wrapper-additional h-6 mt-0.5">
+        <div class="wrapper-additional min-h-6 mt-0.5">
             @error($itmForm->error->key)
                 <div class="ctr-errorInpForm ml-4">
                     <div class="cErrorInpForm text-red-600">

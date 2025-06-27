@@ -12,12 +12,9 @@
     
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     
-    <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@3.0.4/index.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@3.0.4/index.min.js"></script> --}}
+    <script src="{{ asset('vendor/vanillaCalendarPro/index.js') }}"></script>
     
-    <script>
-        const { Calendar } = window.VanillaCalendarPro;
-    </script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap" rel="stylesheet">
@@ -25,7 +22,8 @@
     
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     
-    <link href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@3.0.4/styles/index.min.css" rel="stylesheet">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@3.0.4/styles/index.min.css" rel="stylesheet"> --}}
+    <link rel="stylesheet" href="{{ asset('vendor/vanillaCalendarPro/styles/index.css') }}"></link>
     
     <link rel="stylesheet" href="{{ asset('main/css/s.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('main/css/font/poppins.css') }}" type="text/css">
@@ -43,6 +41,9 @@
         <script>
             const jq = jQuery.noConflict();
             window.$jq = jq;
+        </script>
+        <script>
+            const { Calendar } = window.VanillaCalendarPro;
         </script>
     @endonce
 </head>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 
 use App\Models\Log\UserActivity;
-use App\Models\User;
+use App\Models\Users;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -27,12 +27,21 @@ class AuthHelper {
         
         $isUsernameUnique = false;
         $username = "";
+        $countLoop = 0;
+        $lengthLetter = 8;
         while(!$isUsernameUnique) {
-            $randomLetter = $withLetter ? LibHelper::randStrNum(6, false) : mt_rand(1000, 9999) . mt_rand(1000, 9999);
-            $username = $accronym . $randomLetter;
-            if( ! (User\User::where('username', '=' ,  $username )->exists() ) ) {
+            $randomLetter = $withLetter ? LibHelper::randStr($lengthLetter, lower: false,) : mt_rand(1000, 9999) . mt_rand(1000, 9999);
+            $username = $accronym . '-' . $randomLetter;
+            if( ! (Users\User::where('username', '=' ,  $username )->exists() ) ) {
                 $isUsernameUnique = true;
             }
+            
+            if ($countLoop > 10) {
+                $countLoop = -1;
+                $lengthLetter += 1;
+            }
+            
+            $countLoop++;
         }
         
         return $username;

@@ -10,7 +10,7 @@
     <script src="{{ asset('main/js/urlUtils.js') }}"></script>
     <script src="{{ asset('main/js/cookieUtils.js') }}"></script>
     <script>
-        function dispatchingDataTo($dispatchKey, $dispatchData) {
+        function dispatchingDataLivewireTo($dispatchKey, $dispatchData) {
             if (typeof $dispatchData !== 'object') {
                 alert('Please set the dispatch data to object type');
                 return {
@@ -103,9 +103,25 @@
         document.addEventListener('livewire:navigated', (e) => {
             
             // console.log(e.target.location);
-            console.log(window.history)
+            console.log(' ');
+            // console.log(window);
+            console.log(window.history);
+            // console.log(window.VanillaCalendarPro);
+            // console.log(window.VanillaCalendarPro.Calendar);
+            // console.log(window.VanillaCalendarPro.Calendar.memoizedElements);
+            // console.log(Calendar);
+            console.log(' ');
+            
+            const CalendarClass = window?.VanillaCalendarPro?.Calendar;
+            if (CalendarClass?.memoizedElements?.clear) {
+                CalendarClass.memoizedElements.clear(); // aman, cepat
+                console.log('[Calendar] Memoized elements cleared after Livewire navigated');
+            }
             
         });
     </script>
+    
+    {{-- @livewire('layout.partial.refresh-c-s-r-f') --}}
+    
     @stack('auth-body-script')
 @endsection

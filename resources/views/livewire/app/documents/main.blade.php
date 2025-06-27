@@ -1,3 +1,7 @@
+@push('default-layout-head-meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
+
 @once
     @push('dashboard-top-main-content')
         <nav class="navMailDashboard">

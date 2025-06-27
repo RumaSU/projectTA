@@ -7,11 +7,15 @@
         window.addEventListener('alpine:init', () => {
             Alpine.data('setTimezone', () => {
                 
+                
                 return {
                     init() {
+                        
+                        
+                        
                         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        dispatchingDataTo('Set-New-Timezone', {timezone: timezone});
-                        setNewCookie('timezone', timezone);
+                        dispatchingDataLivewireTo('Set-New-Timezone', {timezone: timezone});
+                        setNewCookie('timezone_browser', timezone);
                     },
                 }
             });

@@ -73,10 +73,14 @@ class Helper {
         return $model::where($column, '=', $value)->exists();
     }
     
-    public static function randStr(int $length, bool $withLower = true, bool $withSymbol = false) {
-        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if ($withLower) $characters .= 'abcdefghijklmnopqrstuvwxyz';
-        if ($withSymbol) $characters.= "!@#$%^&*()-_=+[]{};:,.<>?/|~`";
+    public static function randStr(int $length, bool $upper = true, bool $lower = true, bool $number = true, bool $symbol = false) {
+        // $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = '';
+        if ($upper) $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if ($number) $characters .= '0123456789';
+        if ($lower) $characters .= 'abcdefghijklmnopqrstuvwxyz';
+        if ($symbol) $characters.= "!@#$%^&*()-_=+[]{};:,.<>?/|~`";
+        
         return substr(str_shuffle($characters), 0, $length);
     }
     
