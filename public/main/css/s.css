@@ -1,6 +1,15 @@
 :root {
     --main-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --main-font-poppins: "Poppins", sans-serif;
+    --main-font-pacifico: "Pacifico", cursive;
+    --main-font-dancing-script: "Dancing Script", cursive;
+    --main-font-great-vibes: "Great Vibes", cursive;
+    --main-font-satisfy: "Satisfy", cursive;
+    --main-font-allura: "Allura", cursive;
+    --main-font-alex-brush: "Alex Brush", cursive;
+    --main-font-signika: "Signika", sans-serif;
+    --main-font-mr-dafoe: "Mr Dafoe", cursive;
+    --main-font-homemad-apple: "Homemade Apple", cursive;
 }
 
 * {

@@ -6,6 +6,7 @@ namespace App\Library;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Collection;
 use Ramsey\Uuid\Uuid;
 
 
@@ -114,6 +115,12 @@ class Helper {
         $decrypted = openssl_decrypt($ciphertext, $cipher, $key, 0, $iv, $tag);
     
         return json_decode($decrypted, true); // Kembalikan sebagai array/objek
+    }
+    
+    public static function isCollectionOfModel($data, $modelClass){
+        return $data instanceof Collection &&
+            $data->isNotEmpty() &&
+            $data->first() instanceof $modelClass;
     }
     
     // public static function randomString(int $length, bool $lower = true, bool $number = true, bool $symbol = false) {

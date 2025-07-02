@@ -34,6 +34,9 @@ class MigrateSelected extends Command
     private $selected_migrate = [
         'db\0000_000_session_table.php',
         'db\0001_000_user.php',
+        'db\0004_000_signatures.php',
+        'db\0080_001_file_signatures.php',
+        'db\9999_000_references_table.php'
     ];
     
     

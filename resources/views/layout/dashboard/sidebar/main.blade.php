@@ -59,8 +59,8 @@
                 (object) array(
                     'titleNav' => 'my Signature',
                     'icon' => 'fas fa-signature',
-                    'routeNav' => '',
-                    'activeRoute' => '',
+                    'routeNav' => route('app.signature.main'),
+                    'activeRoute' => 'signature',
                     'wireNavigate' => true,
                 ),
                 (object) array(

@@ -9,6 +9,7 @@
     @stack('dashboard-head-script')
     <script src="{{ asset('main/js/urlUtils.js') }}"></script>
     <script src="{{ asset('main/js/cookieUtils.js') }}"></script>
+    <script src="{{ asset('main/js/dateUtils.js') }}"></script>
     <script>
         function dispatchingDataLivewireTo($dispatchKey, $dispatchData) {
             if (typeof $dispatchData !== 'object') {
@@ -66,6 +67,8 @@
             </div>
         </div>
     </div>
+    
+    @stack('global-custom-content')
     
     @persist('custom_notification')
         @include('livewire.layout.partial.toast-notification')

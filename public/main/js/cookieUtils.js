@@ -2,12 +2,14 @@ function getAllCookies() {
     return document.cookie;
 }
 
+// function setNewCookie(key, value, path = '/', expire = 60*60*24*30, sameSite='Lax') {
 function setNewCookie(key, value, path = '/', expire = 60*60*24*30, sameSite='Lax') {
     // document.cookie = `${key}=${value}; path=${path}; max-age=${expire};`;
     const encodedKey = encodeURIComponent(key);
     const encodedValue = encodeURIComponent(value);
     let expiredValue = expire == 'delete' ? new Date(0) : expire;
-    document.cookie = `${encodedKey}=${encodedValue}; path=${path}; max-age=${expiredValue}; SameSite=${sameSite}`;
+    // document.cookie = `${encodedKey}=${encodedValue}; path=${path}; max-age=${expiredValue}; SameSite=${sameSite}`;
+    document.cookie = `${encodedKey}=${encodedValue}; path=${path}; max-age=${expiredValue}`;
 }
 
 // string(just value), object(return as object {key: value})
@@ -18,15 +20,11 @@ function getCookie(name, returnType = 'object') {
     const arrCookies = decodeCookie.split(';');
     
     const rawCookie = arrCookies.find(cookie => cookie.trim().startsWith(nameCookie));
-    console.log(rawCookie);
-    console.log(arrCookies.find(cookie => cookie.startsWith(nameCookie)));
     
     if (! rawCookie) {
-        console.warn(`Cookie ${name} is not found`);
+        // console.warn(`Cookie ${name} is not found`);
         return null;
     }
-    
-    console.log(rawCookie.trim());
     
     const value = rawCookie.trim().slice(nameCookie.length);
     

@@ -5,7 +5,7 @@
     <div 
         x-on:mouseenter="$dispatch('pause-auto-dismiss')" 
         x-on:mouseleave="$dispatch('resume-auto-dismiss')" 
-        class="{{ Str::contains(request()->route()->getName(), 'app') ? 'mt-20' : '' }} group pointer-events-none z-40 border border-black fixed inset-x-8 top-0 flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:left-[unset] md:right-0 md:max-w-md"
+        class="{{ Str::contains(request()->route()->getName(), 'app') ? 'mt-20' : '' }} group pointer-events-none z-50 border border-black fixed inset-x-8 top-0 flex max-w-full flex-col gap-2 bg-transparent p-4 md:left-[unset] md:right-0 md:max-w-md"
     
         >
         <template x-for="(notification, index) in notifications" x-bind:key="notification.id">

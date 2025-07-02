@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB; 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -161,19 +163,16 @@ return new class extends Migration
                 $table->string('remember_token');
                 $table->string('user_agent')->nullable(); // opsional
                 $table->string('user_agent_hash')->nullable(); // opsional // just hash random string and encrypt in to cookies
-                $table->ipAddress('ip_address')->nullable(); // opsional
-                $table->timestamp('last_used_at')->nullable();
-                $table->timestamp('expired_date');
+                // $table->ipAddress('ip_address')->nullable(); // opsional
+                $table->string('ip_address')->nullable(); // opsional
+                $table->timestamp('last_used_at')->useCurrent();
+                $table->timestamp('expired_at')->default(DB::raw('DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY)'));
 
                 $table->timestamps();
                 
                 $table->index('id_user');
             });
         }
-        
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
-        });
     }
 
     /**

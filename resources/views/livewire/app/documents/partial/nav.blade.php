@@ -1,4 +1,4 @@
-<div class="ctr-navDocumentDashboard">
+<div class="ctr-navDocumentDashboard h-12">
     <div class="cNavDocumentDashboard flex items-center justify-between">
         <div class="ctr-leftNavDocumentDashboard">
             <div class="cLeftNavDocumentDashboard">

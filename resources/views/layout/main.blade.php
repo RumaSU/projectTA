@@ -14,6 +14,7 @@
     
     {{-- <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@3.0.4/index.min.js"></script> --}}
     <script src="{{ asset('vendor/vanillaCalendarPro/index.js') }}"></script>
+    <script src="{{ asset('vendor/dayjs/dayjs.min.js') }}"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,6 +45,9 @@
         </script>
         <script>
             const { Calendar } = window.VanillaCalendarPro;
+        </script>
+        <script>
+            console.log(dayjs())
         </script>
     @endonce
 </head>

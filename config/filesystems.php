@@ -37,6 +37,13 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        
+        'signatures' => [
+            'driver' => 'local',
+            'root' => storage_path('app/signatures'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
 
         'public' => [
             'driver' => 'local',

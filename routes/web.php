@@ -55,12 +55,13 @@ Route::middleware(['auth'])->name('app.')->group(function() {
         // Route::get('/inbox', App\Livewire\App\Mail\Page\Inbox::class)->name('inbox');
     });
     
-    
-    // Route::get('/dashboard', App\Livewire\App\Dashboard\Main\Main::class)->name('dashboard');
-    
     Route::prefix('documents')->name('documents.')->group(function() {
         // Route::get('/', App\Livewire\App\Dashboard\Documents\Main\Main::class)->name('main');
         Route::get('/', App\Livewire\App\Documents\Main::class)->name('main');
+    });
+    
+    Route::prefix('mysignature')->name('signature.')->group( function() {
+        Route::get('/', App\Livewire\App\Signature\Main::class)->name('main');
     });
      
     Route::get('/logout', function() {

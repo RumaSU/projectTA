@@ -1,0 +1,1121 @@
+@php
+    $listFilterDocuments = [
+        (object) [
+            'title' => 'status',
+            'alpine' => (object) [
+                'a_data' => 'filter_statusDocument',
+            ],
+            'filter' => [
+                (object) ['label' => 'All Status', 'value' => 'all', 'default' => true, 'checked' => true],
+                (object) ['label' => 'In Progress', 'value' => 'progress', 'default' => false, 'checked' => false],
+                (object) ['label' => 'Completed', 'value' => 'completed', 'default' => false, 'checked' => false],
+                (object) ['label' => 'Rejected', 'value' => 'rejected', 'default' => false, 'checked' => false],
+                (object) ['label' => 'Draft', 'value' => 'draft', 'default' => false, 'checked' => false],
+            ],
+        ],
+        (object) [
+            'title' => 'type',
+            'alpine' => (object) [
+                'a_data' => 'filter_typeDocument',
+            ],
+            'filter' => [
+                (object) ['label' => 'All Type', 'value' => 'all', 'default' => true, 'checked' => true],
+                (object) ['label' => 'Signature', 'value' => 'signature', 'default' => false, 'checked' => false],
+                (object) ['label' => 'Paraf', 'value' => 'paraf', 'default' => false, 'checked' => false],
+                (object) ['label' => 'Uncategorized', 'value' => 'uncategorized', 'default' => false, 'checked' => false],
+            ],
+        ],
+    ];
+@endphp
+
+<div class="ctr-filterDocumentsDashboard">
+    <div class="cFilterDocumentsDashboard flex items-center justify-between">
+        <div class="ctr-lftFilterDocumentsDashboard">
+            <div class="cLftFilterDocumentsDashboard flex items-start gap-2">
+                
+                @foreach ($listFilterDocuments as $itmKey => $itmValue)
+                
+                    <div class="itm-{{ $itmValue->title }}FilterDocumentsDashboard relative" x-data="{{ $itmValue->alpine->a_data }}">
+                        <div class="act{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard">
+                            <button class="btnActFilterDocuments min-w-40 rounded-xl border border-[#9a9a9a]"
+                                @click="modalStatus = ! modalStatus"
+                                >
+                                <div class="cBtnActFilterDocuments flex items-center justify-between gap-2 px-5 py-2 ">
+                                    <div class="txLblBtnAct">
+                                        <div class="tx text-sm text-[#6a6a6a]">
+                                            <p x-text="textFilter">All {{ ucfirst($itmValue->title) }}</p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
+                                        <div class="icn text-[#6a6a6a] text-xl">
+                                            <i class="fas fa-sliders"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div class="wrapper-modal{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard absolute top-full left-0 pt-4 z-10"
+                            style="display: none"
+                            x-show="modalStatus" 
+                            @click.away="modalStatus = false"
+                            
+                            >
+                            <div
+                                class="ctr-modal{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard bg-white w-52 min-h-32 py-2 rounded-md shadow-md shadow-black/40">
+                                <div class="cModal{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard space-y-0.5">
+                                    
+                                    @foreach ($itmValue->filter as $optionFilter)
+                                    
+                                        <div class="itm-{{ $itmValue->title }}FilterDocuments group">
+                                            <label 
+                                                for="{{ $itmValue->title }}FilterDocument_val{{ ucfirst($optionFilter->value) }}"
+                                                class="px-4 py-2 block rounded-md group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-blue-100"
+                                            >
+                                                <div class="c{{ ucfirst($itmValue->title) }}FilterDocument flex items-center justify-between">
+                                                    <div class="txLbl{{ ucfirst($itmValue->title) }}Filter">
+                                                        <div class="txLbl text-sm">
+                                                            <p>{{ $optionFilter->label }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="icn{{ ucfirst($itmValue->title) }}Filter invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
+                                                        <div class="icn text-blue-800">
+                                                            <i class="fas fa-check"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <input type="radio" name="{{ $itmValue->title }}FilterDocuments"
+                                                id="{{ $itmValue->title }}FilterDocument_val{{ ucfirst($optionFilter->value) }}"
+                                                value="{{ $optionFilter->value }}"
+                                                {{-- :id="`{{ $itmValue->title }}FilterDocument${itm{{ $optionFilter->value }} . label}`"  --}}
+                                                {{-- :value="itm{{ $optionFilter->value }} . value" --}}
+                                                {{ $optionFilter->default ? 'checked' : '' }}
+                                                class="sr-only hidden"
+                                                @change="changeValueFilter"
+                                            >    
+                                        </div>
+                                        
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+                
+                <div 
+                    class="itm-OwnerFilterDocumentsDashboard relative" 
+                    {{-- x-data="" --}}
+                >
+                    <div class="actOwnerFilterDocumentsDashboard">
+                        <button class="btnActFilterDocuments w-40 rounded-xl border border-[#9a9a9a]"
+                            {{-- @click="" --}}
+                            >
+                            <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
+                                <div class="txLblBtnAct">
+                                    <div class="tx text-sm text-[#6a6a6a]">
+                                        <p
+                                         {{-- x-text="" --}}
+                                         >Owner</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
+                                    <div class="icn text-[#6a6a6a] text-xl">
+                                        <i class="fas fa-sliders"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    {{-- <div class="wrapper-modal{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard absolute top-full left-0 pt-4 z-10"
+                        style="display: none"
+                        x-show="modalStatus" 
+                        @click.away="modalStatus = false"
+                        
+                        >
+                        <div
+                            class="ctr-modal{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard bg-white w-52 min-h-32 py-2 rounded-md shadow-md shadow-black/40">
+                            <div class="cModal{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard space-y-0.5">
+                                
+                                @foreach ($itmValue->filter as $optionFilter)
+                                
+                                    <div class="itm-{{ $itmValue->title }}FilterDocuments group">
+                                        <label 
+                                            for="{{ $itmValue->title }}FilterDocument_val{{ ucfirst($optionFilter->value) }}"
+                                            class="px-4 py-2 block rounded-md group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-blue-100"
+                                        >
+                                            <div class="c{{ ucfirst($itmValue->title) }}FilterDocument flex items-center justify-between">
+                                                <div class="txLbl{{ ucfirst($itmValue->title) }}Filter">
+                                                    <div class="txLbl text-sm">
+                                                        <p>{{ $optionFilter->label }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="icn{{ ucfirst($itmValue->title) }}Filter invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
+                                                    <div class="icn text-blue-800">
+                                                        <i class="fas fa-check"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <input type="radio" name="{{ $itmValue->title }}FilterDocuments"
+                                            id="{{ $itmValue->title }}FilterDocument_val{{ ucfirst($optionFilter->value) }}"
+                                            value="{{ $optionFilter->value }}"
+                                            class="sr-only hidden"
+                                            @change="changeValueFilter"
+                                        >    
+                                    </div>
+                                    
+                                @endforeach
+                            </div>
+                        </div>
+                    </div> --}}
+                </div>
+                
+                <div class="itm-modifiedFilterDocumentsDashboard relative" x-data="filter_modifiedDocument">
+                    <div class="actModifiedFilterDocumentsDashboard">
+                        <button class="btnActFilterDocuments w-52 rounded-xl border border-[#9a9a9a]"
+                            @click="modalStatus = !modalStatus">
+                            <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
+                                <div class="txLblBtnAct">
+                                    <div class="tx text-sm text-[#6a6a6a]">
+                                        <p 
+                                            x-text="textFilter"
+                                            >
+                                            All Period</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
+                                    <div class="icn text-[#6a6a6a] text-xl">
+                                        <i class="fas fa-sliders"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="wrapper-modalModifiedFilterDocumentsDashboard absolute top-full left-0" 
+                        {{-- style="display: none" --}}
+                        {{-- x-show="" 
+                        @click.away=""  --}}
+                    >
+                        <div
+                            class="ctr-modalModifiedFilterDocumentsDashboard bg-white w-52 py-2 rounded-md shadow-md shadow-black/70"
+                        >
+                            @php
+                                $arrDefaultOptionFilterModified = [
+                                    ['label' => 'All Period', 'value' => ['label' => 'all', 'start_date' => null], 'default' => true,],
+                                    ['label' => 'Last 30 days', 'value' => ['label' => 'L30D', 'start_date' => 30], 'default' => false,],
+                                    ['label' => 'Last 3 months', 'value' => ['label' => 'L3M', 'start_date' => 90], 'default' => false,],
+                                    ['label' => 'Last 6 months', 'value' => ['label' => 'L6M', 'start_date' => 180], 'default' => false,],
+                                ];
+                                
+                                $optionsFilterModified = json_decode(json_encode($arrDefaultOptionFilterModified));
+                            @endphp
+                            
+                            
+                            <div class="cModalModifiedFilterDocumentsDashboard space-y-0.5">
+                                @foreach ($optionsFilterModified as $itmOption)
+                                    <div class="itm-modifiedFilterDocuments group">
+                                        <label 
+                                            for="modifiedFilterDocuments{{ strtoupper($itmOption->value->label) }}"
+                                            class="px-4 py-2 block rounded-md group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-blue-100"
+                                        >
+                                            <div class="cModifiedFilterDocument flex items-center justify-between">
+                                                <div class="txLblModifiedFilter">
+                                                    <div class="txLbl text-sm">
+                                                        <p>{{ $itmOption->label }}</p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="icnModifiedFilter invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
+                                                    <div class="icn text-blue-800">
+                                                        <i class="fas fa-check"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <input type="radio" name="ModifiedFilterDocuments"
+                                            id="modifiedFilterDocuments{{ strtoupper($itmOption->value->label) }}"
+                                            value="{{ $itmOption->value->label }}"
+                                            {{ $itmOption->default ? 'checked' : '' }}
+                                            class="sr-only hidden" @change="changeValueFilter">
+                                    </div>
+                                @endforeach
+
+                                <div 
+                                    class="itm-modifiedFilterDocuments group" 
+                                    {{-- id="randgeDateModifiedFilterDocuments" 
+                                    data-type-as="date" 
+                                    data-select-mode="multiple-ranged" --}}
+                                >
+                                    
+                                    <div class="inpRangeDateItemModifiedFilter border border-black">
+                                        <label 
+                                            for="rangeDateModifiedFilterDocuments"
+                                            class="px-4 py-2 block rounded-md cursor-pointer hover:bg-blue-100"
+                                            
+                                        >
+                                            <div
+                                                class="cRangeDateItemModifiedFilter flex items-center justify-between">
+                                                <div class="txRangeDateItemModifiedFilter">
+                                                    <div class="txRange text-sm">
+                                                        <p data-text-custom-range>Custom Range</p>
+                                                    </div>
+                                                </div>
+                                                <div class="icnItemModifiedFilter">
+                                                    <div class="icn text-slate-700">
+                                                        <i class="fas fa-calendar-days"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                        {{-- <input 
+                                            type="text" 
+                                            id="rangeDateModifiedFilterDocuments"
+                                            name="range_date" 
+                                            data-type-as="date"
+                                            data-select-mode="multiple-ranged"
+                                            placeholder="Custom Range Date"
+                                            class="cursor-pointer px-4 py-2 text-sm w-full outline-none bg-transparent placeholder:text-black border border-black"
+                                            readonly
+                                            @change="changeValueCustomModified"
+                                        > --}}
+                                        {{-- <input 
+                                            type="text" 
+                                            id="testVanillaDate"
+                                            name="testVanillaDate" 
+                                            data-type-as="date"
+                                            data-select-mode="single"
+                                            placeholder="Custom Range Date"
+                                            class="cursor-pointer px-4 py-2 text-sm w-full outline-none bg-transparent placeholder:text-black border border-black"
+                                        > --}}
+                                    </div>
+                                    
+                                    <div class="wrapper-absolute w-full absolute top-0 left-full">
+                                        <div class="inpField ml-2">
+                                            <input 
+                                                type="text" 
+                                                id="rangeDateModifiedFilterDocuments"
+                                                name="range_date" 
+                                                data-type-as="date"
+                                                data-select-mode="multiple-ranged"
+                                                placeholder="Custom Range Date"
+                                                {{-- class="sr-only cursor-pointer px-4 py-2 text-sm w-full outline-none bg-transparent placeholder:text-black border border-black" --}}
+                                                class="cursor-pointer px-4 py-2 text-sm w-full outline-none placeholder:text-black border border-black"
+                                                readonly
+                                                @change="changeValueCustomModified"
+                                            >
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+                                    {{-- <div class="wrapper absolute size-full left-full top-0 border border-black p-4">
+                                        <div class="testVanillaDate bg-white size-full">
+                                            <div class="border border-black p-4" id="divTestVanillaDate" data-type-as="date" data-select-mode="single"></div>
+                                        </div>
+                                    </div> --}}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="ctr-rghtFilterDocumentsDashboard">
+            <div class="cRghtFilterDocumentsDashboard flex items-center gap-4">
+                <div class="numOfPaginateDocumentsDashboard text-xs inline-flex gap-1 text-[#7D7D7D]">
+                    <div class="minNumActivePaginate">
+                        <p>{$num1}</p>
+                    </div>
+                    -
+                    <div class="maxNumActivePaginate">
+                        <p>{$num2}</p>
+                    </div>
+                    of
+                    <div class="ofMaxNumPaginateDocumentsDashboard">
+                        <p>${num3}</p>
+                    </div>
+                </div>
+                <div class="act-paginateDocumentsDashboard flex gap-2">
+                    <div class="act-leftPaginateDocumentsDashboard">
+                        <button class="btnAct-paginateDocumentsDashboard rounded-full hover:bg-[#D9D9D9]">
+                            <div class="cBtnAct-paginateDocumentsDashboard size-8  flex items-center justify-center">
+                                <div class="icn text-[#3D3D3D]">
+                                    <i class="fas fa-chevron-left"></i>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="act-rghtPaginateDocumentsDashboard">
+                        <button class="btnAct-paginateDocumentsDashboard rounded-full hover:bg-[#D9D9D9]">
+                            <div class="cBtnAct-paginateDocumentsDashboard size-8  flex items-center justify-center">
+                                <div class="icn text-[#3D3D3D]">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@once
+    @push('dashboard-body-script')
+        <script data-navigate-once>
+            const hierarchyParam = ['status', 'type', 'owner', 'modified', 'start_date', 'end_date'];
+            function acceptFilterValue(nameFilter) {
+                nameFilter = nameFilter.trim().toLowerCase();
+                const acceptName = [
+                    { key: 'status', value: JSON.parse(`{!! json_encode($listFilterDocuments[0]->filter) !!}`) },
+                    { key: 'type', value: JSON.parse(`{!! json_encode($listFilterDocuments[1]->filter) !!}`) },
+                    { key: 'modified', value: JSON.parse(`{!! json_encode($optionsFilterModified) !!}`) },
+                ];
+                
+                const findAccept = acceptName.find(x => x.key == nameFilter);
+                if (! findAccept) {
+                    return null;
+                }
+                
+                return findAccept.value;
+            }
+            
+            Alpine.store('filterDocumentStore', {
+                filter_status: acceptFilterValue('status').find(x => x.default).value,
+                filter_type: acceptFilterValue('type').find(x => x.default).value,
+                filter_modified: {
+                    label: acceptFilterValue('modified').find(x => x.default).value.label,
+                    start_date: null,
+                    end_date: null,
+                },
+                
+                init() {
+                    const initDefaultFilter = this.firstInitDefaultFilter();
+                    const initModifiedFilter = this.firstInitModifiedFilter();
+                    // this.initCustomModified();
+                    const filters = [];
+                    
+                    if (initDefaultFilter) filters.push(...initDefaultFilter);
+                    if (initModifiedFilter) filters.push(...initModifiedFilter);
+                    
+                    setHierarchyParam(hierarchyParam, filters);
+                    
+                    window.addEventListener('Alpine-Init-Filter-Document', () => {
+                        this.dispatchData();
+                    })
+                },
+                
+                setStatus(status) {
+                    this.filter_status = status;
+                },
+                setType(type) {
+                    this.filter_type = type;
+                },
+                setModified(label, start_date, end_date) {
+                    this.filter_modified.label = label;
+                    this.filter_modified.start_date = start_date;
+                    this.filter_modified.end_date = end_date;
+                },
+                dispatchData() {
+                    $dispatchingData = Object.assign({}, {
+                        filter_status: this.filter_status,
+                        filter_type: this.filter_type,
+                        filter_modified: {
+                            label: this.filter_modified.label,
+                            start_date: this.filter_modified.start_date,
+                            end_date: this.filter_modified.end_date,
+                        },
+                    });
+                    
+                    Object.assign($dispatchingData, {
+                        _token: $jq('meta[name="csrf-token"]').attr('content'),
+                    });
+                    console.log($dispatchingData);
+                    
+                    dispatchingDataLivewireTo('Document-Filter-Data', $dispatchingData);
+                },
+                
+                firstInitDefaultFilter() {
+                    const defaultParam = [
+                        { param: 'status', func: 'setStatus', },
+                        { param: 'type', func: 'setType', },
+                    ];
+                    
+                    let arrDefaultParam = [];
+                    defaultParam.forEach((val) => {
+                        const valParam = whatParamQueryValue(val.param);
+                        if (! valParam) { 
+                            console.log('Skip param: ', val.param);
+                            return;
+                        }
+                        
+                        const acceptValue = acceptFilterValue(val.param);
+                        if (! acceptValue) {
+                            console.warn('Filter not found');
+                            return;
+                        }
+                        const defaultValue = acceptValue.find(x => x.default);
+                        
+                        const findAccept = acceptValue.find(x => x.value == valParam);
+                        if (! findAccept) {
+                            removeParamsQuery(val.param);
+                            console.warn('Value not valid');
+                            return;
+                        }
+                        
+                        if (valParam == defaultValue.value) {
+                            console.warn('Value filter default');
+                            return;
+                        }
+                        
+                        this[val.func](findAccept.value);
+                        arrDefaultParam.push({key: val.param, value: findAccept.value});
+                    });
+                    
+                    return arrDefaultParam;
+                },
+                
+                
+                
+                firstInitModifiedFilter() {
+                    const labelValParam = whatParamQueryValue('modified');
+                    if (! labelValParam) {
+                        console.log('Modified param not defined');
+                        return null;
+                    }
+                    
+                    const acceptValue = acceptFilterValue('modified');
+                    
+                    // if (acceptValue.some(x => x.value.label == labelValParam)) return this.initDefaultModified(labelValParam);
+                    if (labelValParam != 'custom') return this.initDefaultModified(labelValParam);
+                    if (labelValParam == 'custom') return this.initCustomModified();
+                    
+                    return null;
+                },
+                
+                initDefaultModified(modifiedLabel) {
+                    const acceptValue = acceptFilterValue('modified');
+                    const defaultValue = acceptValue.find(x => x.default);
+                    
+                    if (modifiedLabel == defaultValue.value.label) {
+                        return null;
+                    }
+                    
+                    const findValue = acceptValue.find(x => x.value.label == modifiedLabel);
+                    if (! findValue) {
+                        removeParamsQuery('modified');
+                        removeParamsQuery('start_date');
+                        removeParamsQuery('end_date');
+                        
+                        return null;
+                    }
+                    
+                    const now = new Date();
+                    const start = new Date();
+                    start.setDate(start.getDate() - findValue.value.start_date);
+                    
+                    const nowISOString = now.toISOString().split('T')[0];
+                    const startISOString = start.toISOString().split('T')[0];
+                    
+                    this.filter_modified.label = findValue.value.label;
+                    this.filter_modified.start_date = startISOString;
+                    this.filter_modified.end_date = nowISOString;
+                    
+                    const arrParam = [
+                        { key: 'modified', value: findValue.value.label },
+                        { key: 'start_date', value: startISOString },
+                        { key: 'end_date', value: nowISOString },
+                    ];
+                    
+                    return arrParam;
+                },
+                
+                initCustomModified() {
+                    const customParam = [ 'start_date', 'end_date' ];
+                    const valueStartEnd = customParam.map((key) => {
+                        return {
+                            key,
+                            value: whatParamQueryValue(key),
+                        }
+                    });
+                    
+                    for ( {key, value} of valueStartEnd ) {
+                        if (! value) return null;
+                        
+                        const dateValid = (( d = new Date(value) ) => {
+                            return d instanceof Date && !isNaN(d);
+                        })();
+                        
+                        if (! dateValid) {
+                            this.filter_modified[key] = null;
+                            return null;
+                        };
+                    }
+                    
+                    return valueStartEnd;
+                },
+            });
+            
+        </script>
+        
+        <script data-navigate-once>
+            Alpine.data('filter_statusDocument', () => {
+                const $acceptValue = acceptFilterValue('status');
+                const $defaultValue = $acceptValue.find(x => x.default);
+                
+                return {
+                    valueFilter: $defaultValue.value,
+                    textFilter: $defaultValue.label,
+                    modalStatus: false,
+                    
+                    init() {
+                        const statusParam = whatParamQueryValue('status');
+                        if (! statusParam) return;
+                        
+                        const findValueParam = $acceptValue.find( ({ value }) => value == statusParam );
+                        if (! findValueParam) return;
+                        
+                        const rootElement = this.$root;
+                        const $jqRootElement = $jq(rootElement);
+                        
+                        $jqRootElement.find(`input[value="${statusParam}"]`).attr('checked', 'checked');
+                        this.valueFilter = findValueParam.value;
+                        this.textFilter = findValueParam.label;
+                    },
+                    
+                    changeValueFilter($e, isDispatch = true, isSetParam = true) {
+                        const eCurrTarget = $e.currentTarget;
+                        const $jqCurrTarget = $jq(eCurrTarget);
+                        
+                        const changeValue = $jqCurrTarget.val() ?? $e ?? null;
+                        
+                        if (! changeValue) {
+                            this.valueFilter = $defaultValue.value;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('status');
+                            
+                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
+                            return;
+                        }
+                        
+                        const $selectValue = $acceptValue.find(x => x.value == changeValue);
+                        if (! $selectValue) {
+                            this.valueFilter = $defaultValue.value;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('status');
+                            
+                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
+                            return;
+                        }
+                        
+                        if (this.valueFilter == changeValue) {
+                            return;
+                        }
+                        
+                        this.valueFilter = $selectValue.value;
+                        this.textFilter = $selectValue.label;
+                        
+                        if (isSetParam) {
+                            if (this.valueFilter == $defaultValue.value) {
+                                removeParamsQuery('status');
+                            } else {
+                                setHierarchyParam(hierarchyParam, [{key: 'status', value: this.valueFilter}]);
+                                // setParamsQuery('status', this.valueFilter)
+                            }
+                        }
+                        
+                        this.$store.filterDocumentStore.setStatus(this.valueFilter);
+                        console.log(this.$store.filterDocumentStore.filter_status);
+                        
+                        if (isDispatch) {
+                            this.$store.filterDocumentStore.dispatchData();
+                        }
+                    },
+                }
+                
+            });
+            
+            Alpine.data('filter_typeDocument', () => {
+                const $acceptValue = acceptFilterValue('type');
+                const $defaultValue = $acceptValue.find(x => x.default);
+                
+                return {
+                    valueFilter: $defaultValue.value,
+                    textFilter: $defaultValue.label,
+                    modalStatus: false,
+                    
+                    init() {
+                        const statusParam = whatParamQueryValue('type');
+                        if (! statusParam) return;
+                        
+                        const findValueParam = $acceptValue.find( ({ value }) => value == statusParam );
+                        if (! findValueParam) return;
+                        
+                        const rootElement = this.$root;
+                        const $jqRootElement = $jq(rootElement);
+                        
+                        $jqRootElement.find(`input[value="${statusParam}"]`).attr('checked', 'checked');
+                        this.valueFilter = findValueParam.value;
+                        this.textFilter = findValueParam.label;
+                    },
+                    
+                    changeValueFilter($e, isDispatch = true, isSetParam = true) {
+                        const eCurrTarget = $e.currentTarget;
+                        const $jqCurrTarget = $jq(eCurrTarget);
+                        
+                        const changeValue = $jqCurrTarget.val() ?? $e ?? null;
+                        
+                        if (! changeValue) {
+                            this.valueFilter = $defaultValue.value;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('type');
+                            
+                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
+                            return;
+                        }
+                        
+                        const $selectValue = $acceptValue.find(x => x.value == changeValue);
+                        if (! $selectValue) {
+                            this.valueFilter = $defaultValue.value;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('type');
+                            
+                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
+                            return;
+                        }
+                        
+                        if (this.valueFilter == changeValue) {
+                            return;
+                        }
+                        
+                        this.valueFilter = $selectValue.value;
+                        this.textFilter = $selectValue.label;
+                        
+                        if (isSetParam) {
+                            if (this.valueFilter == $defaultValue.value) {
+                                removeParamsQuery('type');
+                            } else {
+                                setHierarchyParam(hierarchyParam, [{key: 'type', value: this.valueFilter}]);
+                                // setParamsQuery('type', this.valueFilter)
+                            }
+                        }
+                        
+                        this.$store.filterDocumentStore.setType(this.valueFilter);
+                        console.log(this.$store.filterDocumentStore.filter_type);
+                        
+                        if (isDispatch) {
+                            this.$store.filterDocumentStore.dispatchData();
+                        }
+                    },
+                }
+                
+            });
+            
+            
+            
+            Alpine.data('filter_modifiedDocument', () => {
+                const $acceptValue = acceptFilterValue('modified');
+                const $defaultValue = $acceptValue.find(x => x.default);
+                
+                const listCalendarInput = [];
+                
+                return {
+                    valueFilter: $defaultValue.value.label,
+                    textFilter: $defaultValue.label,
+                    modalStatus: false,
+                    
+                    init() {
+                        this.initVanillaCalendar();
+                        
+                        const statusParam = whatParamQueryValue('modified');
+                        if (! statusParam) return;
+                        
+                        const findValueParam = $acceptValue.find( ({ value }) => value.label == statusParam );
+                        if (! findValueParam) return;
+                        
+                        const rootElement = this.$root;
+                        const $jqRootElement = $jq(rootElement);
+                        
+                        $jqRootElement.find(`input[value="${statusParam}"]`).attr('checked', 'checked');
+                        this.valueFilter = findValueParam.value;
+                        this.textFilter = findValueParam.label;
+                    },
+                    
+                    changeValueFilter($e, isDispatch = true, isSetParam = true) {
+                        const eCurrTarget = $e.currentTarget;
+                        const $jqCurrTarget = $jq(eCurrTarget);
+                        
+                        const changeValue = $jqCurrTarget.val() ?? $e ?? null;
+                        
+                        if (! changeValue) {
+                            this.valueFilter = $defaultValue.value.label;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('modified');
+                            
+                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `Value not defined` });
+                            return;
+                        }
+                        
+                        const $selectValue = $acceptValue.find(x => x.value.label == changeValue);
+                        if (! $selectValue) {
+                            this.valueFilter = $defaultValue.value.label;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('modified');
+                            
+                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
+                            return;
+                        }
+                        
+                        if (this.valueFilter == changeValue) {
+                            return;
+                        }
+                        
+                        this.valueFilter = $selectValue.value.label;
+                        this.textFilter = $selectValue.label;
+                        
+                        const now = new Date();
+                        const start = new Date();
+                        start.setDate(start.getDate() - $selectValue.value.start_date);
+                        
+                        const nowISOString = now.toISOString().split('T')[0];
+                        const startISOString = start.toISOString().split('T')[0];
+                        
+                        
+                        if (isSetParam) {
+                            if (this.valueFilter == $defaultValue.value.label) {
+                                removeParamsQuery('modified');
+                            } else {
+                                const hierarchyModified = [
+                                    {key: 'modified', value: this.valueFilter},
+                                    {key: 'start_date', value: startISOString},
+                                    {key: 'end_date', value: nowISOString},
+                                ];
+                                setHierarchyParam(hierarchyParam, hierarchyModified);
+                                // setParamsQuery('modified', this.valueFilter);
+                            }
+                        }
+                        
+                        this.$store.filterDocumentStore.setModified(this.valueFilter, startISOString, nowISOString);
+                        console.log(this.$store.filterDocumentStore.filter_modified);
+                        if (isDispatch) {
+                            this.$store.filterDocumentStore.dispatchData();
+                        }
+                    },
+                    
+                    changeValueCustomModified($e, isDispatch = true, isSetParam = true) {
+                        const eCurrTarget = $e.currentTarget;
+                        const $jqCurrTarget = $jq(eCurrTarget);
+                        // const $jqNameTarget = $jqCurrTarget.attr('name');
+                        
+                        console.log(!!$jqCurrTarget.val());
+                        
+                        if ( !(!!$jqCurrTarget.val()) ) {
+                            console.log(' ');
+                            console.log('Value kosong');
+                            console.log('KONTOL');
+                            console.log(' ');
+                            
+                            this.valueFilter = $defaultValue.value.label;
+                            this.textFilter = $defaultValue.label;
+                            removeParamsQuery('modified');
+                            removeParamsQuery('start_date');
+                            removeParamsQuery('end_date');
+                            
+                            return;
+                        }
+                        
+                        const selectedDates = $jqCurrTarget.val().split(';range;');
+                        const selectedDatesFilter = selectedDates.filter((x) => !!x);
+                        
+                        console.log('Selected Dates Filter onchange input: ', selectedDatesFilter);
+                        // if (! (selectedDates && selectedDates.length)) return;
+                        
+                        // console.log(' ');
+                        // console.log('check val have value: ', !!$jqCurrTarget.val());
+                        // console.log('check val have value: ', $jqCurrTarget.val());
+                        // console.log('alpine change value custom modified');
+                        // console.log($e);
+                        // console.dir(eCurrTarget);
+                        // console.dir(eCurrTarget.value);
+                        // console.log($jqCurrTarget);
+                        // console.log($jqCurrTarget.val());
+                        // console.log('KONTOL');                        
+                        // console.log(' ');
+                        // console.log('selectedDates: ', selectedDates);
+                        // console.log('selectedDates: ', selectedDates.length);
+                        // console.log('selectedDatesFilter: ', selectedDates);
+                        // console.log('selectedDatesFilter: ', selectedDates.length);
+                        // console.log(' ');
+                        
+
+                        
+                        
+                    },
+                    
+                    refreshCustomFilter() {
+                        
+                    },
+                    
+                    initVanillaCalendar() {
+                        
+                        console.log(' ');
+                        console.log('Vanilla Calendar Init');
+                        console.log(' ');
+                        
+                        const rootElement = this.$root;
+                        const $jqRootElement = $jq(rootElement);
+                        
+                        const $findInputDate = $jqRootElement.find(`[data-type-as="date"]`);
+                        
+                        const todayDate = new Date();
+                        const rangeDefault = getDateLast(todayDate, 7, 'day');
+                        const acceptMode = ['single', 'multiple', 'multiple-ranged'];
+                         
+                        if (! $findInputDate.length) {
+                            return;
+                        }
+                        
+                        $findInputDate.each(($idx, $val) => {
+                            const $jqOriInputDate = $jq($val);
+                            const $idInputDate = $jqOriInputDate.attr('id');
+                            const $nameInputDate = $jqOriInputDate.attr('name');
+                            const $dataSelectMode = $jqOriInputDate.data('selectMode');
+                            
+                            let defaultSelectMode = 'single';
+                            
+                            if ($dataSelectMode) {
+                                defaultSelectMode = acceptMode.filter((x) => x == $dataSelectMode)[0] ?? defaultSelectMode;
+                            }
+                            
+                            // set input type from date to text for trigger vanilla calendar
+                            $jqOriInputDate.attr('type', 'text');
+                            
+                            const calendarInput = new Calendar(`#${$idInputDate}`, {
+                                inputMode: true,
+                                dateMax: todayDate,
+                                dateToday: todayDate,
+                                positionToInput: ['center', 'left'],
+                                selectedTheme: 'dark',
+                                // selectedWeekends: [-1],
+                                selectedDates: [``],
+                                selectionDatesMode: defaultSelectMode,
+                                
+                                
+                                onChangeToInput(self) {
+                                    const selfContext = self.context;
+                                    
+                                    const mainElement = selfContext.mainElement;
+                                    const inputElement = selfContext.inputElement;
+                                    
+                                    const $jqMainElement = $jq(mainElement);
+                                    const $jqInputElement = $jq(selfContext.inputElement);
+                                    
+                                    const $btnAction = $jqMainElement.find('[data-set-range-type]');
+                                    
+                                    console.log('on change input');
+                                    
+                                    const input = selfContext.inputElement;
+                                    if (!input) return;
+                                    
+                                    const selectedDates = selfContext.selectedDates;
+                                    const selectedDatesFilter = selectedDates.filter((x) => x);
+                                    if (! (selectedDatesFilter && selectedDatesFilter.length)) return;
+                                    
+                                    $btnAction.each(($idx, $element) => {
+                                        const thisElement = $jq($element);
+                                        
+                                        thisElement.removeAttr('disabled');
+                                    });
+                                    
+                                    const objSelected = [];
+                                    
+                                    selectedDatesFilter.forEach((x) => {
+                                        const d = dayjs(x);
+                                        if (d) objSelected.push({ 
+                                            day: d.date(),
+                                            dayText: d.format('D'), 
+                                            month: d.month(), 
+                                            monthText: d.format('MMMM'), 
+                                            year: d.year(), 
+                                            full: x, 
+                                            yearText: d.format('YYYY'), 
+                                            dayjs: d,
+                                        });
+                                    });
+                                    
+                                    const firstRange = objSelected[0];
+                                    const secondRange = objSelected[1] ?? null;
+                                    
+                                    let valueText = 
+                                        `${firstRange.dayText}` +
+                                        `${ (!secondRange || firstRange.month !== secondRange.month || firstRange.year !== secondRange ) ? 
+                                            ' ' + firstRange.monthText : 
+                                            '' }` +
+                                        `${ (!secondRange || firstRange.year !== secondRange.year) ? 
+                                            ', ' + firstRange.yearText : 
+                                            '' }` +
+                                        `${ secondRange ? 
+                                            ` - ${secondRange.dayText} ${secondRange.monthText}, ${secondRange.yearText}` : 
+                                            '' }
+                                    `;
+                                    
+                                    valueText = valueText.trim();
+                                    
+                                    console.log(valueText);
+                                    
+                                    $btnAction.click(($e) => {
+                                        const thisElement = $jq($e.currentTarget);
+                                        const setType = thisElement.attr('data-set-range-type');
+                                        
+                                        const selectedDates = selfContext.selectedDates;
+                                        const selectedDatesFilter = selectedDates.filter((x) => x);
+                                        
+                                        if (setType == 'close') {
+                                            thisElement.click(self.hide);
+                                            return
+                                        }
+                                        
+                                        inputElement.value = selectedDatesFilter.join(';range;');
+                                        
+                                        inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                                        inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+                                        
+                                        thisElement.off('click');
+                                    });
+                                    
+                                },
+                                
+                                layouts: {
+                                    default: `
+                                        <div class="vc-custom-header flex items-center pb-1 mb-1 justify-between border-b border-white">
+                                            <div class="mainHeader font-semibold text-sm">
+                                                <p>Select Date Range</p>
+                                            </div>
+                                            <div class="actionHeader group/buttonActionVC relative">
+                                                <button 
+                                                    class="size-8 rounded-full hover:bg-black/35 hover:contrast-200"
+                                                    type="button"
+                                                    data-set-range-type="close"
+                                                >
+                                                    <div class="mainAction">
+                                                        <div class="icon text-sm">
+                                                            <i class="fas fa-x"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="vc-header" data-vc="header" role="toolbar" aria-label="Calendar Navigation">
+                                            <#ArrowPrev [month] />
+                                            <div class="vc-header__content" data-vc-header="content">
+                                                <#Month /> | <#Year />
+                                            </div>
+                                            <#ArrowNext [month] />
+                                        </div>
+                                        <div class="vc-wrapper" data-vc="wrapper">
+                                            <#WeekNumbers />
+                                            <div class="vc-content" data-vc="content">
+                                                <#Week />
+                                                <#Dates />
+                                                <#DateRangeTooltip />
+                                            </div>
+                                        </div>
+                                        <#ControlTime />
+                                        
+                                        <div class="vc-custom-action space-y-1 mt-2">
+                                            <div class="btnApply group/buttonActionVC flex-grow">
+                                                <button 
+                                                    class="px-4 py-2 w-full rounded-lg bg-blue-600 [&:not(:disabled)]:hover:contrast-200"
+                                                    type="button"
+                                                    data-set-range-type="apply"
+                                                    disabled
+                                                >
+                                                    <div class="cBtnApply">
+                                                        <div class="txApply text-white">
+                                                            <div class="tx text-xs">
+                                                                <p>Apply</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                    `,
+                                },
+
+                            });
+                            
+                            calendarInput.init();
+                        });
+                        
+                        
+                    },
+                }
+                
+            });
+            
+            
+            
+            
+            
+        </script>
+        
+        {{-- <div class="vc-custom-action space-y-1">
+            <div class="btnApply group/buttonActionVC flex-grow">
+                <button 
+                    class="px-4 py-2 w-full rounded-lg bg-blue-600 [&:not(:disabled)]:hover:contrast-200"
+                    type="button"
+                    data-set-range-type="apply"
+                    disabled
+                >
+                    <div class="cBtnApply">
+                        <div class="txApply text-white">
+                            <div class="tx text-xs">
+                                <p>Apply</p>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+            <div class="btnClose group/buttonActionVC relative shrink-0">
+                <button 
+                    class="px-4 py-2 w-full rounded-lg border border-gray-400 hover:bg-inherit hover:contrast-200 hover:backdrop-brightness-50"
+                    type="button"
+                    data-set-range-type="close"
+                >
+                    <div class="cBtnClose">
+                        <div class="txClose">
+                            <div class="tx text-xs">
+                                <p>Close</p>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div> --}}
+        
+        <script data-navigate-once>
+            
+            Livewire.hook('component.init', (component, cleanup) => {
+                console.log({
+                    // LHookMessage: message,
+                    LHookComponent: component,
+                    LHookCleanup: cleanup,
+                });
+            })
+        </script>
+    @endpush
+@endonce

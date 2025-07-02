@@ -1,427 +1,3 @@
-{{-- <div class="ctr-filterDocumentsDashboard">
-    <div class="cFilterDocumentsDashboard flex items-center justify-between">
-        <div class="ctr-lftFilterDocumentsDashboard" x-data="filterDocument">
-            <div class="cLftFilterDocumentsDashboard flex items-start gap-2">
-                @php
-                    $lstFilterDocuments = [
-                        (object) [
-                            'title' => 'status',
-                            'alpine' => (object)[
-                                'a_data' => '',
-                                'a_change' => '',
-                            ],
-                            'filter' => [
-                                (object) ['label' => 'All Status', 'value' => 'all'],
-                                (object) ['label' => 'In Progress', 'value' => 'progress'],
-                                (object) ['label' => 'Completed', 'value' => 'completed'],
-                                (object) ['label' => 'Rejected', 'value' => 'rejected'],
-                                (object) ['label' => 'Draft', 'value' => 'draft'],
-                            ],
-                        ],
-                        (object) [
-                            'title' => 'type',
-                            'alpine' => (object)[
-                                'a_data' => '',
-                                'a_change' => '',
-                            ],
-                            'filter' => [
-                                (object) ['label' => 'All Type', 'value' => 'all'],
-                                (object) ['label' => 'Signature', 'value' => 'signature'],
-                                (object) ['label' => 'Paraf', 'value' => 'paraf'],
-                                (object) ['label' => 'Uncategorized', 'value' => 'uncategorized'],
-                            ],
-                        ],
-                    ];
-                @endphp
-
-                <div class="itm-statusFilterDocumentsDashboard relative">
-                    <div class="actStatusFilterDocumentsDashboard">
-                        <button class="btnActFilterDocuments w-40 rounded-xl border border-[#9a9a9a]"
-                            @click="$filterDocument.status.filterModal = !$filterDocument.status.filterModal">
-                            <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
-                                <div class="txLblBtnAct">
-                                    <div class="tx text-sm text-[#6a6a6a]">
-                                        <p x-text="$filterDocument.status.filterText">All Status</p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
-                                    <div class="icn text-[#6a6a6a] text-xl">
-                                        <i class="fas fa-sliders"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-
-                    <div class="wrapper-modalStatusFilterDocumentsDashboard absolute top-full left-0 pt-4"
-                        x-show="$filterDocument.status.filterModal" style="display: none"
-                        @click.away="$filterDocument.status.filterModal = false">
-                        <div
-                            class="ctr-modalStatusFilterDocumentsDashboard bg-white w-52 py-2 rounded-md shadow-md shadow-black/40">
-                            <div class="cModalStatusFilterDocumentsDashboard space-y-0.5">
-                                <template x-for="itmStatus in listFilter.status" :key="itmStatus . label">
-                                    <div class="itm-statusFilterDocuments group">
-                                        <label :for="`statusFilterDocument${itmStatus . label}`"
-                                            class="px-4 py-2 block rounded-md group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-blue-100">
-                                            <div class="cStatusFilterDocument flex items-center justify-between">
-                                                <div class="txLblStatusFilter">
-                                                    <div class="txLbl text-sm">
-                                                        <p x-text="itmStatus.label"></p>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="icnStatusFilter invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
-                                                    <div class="icn text-blue-800">
-                                                        <i class="fas fa-check"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <input type="radio" name="statusFilterDocuments"
-                                            :id="`statusFilterDocument${itmStatus . label}`" :value="itmStatus . value"
-                                            :checked="itmStatus . checked" class="sr-only hidden"
-                                            @change="changeStatusFilter">
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="itm-typeFilterDocumentsDashboard relative">
-                    <div class="actTypeFilterDocumentsDashboard">
-                        <button class="btnActFilterDocuments w-40 rounded-xl border border-[#9a9a9a]"
-                            @click="$filterDocument.type.filterModal = !$filterDocument.type.filterModal">
-                            <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
-                                <div class="txLblBtnAct">
-                                    <div class="tx text-sm text-[#6a6a6a]">
-                                        <p x-text="$filterDocument.type.filterText">All Type</p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
-                                    <div class="icn text-[#6a6a6a] text-xl">
-                                        <i class="fas fa-sliders"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                    <div class="wrapper-modalTypeFilterDocumentsDashboard absolute top-full left-0 pt-4"
-                        x-show="$filterDocument.type.filterModal" style="display: none"
-                        @click.away="$filterDocument.type.filterModal = false">
-                        <div
-                            class="ctr-modalTypeFilterDocumentsDashboard bg-white w-52 py-2 rounded-md shadow-md shadow-black/40">
-                            <div class="cModalTypeFilterDocumentsDashboard space-y-0.5">
-                                <template x-for="itmType in listFilter.type" :key="itmType . label">
-                                    <div class="itm-TypeFilterDocuments group">
-                                        <label :for="`TypeFilterDocument${itmType . label}`"
-                                            class="px-4 py-2 block rounded-md group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-blue-100">
-                                            <div class="cTypeFilterDocument flex items-center justify-between">
-                                                <div class="txLblTypeFilter">
-                                                    <div class="txLbl text-sm">
-                                                        <p x-text="itmType.label"></p>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="icnTypeFilter invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
-                                                    <div class="icn text-blue-800">
-                                                        <i class="fas fa-check"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <input type="radio" name="TypeFilterDocuments"
-                                            :id="`TypeFilterDocument${itmType . label}`" :value="itmType . value"
-                                            :checked="itmType . checked" class="sr-only hidden"
-                                            @change="changeTypeFilter">
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="itm-ownerFilterDocumentsDashboard relative">
-                    <div class="actOwnerFilterDocumentsDashboard">
-                        <button class="btnActFilterDocuments w-40 rounded-xl border border-[#9a9a9a]">
-                            <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
-                                <div class="txLblBtnAct">
-                                    <div class="tx text-sm text-[#6a6a6a]">
-                                        <p>Owner</p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
-                                    <div class="icn text-[#6a6a6a] text-xl">
-                                        <i class="fas fa-sliders"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="itm-modifiedFilterDocumentsDashboard relative">
-                    <div class="actModifiedFilterDocumentsDashboard">
-                        <button class="btnActFilterDocuments w-52 rounded-xl border border-[#9a9a9a]"
-                            @click="$filterDocument.modified.filterModal = !$filterDocument.modified.filterModal">
-                            <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
-                                <div class="txLblBtnAct">
-                                    <div class="tx text-sm text-[#6a6a6a]">
-                                        <p 
-                                            x-text="
-                                                $filterDocument.modified.filterStatus ? $filterDocument.modified.filterText : 
-                                                $filterDocument.customModified.filterStatus ? $filterDocument.customModified.filterText :
-                                                'All Period'
-                                                "
-                                            
-                                            >
-                                            All Period</p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="icnBtnAct size-8 flex items-center justify-center rounded-md hover:bg-[#D9D9D9]">
-                                    <div class="icn text-[#6a6a6a] text-xl">
-                                        <i class="fas fa-sliders"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-
-                    <div class="wrapper-modalModifiedFilterDocumentsDashboard absolute top-full left-0 pt-4" 
-                        x-show="$filterDocument.modified.filterModal" style="display: none" //Comment
-                        @click.away="$filterDocument.modified.filterModal = false" //Comment 
-                    >
-                        <div
-                            class="ctr-modalModifiedFilterDocumentsDashboard bg-white w-52 py-2 rounded-md shadow-md shadow-black/40">
-                            <div class="cModalModifiedFilterDocumentsDashboard space-y-0.5">
-                                <template x-for="itmModified in listFilter.modified" :key="itmModified . label">
-                                    <div class="itm-modifiedFilterDocuments group">
-                                        <label :for="`ModifiedFilterDocument${itmModified . label}`"
-                                            class="px-4 py-2 block rounded-md group-has-[:checked]:bg-blue-100 cursor-pointer hover:bg-blue-100">
-                                            <div class="cModifiedFilterDocument flex items-center justify-between">
-                                                <div class="txLblModifiedFilter">
-                                                    <div class="txLbl text-sm">
-                                                        <p x-text="itmModified.label"></p>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="icnModifiedFilter invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
-                                                    <div class="icn text-blue-800">
-                                                        <i class="fas fa-check"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <input type="radio" name="ModifiedFilterDocuments"
-                                            :id="`ModifiedFilterDocument${itmModified . label}`"
-                                            :value="itmModified . value . label" :checked="itmModified . checked"
-                                            class="sr-only hidden" @change="changeModifiedFilter">
-                                    </div>
-                                </template>
-
-                                <div class="itm-modifiedFilterDocuments group relative">
-
-                                    <div class="act-btnCustomModifiedFilterDocuments">
-                                        <button
-                                            class="btnCustomModifiedFilterDocuments w-full px-4 py-2 block rounded-md cursor-pointer hover:bg-blue-100"
-                                            @click="viewModalCustomModifiedFilter"
-                                            @click="$filterDocument.customModified.filterModal = !$filterDocument.customModified.filterModal" //Comment
-                                            >
-                                            <div
-                                                class="cBtnCustomModifiedFilterDocuments flex items-center justify-between">
-                                                <div class="txLblCustomModified">
-                                                    <div class="txLbl text-sm">
-                                                        <p>Custom Period</p>
-                                                    </div>
-                                                </div>
-                                                <div class="icnCustomModified invisible opacity-0 ">
-                                                    <div class="icn">
-                                                        <div class="fas fa-check"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div
-                                        class="wrapper-modalCustomModifiedFilterDocuments absolute top-0 left-full border border-black"
-                                        x-show="$filterDocument.customModified.filterModal" style="display: none"  //Comment
-                                        @click.away="viewModalCustomModifiedFilter"  //Comment
-                                        @click.away="$filterDocument.customModified.filterModal = false"  //Comment
-                                        >
-                                        <div
-                                            class="ctr-modalCustomModifiedFilterDocuments bg-white w-52 py-2 px-1.5 rounded-md shadow-md shadow-black/40">
-                                            <div class="cModalCustomModifiedFilterDocuments">
-                                                <div class="titleModalCustomModifiedFilterDocuments">
-                                                    <div class="txTitle text-xs font-semibold text-[#a9a9a9]">
-                                                        <p>Custom Period (DD-MM-YYYY)</p>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="lst-customModifiedFilterDocuments mt-1">
-                                                    <div class="itm-startDateCustomModifiedFilter">
-                                                        <div class="inpStartDateCustomModifiedFilter relative">
-                                                            <label for="customModifiedFilterStartDate"
-                                                                class="w-full px-4 py-2 block rounded-md cursor-pointer border border-black"
-                                                                data-custom-input="customModifiedFilterStartDate"
-                                                                @click="viewCalendarCustomModifiedFilter"  //Comment
-                                                                >
-                                                                <div
-                                                                    class="cCustomModifiedFilterStartDate flex items-center justify-between">
-                                                                    <div class="txLblCustomModifiedFilterStartDate">
-                                                                        <div class="txLbl text-sm">
-                                                                            <p x-text="$filterDocument.customModified.filterValue.start_date.value">Start date</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="icnCustomModifiedFilter">
-                                                                        <div class="icn">
-                                                                            <i class="fas fa-calendar-days"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input 
-                                                                type="text" 
-                                                                id="customModifiedFilterStartDate" 
-                                                                class=""
-                                                                placeholder="Start date"
-                                                                :value="$filterDocument.customModified.filterValue.start_date.value"  //Comment 
-                                                                @change="changeCustomModifiedFilter" 
-                                                                data-custom-label="start_date"
-                                                                readonly
-                                                                >
-                                                            <input type="text" id="customModifiedFilterStartDate" class="sr-only border border-black">  //Comment
-                                                            <input type="date" id="customModifiedFilterStartDate">  //Comment
-                                                        </div>
-                                                        <div class="ctr-clearCustomDateModifiedFilter mt-0.5">
-                                                            <div class="cClearCustomDateModifiedFilter">
-                                                                <button 
-                                                                    class="btnClearCustomDateModifiedFilter ml-auto mr-0 block"
-                                                                    data-clear-custom="start_date"
-                                                                    >
-                                                                    <div class="cBtnClearCustomDateModifiedFilter">
-                                                                        <div class="txClear text-xs text-blue-600 font-semibold">
-                                                                            <p>Clear</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="itm-endDateCustomModifiedFilter mt-2">
-                                                        <div class="inpEndDateCustomModifiedFilter">
-                                                            <label for="customModifiedFilterEndDate"
-                                                                id="idBtnCustomModifiedFilterEndDate"  //Comment
-                                                                class="w-full px-4 py-2 block rounded-md cursor-pointer border border-black"
-                                                                data-custom-input="customModifiedFilterEndDate" 
-                                                                @click="viewCalendarCustomModifiedFilter"  //Comment
-                                                                >
-                                                                <div
-                                                                    class="cCustomModifiedFilterEndDate flex items-center justify-between">
-                                                                    <div class="txLblCustomModifiedFilterEndDate">
-                                                                        <div class="txLbl text-sm">
-                                                                            <p 
-                                                                                x-text="$filterDocument.customModified.filterValue.end_date.value"
-                                                                                >
-                                                                                End date</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="icnCustomModifiedFilter">
-                                                                        <div class="icn">
-                                                                            <i class="fas fa-calendar-days"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input 
-                                                                type="text" 
-                                                                id="customModifiedFilterEndDate" 
-                                                                class=""
-                                                                placeholder="End date" 
-                                                                :value="$filterDocument.customModified.filterValue.end_date.value"  //Comment 
-                                                                @change="changeCustomModifiedFilter" 
-                                                                data-custom-label="end_date"
-                                                                readonly
-                                                                >
-                                                            <input type="text" id="customModifiedFilterEndDate" class="sr-only">  //Comment
-                                                            <input type="date" id="customModifiedFilterEndDate">  //Comment
-                                                        </div>
-                                                        <div class="ctr-clearCustomDateModifiedFilter mt-0.5">
-                                                            <div class="cClearCustomDateModifiedFilter">
-                                                                <button 
-                                                                    class="btnClearCustomDateModifiedFilter ml-auto mr-0 block"
-                                                                    data-clear-custom="end_date"
-                                                                    >
-                                                                    <div class="cBtnClearCustomDateModifiedFilter">
-                                                                        <div class="txClear text-xs text-blue-600 font-semibold">
-                                                                            <p>Clear</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="ctr-rghtFilterDocumentsDashboard">
-            <div class="cRghtFilterDocumentsDashboard flex items-center gap-4">
-                <div class="numOfPaginateDocumentsDashboard text-xs inline-flex gap-1 text-[#7D7D7D]">
-                    <div class="minNumActivePaginate">
-                        <p>{$num1}</p>
-                    </div>
-                    -
-                    <div class="maxNumActivePaginate">
-                        <p>{$num2}</p>
-                    </div>
-                    of
-                    <div class="ofMaxNumPaginateDocumentsDashboard">
-                        <p>${num3}</p>
-                    </div>
-                </div>
-                <div class="act-paginateDocumentsDashboard flex gap-2">
-                    <div class="act-leftPaginateDocumentsDashboard">
-                        <button class="btnAct-paginateDocumentsDashboard rounded-full hover:bg-[#D9D9D9]">
-                            <div class="cBtnAct-paginateDocumentsDashboard size-8  flex items-center justify-center">
-                                <div class="icn text-[#3D3D3D]">
-                                    <i class="fas fa-chevron-left"></i>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                    <div class="act-rghtPaginateDocumentsDashboard">
-                        <button class="btnAct-paginateDocumentsDashboard rounded-full hover:bg-[#D9D9D9]">
-                            <div class="cBtnAct-paginateDocumentsDashboard size-8  flex items-center justify-center">
-                                <div class="icn text-[#3D3D3D]">
-                                    <i class="fas fa-chevron-right"></i>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
 @php
     $listFilterDocuments = [
         (object) [
@@ -459,12 +35,13 @@
                 
                 @foreach ($listFilterDocuments as $itmKey => $itmValue)
                 
-                    <div class="itm-{{ $itmValue->title }}FilterDocumentsDashboard relative" x-data="{{ $itmValue->alpine->a_data }}">
+                    {{-- <div class="itm-{{ $itmValue->title }}FilterDocumentsDashboard relative" x-data="{{ $itmValue->alpine->a_data }}"> --}}
+                    <div class="itm-{{ $itmValue->title }}FilterDocumentsDashboard relative" x-data="filter_defaultDocument('{{ $itmValue->title }}')">
                         <div class="act{{ ucfirst($itmValue->title) }}FilterDocumentsDashboard">
-                            <button class="btnActFilterDocuments w-40 rounded-xl border border-[#9a9a9a]"
+                            <button class="btnActFilterDocuments min-w-40 rounded-xl border border-[#9a9a9a]"
                                 @click="modalStatus = ! modalStatus"
                                 >
-                                <div class="cBtnActFilterDocuments flex items-center justify-between px-5 py-2 ">
+                                <div class="cBtnActFilterDocuments flex items-center justify-between gap-2 px-5 py-2 ">
                                     <div class="txLblBtnAct">
                                         <div class="tx text-sm text-[#6a6a6a]">
                                             <p x-text="textFilter">All {{ ucfirst($itmValue->title) }}</p>
@@ -514,8 +91,6 @@
                                             <input type="radio" name="{{ $itmValue->title }}FilterDocuments"
                                                 id="{{ $itmValue->title }}FilterDocument_val{{ ucfirst($optionFilter->value) }}"
                                                 value="{{ $optionFilter->value }}"
-                                                {{-- :id="`{{ $itmValue->title }}FilterDocument${itm{{ $optionFilter->value }} . label}`"  --}}
-                                                {{-- :value="itm{{ $optionFilter->value }} . value" --}}
                                                 {{ $optionFilter->default ? 'checked' : '' }}
                                                 class="sr-only hidden"
                                                 @change="changeValueFilter"
@@ -623,13 +198,13 @@
                         </button>
                     </div>
 
-                    <div class="wrapper-modalModifiedFilterDocumentsDashboard absolute top-full left-0 pt-4" 
-                        {{-- style="display: none" --}}
-                        {{-- x-show="" 
-                        @click.away=""  --}}
+                    <div class="wrapper-modalModifiedFilterDocumentsDashboard absolute top-full left-0" 
+                        style="display: none"
+                        x-show="modalStatus" 
+                        @click.away="modalStatus = false" 
                     >
                         <div
-                            class="ctr-modalModifiedFilterDocumentsDashboard bg-white w-52 py-2 rounded-md shadow-md shadow-black/40"
+                            class="ctr-modalModifiedFilterDocumentsDashboard bg-white w-52 py-2 rounded-md shadow-md shadow-black/70"
                         >
                             @php
                                 $arrDefaultOptionFilterModified = [
@@ -671,266 +246,82 @@
                                             class="sr-only hidden" @change="changeValueFilter">
                                     </div>
                                 @endforeach
-
-                                <div class="itm-modifiedFilterDocuments group relative">
-
-                                    <div class="act-btnCustomModifiedFilterDocuments">
-                                        <button
-                                            class="btnCustomModifiedFilterDocuments w-full px-4 py-2 block rounded-md cursor-pointer hover:bg-blue-100"
-                                            {{-- @click="" --}}
-                                            >
+                                    
+                                <div 
+                                    class="itm-modifiedFilterDocuments group" 
+                                >
+                                    
+                                    <div class="inpRangeDateItemModifiedFilter">
+                                        <label 
+                                            for="rangeDateModifiedFilterDocuments"
+                                            class="px-4 py-2 block rounded-md cursor-pointer hover:bg-blue-100 group-has-[:checked]:bg-blue-100"
+                                            
+                                        >
                                             <div
-                                                class="cBtnCustomModifiedFilterDocuments flex items-center justify-between">
-                                                <div class="txLblCustomModified">
-                                                    <div class="txLbl text-sm">
-                                                        <p>Custom Period</p>
+                                                class="cRangeDateItemModifiedFilter flex items-center justify-between">
+                                                <div class="txRangeDateItemModifiedFilter">
+                                                    <div class="txRange text-sm">
+                                                        <p>Custom Range</p>
                                                     </div>
                                                 </div>
-                                                <div class="icnCustomModified invisible opacity-0 ">
-                                                    <div class="icn">
-                                                        <div class="fas fa-check"></div>
+                                                <div class="icnItemModifiedFilter">
+                                                    <div class="icn text-slate-700 group-has-[:checked]:text-blue-700">
+                                                        <i class="fas fa-calendar-days"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </button>
+                                        </label>
                                     </div>
-
-                                    <div
-                                        class="wrapper-modalCustomModifiedFilterDocuments absolute top-0 left-full border border-black"
-                                        {{-- style="display: none"
-                                        x-show=""
-                                        @click.away="" --}}
-                                        >
-                                        <div
-                                            class="ctr-modalCustomModifiedFilterDocuments bg-white w-52 py-2 px-1.5 rounded-md shadow-md shadow-black/40">
-                                            <div class="cModalCustomModifiedFilterDocuments">
-                                                {{-- <div class="titleModalCustomModifiedFilterDocuments">
-                                                    <div class="txTitle text-xs font-semibold text-[#a9a9a9]">
-                                                        <p>Custom Period (DD-MM-YYYY)</p>
-                                                    </div>
-                                                </div> --}}
-                                                
-                                                <div class="lst-customModifiedFilterDocuments mt-1">
-                                                    
-                                                    <div class="itm-startDateCustomModifiedFilter">
-                                                        <div class="inpStartDateCustomModifiedFilter relative">
-                                                            <label for="customModifiedFilterStartDate"
-                                                                class="w-full px-4 py-2 block rounded-md cursor-pointer border border-black"
-                                                                data-custom-input="customModifiedFilterStartDate"
-                                                                {{-- @click="viewCalendarCustomModifiedFilter" --}}
-                                                                >
-                                                                <div
-                                                                    class="cCustomModifiedFilterStartDate flex items-center justify-between">
-                                                                    <div class="txLblCustomModifiedFilterStartDate">
-                                                                        <div class="txLbl text-sm">
-                                                                            <p 
-                                                                                {{-- x-text="" --}}
-                                                                            >Start date</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="icnCustomModifiedFilter">
-                                                                        <div class="icn">
-                                                                            <i class="fas fa-calendar-days"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input 
-                                                                type="text" 
-                                                                id="customModifiedFilterStartDate" 
-                                                                class=""
-                                                                placeholder="Start date"
-                                                                {{-- :value="$filterDocument.customModified.filterValue.start_date.value" --}}
-                                                                {{-- @change="changeCustomModifiedFilter"  --}}
-                                                                data-custom-label="start_date"
-                                                                readonly
-                                                                >
-                                                            {{-- <input type="text" id="customModifiedFilterStartDate" class="sr-only border border-black"> --}}
-                                                            <input type="date" id="customModifiedFilterStartDate">
-                                                        </div>
-                                                        <div class="ctr-clearCustomDateModifiedFilter mt-0.5">
-                                                            <div class="cClearCustomDateModifiedFilter">
-                                                                <button 
-                                                                    class="btnClearCustomDateModifiedFilter ml-auto mr-0 block"
-                                                                    data-clear-custom="start_date"
-                                                                    >
-                                                                    <div class="cBtnClearCustomDateModifiedFilter">
-                                                                        <div class="txClear text-xs text-blue-600 font-semibold">
-                                                                            <p>Clear</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="itm-endDateCustomModifiedFilter mt-2">
-                                                        <div class="inpEndDateCustomModifiedFilter">
-                                                            <label for="customModifiedFilterEndDate"
-                                                                id="idBtnCustomModifiedFilterEndDate"
-                                                                class="w-full px-4 py-2 block rounded-md cursor-pointer border border-black"
-                                                                data-custom-input="customModifiedFilterEndDate" 
-                                                                {{-- @click="" --}}
-                                                                >
-                                                                <div
-                                                                    class="cCustomModifiedFilterEndDate flex items-center justify-between">
-                                                                    <div class="txLblCustomModifiedFilterEndDate">
-                                                                        <div class="txLbl text-sm">
-                                                                            <p 
-                                                                                {{-- x-text="" --}}
-                                                                                >
-                                                                                End date</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="icnCustomModifiedFilter">
-                                                                        <div class="icn">
-                                                                            <i class="fas fa-calendar-days"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input 
-                                                                type="text" 
-                                                                id="customModifiedFilterEndDate" 
-                                                                class=""
-                                                                placeholder="End date" 
-                                                                {{-- :value="$filterDocument.customModified.filterValue.end_date.value"  --}}
-                                                                {{-- @change="changeCustomModifiedFilter"  --}}
-                                                                data-custom-label="end_date"
-                                                                readonly
-                                                                >
-                                                            {{-- <input type="text" id="customModifiedFilterEndDate" class="sr-only"> --}}
-                                                            <input type="date" id="customModifiedFilterEndDate">
-                                                        </div>
-                                                        <div class="ctr-clearCustomDateModifiedFilter mt-0.5">
-                                                            <div class="cClearCustomDateModifiedFilter">
-                                                                <button 
-                                                                    class="btnClearCustomDateModifiedFilter ml-auto mr-0 block"
-                                                                    data-clear-custom="end_date"
-                                                                    >
-                                                                    <div class="cBtnClearCustomDateModifiedFilter">
-                                                                        <div class="txClear text-xs text-blue-600 font-semibold">
-                                                                            <p>Clear</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    
-                                                    <div class="itm-startDateCustomModifiedFilter">
-                                                        <div class="inpStartDateCustomModifiedFilter relative">
-                                                            <label for="customModifiedFilterStartDate"
-                                                                class="w-full px-4 py-2 block rounded-md cursor-pointer border border-black"
-                                                                data-custom-input="customModifiedFilterStartDate"
-                                                                {{-- @click="viewCalendarCustomModifiedFilter" --}}
-                                                                >
-                                                                <div
-                                                                    class="cCustomModifiedFilterStartDate flex items-center justify-between">
-                                                                    <div class="txLblCustomModifiedFilterStartDate">
-                                                                        <div class="txLbl text-sm">
-                                                                            <p 
-                                                                                {{-- x-text="" --}}
-                                                                            >Start date</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="icnCustomModifiedFilter">
-                                                                        <div class="icn">
-                                                                            <i class="fas fa-calendar-days"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input 
-                                                                type="text" 
-                                                                id="customModifiedFilterStartDate" 
-                                                                class=""
-                                                                placeholder="Start date"
-                                                                {{-- :value="$filterDocument.customModified.filterValue.start_date.value" --}}
-                                                                {{-- @change="changeCustomModifiedFilter"  --}}
-                                                                data-custom-label="start_date"
-                                                                readonly
-                                                                >
-                                                            {{-- <input type="text" id="customModifiedFilterStartDate" class="sr-only border border-black"> --}}
-                                                            <input type="date" id="customModifiedFilterStartDate">
-                                                        </div>
-                                                        <div class="ctr-clearCustomDateModifiedFilter mt-0.5">
-                                                            <div class="cClearCustomDateModifiedFilter">
-                                                                <button 
-                                                                    class="btnClearCustomDateModifiedFilter ml-auto mr-0 block"
-                                                                    data-clear-custom="start_date"
-                                                                    >
-                                                                    <div class="cBtnClearCustomDateModifiedFilter">
-                                                                        <div class="txClear text-xs text-blue-600 font-semibold">
-                                                                            <p>Clear</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="itm-endDateCustomModifiedFilter mt-2">
-                                                        <div class="inpEndDateCustomModifiedFilter">
-                                                            <label for="customModifiedFilterEndDate"
-                                                                id="idBtnCustomModifiedFilterEndDate"
-                                                                class="w-full px-4 py-2 block rounded-md cursor-pointer border border-black"
-                                                                data-custom-input="customModifiedFilterEndDate" 
-                                                                {{-- @click="" --}}
-                                                                >
-                                                                <div
-                                                                    class="cCustomModifiedFilterEndDate flex items-center justify-between">
-                                                                    <div class="txLblCustomModifiedFilterEndDate">
-                                                                        <div class="txLbl text-sm">
-                                                                            <p 
-                                                                                {{-- x-text="" --}}
-                                                                                >
-                                                                                End date</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="icnCustomModifiedFilter">
-                                                                        <div class="icn">
-                                                                            <i class="fas fa-calendar-days"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input 
-                                                                type="text" 
-                                                                id="customModifiedFilterEndDate" 
-                                                                class=""
-                                                                placeholder="End date" 
-                                                                {{-- :value="$filterDocument.customModified.filterValue.end_date.value"  --}}
-                                                                {{-- @change="changeCustomModifiedFilter"  --}}
-                                                                data-custom-label="end_date"
-                                                                readonly
-                                                                >
-                                                            {{-- <input type="text" id="customModifiedFilterEndDate" class="sr-only"> --}}
-                                                            <input type="date" id="customModifiedFilterEndDate">
-                                                        </div>
-                                                        <div class="ctr-clearCustomDateModifiedFilter mt-0.5">
-                                                            <div class="cClearCustomDateModifiedFilter">
-                                                                <button 
-                                                                    class="btnClearCustomDateModifiedFilter ml-auto mr-0 block"
-                                                                    data-clear-custom="end_date"
-                                                                    >
-                                                                    <div class="cBtnClearCustomDateModifiedFilter">
-                                                                        <div class="txClear text-xs text-blue-600 font-semibold">
-                                                                            <p>Clear</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
+                                    <div class="ctr-rangeDateSelectText">
+                                        <div class="cRangeDateSelectText px-2 py-0.5 space-y-0.5">
+                                            <div 
+                                                class="startRangeDateSelect items-center px-4 py-0.5 bg-blue-600 rounded-md"
+                                                style="display: none"
+                                                :style="valueCustomFilter.start_date ? 'display: flex' : 'display: none'"
+                                                >
+                                                <div class="icon text-white/80 shrink-0 size-6">
+                                                    <i class="fas fa-calendar-day"></i>
                                                 </div>
-
+                                                <div class="tx text-sm text-white/80">
+                                                    <p x-text="valueCustomFilter.start_date">Start date</p>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="endRangeDateSelect items-center px-4 py-0.5 bg-yellow-600 rounded-md"
+                                                style="display: none"
+                                                :style="valueCustomFilter.end_date ? 'display: flex' : 'display: none'"
+                                                >
+                                                <div class="icon text-white/80 shrink-0 size-6">
+                                                    <i class="fas fa-calendar-day"></i>
+                                                </div>
+                                                <div class="tx text-sm text-white/80">
+                                                    <p x-text="valueCustomFilter.end_date">End date</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="inpCheckboxStatueRangeDateCustom sr-only">
+                                        <input 
+                                            type="checkbox"
+                                            id="id_inpCheckboxStatueRangeDateCustom"
+                                            :checked="valueCustomFilter.start_date || valueCustomFilter.end_date ? 'checked' : ''"
+                                        >
+                                    </div>
+                                    <div class="wrapper-absolute w-full absolute top-0 left-full">
+                                        <div class="inpField ml-2">
+                                            <input 
+                                                type="text" 
+                                                id="rangeDateModifiedFilterDocuments"
+                                                name="range_date" 
+                                                data-type-as="date"
+                                                data-select-mode="multiple-ranged"
+                                                placeholder="Custom Range Date"
+                                                class="sr-only cursor-pointer px-4 py-2 text-sm w-full outline-none placeholder:text-black border border-black"
+                                                readonly
+                                                @change="changeValueCustomModified"
+                                            >
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -980,132 +371,10 @@
     </div>
 </div>
 
-{{-- <div class="flatpickr-calendar animate open arrowBottom arrowLeft" tabindex="-1"
-    style="top: 317px; left: 1160.23px; right: auto;">
-    <div class="flatpickr-months"><span class="flatpickr-prev-month"><svg version="1.1"
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 17 17">
-                <g></g>
-                <path d="M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z"></path>
-            </svg></span>
-        <div class="flatpickr-month">
-            <div class="flatpickr-current-month"><select class="flatpickr-monthDropdown-months" aria-label="Month"
-                    tabindex="-1">
-                    <option class="flatpickr-monthDropdown-month" value="0" tabindex="-1">January</option>
-                    <option class="flatpickr-monthDropdown-month" value="1" tabindex="-1">February</option>
-                    <option class="flatpickr-monthDropdown-month" value="2" tabindex="-1">March</option>
-                    <option class="flatpickr-monthDropdown-month" value="3" tabindex="-1">April</option>
-                    <option class="flatpickr-monthDropdown-month" value="4" tabindex="-1">May</option>
-                    <option class="flatpickr-monthDropdown-month" value="5" tabindex="-1">June</option>
-                </select>
-                <div class="numInputWrapper"><input class="numInput cur-year" type="number" tabindex="-1"
-                        aria-label="Year" max="2025"><span class="arrowUp"></span><span class="arrowDown"></span></div>
-            </div>
-        </div><span class="flatpickr-next-month flatpickr-disabled"><svg version="1.1"
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 17 17">
-                <g></g>
-                <path d="M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z">
-                </path>
-            </svg></span>
-    </div>
-    <div class="flatpickr-innerContainer">
-        <div class="flatpickr-rContainer">
-            <div class="flatpickr-weekdays">
-                <div class="flatpickr-weekdaycontainer">
-                    <span class="flatpickr-weekday">
-                        Sun</span><span class="flatpickr-weekday">Mon</span><span
-                        class="flatpickr-weekday">Tue</span><span class="flatpickr-weekday">Wed</span><span
-                        class="flatpickr-weekday">Thu</span><span class="flatpickr-weekday">Fri</span><span
-                        class="flatpickr-weekday">Sat
-                    </span>
-                </div>
-            </div>
-            <div class="flatpickr-days" tabindex="-1">
-                <div class="dayContainer"><span class="flatpickr-day" aria-label="June 1, 2025"
-                        tabindex="-1">1</span><span class="flatpickr-day" aria-label="June 2, 2025"
-                        tabindex="-1">2</span><span class="flatpickr-day" aria-label="June 3, 2025"
-                        tabindex="-1">3</span><span class="flatpickr-day today" aria-label="June 4, 2025"
-                        aria-current="date" tabindex="-1">4</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 5, 2025">5</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 6, 2025">6</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 7, 2025">7</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 8, 2025">8</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 9, 2025">9</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 10, 2025">10</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 11, 2025">11</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 12, 2025">12</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 13, 2025">13</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 14, 2025">14</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 15, 2025">15</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 16, 2025">16</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 17, 2025">17</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 18, 2025">18</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 19, 2025">19</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 20, 2025">20</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 21, 2025">21</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 22, 2025">22</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 23, 2025">23</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 24, 2025">24</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 25, 2025">25</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 26, 2025">26</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 27, 2025">27</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 28, 2025">28</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 29, 2025">29</span><span class="flatpickr-day flatpickr-disabled"
-                        aria-label="June 30, 2025">30</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 1, 2025">1</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 2, 2025">2</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 3, 2025">3</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 4, 2025">4</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 5, 2025">5</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 6, 2025">6</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 7, 2025">7</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 8, 2025">8</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 9, 2025">9</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 10, 2025">10</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 11, 2025">11</span><span class="flatpickr-day nextMonthDay flatpickr-disabled"
-                        aria-label="July 12, 2025">12</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
 @once
     @push('dashboard-body-script')
-        {{-- <script data-navigate-once>
-            $today = new Date();
-            $yesterday = new Date();
-            $yesterday.setDate($yesterday.getDate() - 1);
-            $jq('#customModifiedFilterStartDate').flatpickr({
-                dateFormat: 'd-m-Y',
-                maxDate: $today,
-                onReady: function (selectedDates, dateStr, instance) {
-                    let selectClassInstance = instance.calendarContainer.className;
-                    selectClassInstance = selectClassInstance.split(' ')[0];
-
-                    const jqClassInstance = $jq(`.${selectClassInstance}`);
-                    jqClassInstance.addClass([
-                        // 'bg-blue-100'
-                    ]);
-                    
-                    jqClassInstance.find('.flatpickr-month select').addClass('text-sm');
-                    jqClassInstance.find('.flatpickr-monthDropdown-months option').addClass('text-sm');
-
-                    console.log(instance.calendarContainer.className);
-                    console.log(selectClassInstance);
-                    console.log($jq(`.${selectClassInstance}`));
-                }
-            });
-
-            $jq('#customModifiedFilterEndDate').flatpickr({
-                dateFormat: 'd-m-Y',
-                maxDate: $yesterday,
-            });
-        </script> --}}
-        
         <script data-navigate-once>
             const hierarchyParam = ['status', 'type', 'owner', 'modified', 'start_date', 'end_date'];
-            // setHierarchyParam(hierarchyParam, null);
-            // console.log($jq('meta[name="csrf-token"]').attr('content'));
             function acceptFilterValue(nameFilter) {
                 nameFilter = nameFilter.trim().toLowerCase();
                 const acceptName = [
@@ -1132,19 +401,14 @@
                 },
                 
                 init() {
-                    const initDefaultFilter = this.firstInitDefaultFilter();
-                    const initModifiedFilter = this.firstInitModifiedFilter();
-                    // this.initCustomModified();
-                    const filters = [];
+                    this.firstInitDefaultFilter();
+                    this.firstInitModifiedFilter();
                     
-                    if (initDefaultFilter) filters.push(...initDefaultFilter);
-                    if (initModifiedFilter) filters.push(...initModifiedFilter);
-                    
-                    setHierarchyParam(hierarchyParam, filters);
+                    this.updateParam();
                     
                     window.addEventListener('Alpine-Init-Filter-Document', () => {
                         this.dispatchData();
-                    })
+                    });
                 },
                 
                 setStatus(status) {
@@ -1158,6 +422,22 @@
                     this.filter_modified.start_date = start_date;
                     this.filter_modified.end_date = end_date;
                 },
+                updateParam(isPushstate = false) {
+                    const dValue = {
+                        status: acceptFilterValue('status').find(x => x.default).value,
+                        type: acceptFilterValue('type').find(x => x.default).value,
+                        modified: acceptFilterValue('modified').find(x => x.default).value.label,
+                    }
+                    const params = [
+                        {key: 'status', value: this.filter_status == dValue.status ? null : this.filter_status},
+                        {key: 'type', value: this.filter_type == dValue.type ? null : this.filter_type},
+                        {key: 'modified', value: this.filter_modified.label == dValue.modified ? null : this.filter_modified.label},
+                        {key: 'start_date', value: this.filter_modified.label == dValue.modified ? null : this.filter_modified.start_date},
+                        {key: 'end_date', value: this.filter_modified.label == dValue.modified ? null : this.filter_modified.end_date},
+                    ];
+                    
+                    paramSetHierarchy(hierarchyParam, params, isPushstate)
+                },
                 dispatchData() {
                     $dispatchingData = Object.assign({}, {
                         filter_status: this.filter_status,
@@ -1167,378 +447,405 @@
                             start_date: this.filter_modified.start_date,
                             end_date: this.filter_modified.end_date,
                         },
-                    });
-                    
-                    Object.assign($dispatchingData, {
                         _token: $jq('meta[name="csrf-token"]').attr('content'),
                     });
-                    console.log($dispatchingData);
                     
                     dispatchingDataLivewireTo('Document-Filter-Data', $dispatchingData);
                 },
                 
                 firstInitDefaultFilter() {
-                    const defaultParam = [
-                        { param: 'status', func: 'setStatus', },
-                        { param: 'type', func: 'setType', },
+                    const params = [
+                        {param: 'status', func: 'setStatus'},
+                        {param: 'type', func: 'setType'},
                     ];
                     
-                    let arrDefaultParam = [];
-                    defaultParam.forEach((val) => {
-                        const valParam = whatParamQueryValue(val.param);
-                        if (! valParam) { 
-                            console.log('Skip param: ', val.param);
-                            return;
-                        }
+                    for ( {param, func} of params ) {
+                        const value = paramValue(param);
+                        if (! value) continue;
                         
-                        const acceptValue = acceptFilterValue(val.param);
-                        if (! acceptValue) {
-                            console.warn('Filter not found');
-                            return;
-                        }
+                        const acceptValue = acceptFilterValue(param);
+                        if (! acceptValue) { console.warn('Filter not found'); continue; }
+                        
                         const defaultValue = acceptValue.find(x => x.default);
+                        if (value == defaultValue.value ) continue;
                         
-                        const findAccept = acceptValue.find(x => x.value == valParam);
-                        if (! findAccept) {
-                            removeParamsQuery(val.param);
-                            console.warn('Value not valid');
-                            return;
-                        }
+                        const findAccept = acceptValue.find(x => x.value = value);
+                        if (! findAccept) { console.warn('Value invalid'); continue; }
                         
-                        if (valParam == defaultValue.value) {
-                            console.warn('Value filter default');
-                            return;
-                        }
-                        
-                        this[val.func](findAccept.value);
-                        arrDefaultParam.push({key: val.param, value: findAccept.value});
-                    });
-                    
-                    return arrDefaultParam;
+                        this[func](value);
+                    }
                 },
-                
-                
                 
                 firstInitModifiedFilter() {
-                    const labelValParam = whatParamQueryValue('modified');
-                    if (! labelValParam) {
-                        console.log('Modified param not defined');
-                        return null;
+                    const param = 'modified'
+                    const value = paramValue(param);
+                    if (! value) return;
+                    
+                    const acceptValue = acceptFilterValue(param);
+                    if (! acceptValue) { console.warn('Filter not found'); return; }
+                    
+                    const defaultValue = acceptValue.find(x => x.default)
+                    if (value == defaultValue.value.label) return;
+                    
+                    if (value == 'custom') {
+                        // goto function custom
+                        return this.initCustomModified();
                     }
                     
-                    const acceptValue = acceptFilterValue('modified');
+                    const findValue = acceptValue.find(x => x.value.label == value);
+                    if (! findValue) { console.warn('Filter invalid'); return; }
                     
-                    // if (acceptValue.some(x => x.value.label == labelValParam)) return this.initDefaultModified(labelValParam);
-                    if (labelValParam != 'custom') return this.initDefaultModified(labelValParam);
-                    if (labelValParam == 'custom') return this.initCustomModified();
-                    
-                    return null;
-                },
-                
-                initDefaultModified(modifiedLabel) {
-                    const acceptValue = acceptFilterValue('modified');
-                    const defaultValue = acceptValue.find(x => x.default);
-                    
-                    if (modifiedLabel == defaultValue.value.label) {
-                        return null;
-                    }
-                    
-                    const findValue = acceptValue.find(x => x.value.label == modifiedLabel);
-                    if (! findValue) {
-                        removeParamsQuery('modified');
-                        removeParamsQuery('start_date');
-                        removeParamsQuery('end_date');
-                        
-                        return null;
-                    }
-
-                    const now = new Date();
-                    const start = new Date();
-                    start.setDate(start.getDate() - findValue.value.start_date);
-                    
-                    const nowISOString = now.toISOString().split('T')[0];
-                    const startISOString = start.toISOString().split('T')[0];
+                    const d = dayjs();
+                    const start = d.subtract(findValue.value.start_date, 'day').toISOString().split('T')[0];
+                    const now = d.toISOString().split('T')[0];
                     
                     this.filter_modified.label = findValue.value.label;
-                    this.filter_modified.start_date = startISOString;
-                    this.filter_modified.end_date = nowISOString;
-                    
-                    const arrParam = [
-                        { key: 'modified', value: findValue.value.label },
-                        { key: 'start_date', value: startISOString },
-                        { key: 'end_date', value: nowISOString },
-                    ];
-                    
-                    return arrParam;
+                    this.filter_modified.start_date = start;
+                    this.filter_modified.end_date = now;
                 },
                 
                 initCustomModified() {
-                    const customParam = [ 'start_date', 'end_date' ];
-                    const valueStartEnd = customParam.map((key) => {
-                        return {
-                            key,
-                            value: whatParamQueryValue(key),
-                        }
-                    });
+                    const params = ['start_date', 'end_date',];
                     
-                    for ( {key, value} of valueStartEnd ) {
-                        if (! value) return null;
+                    const values = [];
+                    for (const param of params) {
+                        const value = paramValue(param);
+                        if (! value) continue;
                         
-                        const dateValid = (( d = new Date(value) ) => {
-                            return d instanceof Date && !isNaN(d);
-                        })();
-                        
-                        if (! dateValid) {
-                            this.filter_modified[key] = null;
-                            return null;
-                        };
+                        const d = dayjs(value);
+                        if (! d.isValid()) continue;
+                        values.push(value);
                     }
                     
-                    return valueStartEnd;
-                },
+                    if (! values.length) return;
+                    const [start, end] = values;
+                    
+                    this.filter_modified.label = 'custom';
+                    this.filter_modified.start_date = start;
+                    this.filter_modified.end_date = end ?? start;
+                }
             });
             
         </script>
         
         <script data-navigate-once>
-            Alpine.data('filter_statusDocument', () => {
-                const $acceptValue = acceptFilterValue('status');
+            Alpine.data('filter_defaultDocument', (filter_type) => {
+                const $acceptValue = acceptFilterValue(filter_type);
                 const $defaultValue = $acceptValue.find(x => x.default);
-                
+                const setStore = `set${filter_type[0].toUpperCase() + filter_type.slice(1)}`;
                 return {
                     valueFilter: $defaultValue.value,
                     textFilter: $defaultValue.label,
                     modalStatus: false,
                     
                     init() {
-                        const statusParam = whatParamQueryValue('status');
-                        if (! statusParam) return;
+                        const param = paramValue(filter_type);
+                        if (! param) return;
                         
-                        const findValueParam = $acceptValue.find( ({ value }) => value == statusParam );
-                        if (! findValueParam) return;
+                        const accept = $acceptValue.filter( ({value}) => value == param )[0];
+                        if (! accept) return;
                         
-                        const rootElement = this.$root;
-                        const $jqRootElement = $jq(rootElement);
-                        
-                        $jqRootElement.find(`input[value="${statusParam}"]`).attr('checked', 'checked');
-                        this.valueFilter = findValueParam.value;
-                        this.textFilter = findValueParam.label;
+                        $element = $jq(this.$root);
+                        $element.find(`input[value="${accept.value}"]`).attr('checked', 'checked');
+                        this.valueFilter = accept.value;
+                        this.textFilter = accept.label;
                     },
                     
                     changeValueFilter($e, isDispatch = true, isSetParam = true) {
-                        const eCurrTarget = $e.currentTarget;
-                        const $jqCurrTarget = $jq(eCurrTarget);
+                        const cTarget = $e.currentTarget;
+                        const $cTarget = $jq(cTarget);
                         
-                        const changeValue = $jqCurrTarget.val() ?? $e ?? null;
+                        const value = $cTarget.val();
                         
-                        if (! changeValue) {
-                            this.valueFilter = $defaultValue.value;
-                            this.textFilter = $defaultValue.label;
-                            removeParamsQuery('status');
-                            
-                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
-                            return;
-                        }
+                        if (! value) return this.changeDefaultValue();
                         
-                        const $selectValue = $acceptValue.find(x => x.value == changeValue);
-                        if (! $selectValue) {
-                            this.valueFilter = $defaultValue.value;
-                            this.textFilter = $defaultValue.label;
-                            removeParamsQuery('status');
-                            
-                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
-                            return;
-                        }
+                        const select = $acceptValue.find(x => x.value == value);
+                        if (! select) return this.changeDefaultValue();
                         
-                        if (this.valueFilter == changeValue) {
-                            return;
-                        }
+                        if (this.valueFilter == value) return;
                         
-                        this.valueFilter = $selectValue.value;
-                        this.textFilter = $selectValue.label;
+                        this.valueFilter = select.value;
+                        this.textFilter = select.label;
                         
-                        if (isSetParam) {
-                            if (this.valueFilter == $defaultValue.value) {
-                                removeParamsQuery('status');
-                            } else {
-                                setHierarchyParam(hierarchyParam, [{key: 'status', value: this.valueFilter}]);
-                                // setParamsQuery('status', this.valueFilter)
-                            }
-                        }
-                        
-                        this.$store.filterDocumentStore.setStatus(this.valueFilter);
-                        console.log(this.$store.filterDocumentStore.filter_status);
-                        
-                        if (isDispatch) {
-                            this.$store.filterDocumentStore.dispatchData();
-                        }
-                    },
-                }
-                
-            });
-            
-            Alpine.data('filter_typeDocument', () => {
-                const $acceptValue = acceptFilterValue('type');
-                const $defaultValue = $acceptValue.find(x => x.default);
-                
-                return {
-                    valueFilter: $defaultValue.value,
-                    textFilter: $defaultValue.label,
-                    modalStatus: false,
-                    
-                    init() {
-                        const statusParam = whatParamQueryValue('type');
-                        if (! statusParam) return;
-                        
-                        const findValueParam = $acceptValue.find( ({ value }) => value == statusParam );
-                        if (! findValueParam) return;
-                        
-                        const rootElement = this.$root;
-                        const $jqRootElement = $jq(rootElement);
-                        
-                        $jqRootElement.find(`input[value="${statusParam}"]`).attr('checked', 'checked');
-                        this.valueFilter = findValueParam.value;
-                        this.textFilter = findValueParam.label;
+                        // this.$store.filterDocumentStore.set...(this.valueFilter);
+                        this.$store.filterDocumentStore[setStore](this.valueFilter);
+                        this.$store.filterDocumentStore.updateParam();
+                        this.$store.filterDocumentStore.dispatchData();
                     },
                     
-                    changeValueFilter($e, isDispatch = true, isSetParam = true) {
-                        const eCurrTarget = $e.currentTarget;
-                        const $jqCurrTarget = $jq(eCurrTarget);
+                    changeDefaultValue() {
+                        this.valueFilter = $defaultValue.value;
+                        this.textFilter = $defaultValue.label;
                         
-                        const changeValue = $jqCurrTarget.val() ?? $e ?? null;
+                        // this.$store.filterDocumentStore.set...(this.valueFilter);
+                        this.$store.filterDocumentStore[setStore](this.valueFilter);
+                        this.$store.filterDocumentStore.updateParam();
+                        this.$store.filterDocumentStore.dispatchData();
                         
-                        if (! changeValue) {
-                            this.valueFilter = $defaultValue.value;
-                            this.textFilter = $defaultValue.label;
-                            removeParamsQuery('type');
-                            
-                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
-                            return;
-                        }
-                        
-                        const $selectValue = $acceptValue.find(x => x.value == changeValue);
-                        if (! $selectValue) {
-                            this.valueFilter = $defaultValue.value;
-                            this.textFilter = $defaultValue.label;
-                            removeParamsQuery('type');
-                            
-                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
-                            return;
-                        }
-                        
-                        if (this.valueFilter == changeValue) {
-                            return;
-                        }
-                        
-                        this.valueFilter = $selectValue.value;
-                        this.textFilter = $selectValue.label;
-                        
-                        if (isSetParam) {
-                            if (this.valueFilter == $defaultValue.value) {
-                                removeParamsQuery('type');
-                            } else {
-                                setHierarchyParam(hierarchyParam, [{key: 'type', value: this.valueFilter}]);
-                                // setParamsQuery('type', this.valueFilter)
-                            }
-                        }
-                        
-                        this.$store.filterDocumentStore.setType(this.valueFilter);
-                        console.log(this.$store.filterDocumentStore.filter_type);
-                        
-                        if (isDispatch) {
-                            this.$store.filterDocumentStore.dispatchData();
-                        }
+                        this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
                     },
                 }
-                
             });
-            
-            
             
             Alpine.data('filter_modifiedDocument', () => {
                 const $acceptValue = acceptFilterValue('modified');
                 const $defaultValue = $acceptValue.find(x => x.default);
-                
                 return {
                     valueFilter: $defaultValue.value.label,
                     textFilter: $defaultValue.label,
+                    
+                    valueCustomFilter: {start_date: null, end_date: null,},
+                    
                     modalStatus: false,
-                    modalCustomStatus: false,
                     
                     init() {
-                        const statusParam = whatParamQueryValue('modified');
-                        if (! statusParam) return;
+                        this.initVanillaCalendar();
                         
-                        const findValueParam = $acceptValue.find( ({ value }) => value.label == statusParam );
-                        if (! findValueParam) return;
+                        const value = paramValue('modified');
+                        if (! value) return;
+                        if (value == 'custom') return this.initCustomModified();
                         
-                        const rootElement = this.$root;
-                        const $jqRootElement = $jq(rootElement);
+                        const findValue = $acceptValue.find( x => x.value.label == value );
+                        if (! findValue) return;
                         
-                        $jqRootElement.find(`input[value="${statusParam}"]`).attr('checked', 'checked');
-                        this.valueFilter = findValueParam.value;
-                        this.textFilter = findValueParam.label;
+                        const $root = $jq(this.$root);
+                        $root.find(`input[value="${value}"]`).prop('checked', true);
+                        this.valueFilter = findValue.value.label;
+                        this.textFilter = findValue.label;
+                    },
+                    
+                    initCustomModified() {
+                        const $root = $jq(this.$root);
+                        const params = ['start_date', 'end_date'];
+                        const values = [];
+                        for (const param of params) {
+                            const value = paramValue(param);
+                            if (! value) continue;
+                            
+                            values.push(value);
+                        }
+                        
+                        if (! values.length) return;
+                        const [start, end] = values;
+                        
+                        $root.find(`input[type="radio"]`).prop('checked', false);
+                        this.valueFilter = 'custom';
+                        this.textFilter = 'Custom Range';
+                        this.valueCustomFilter.start_date = start;
+                        this.valueCustomFilter.end_date = end ?? start;
                     },
                     
                     changeValueFilter($e, isDispatch = true, isSetParam = true) {
-                        const eCurrTarget = $e.currentTarget;
-                        const $jqCurrTarget = $jq(eCurrTarget);
+                        const cTarget = $e.currentTarget;
+                        const $cTarget = $jq(cTarget);
                         
-                        const changeValue = $jqCurrTarget.val() ?? $e ?? null;
+                        const value = $cTarget.val();
                         
-                        if (! changeValue) {
-                            this.valueFilter = $defaultValue.value.label;
-                            this.textFilter = $defaultValue.label;
-                            removeParamsQuery('modified');
-                            
-                            this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `Value not defined` });
-                            return;
-                        }
+                        if (! value) return this.changeDefaultValue(true);
                         
-                        const $selectValue = $acceptValue.find(x => x.value.label == changeValue);
-                        if (! $selectValue) {
-                            this.valueFilter = $defaultValue.value.label;
-                            this.textFilter = $defaultValue.label;
-                            removeParamsQuery('modified');
-                            
+                        const select = $acceptValue.find(x => x.value.label == value);
+                        if (! select) return this.changeDefaultValue(true);
+                        
+                        if (value == $defaultValue.value.label) return this.changeDefaultValue();
+                        
+                        
+                        this.valueFilter = select.value.label;
+                        this.textFilter = select.label;
+                        this.valueCustomFilter.start_date = null;
+                        this.valueCustomFilter.end_date = null;
+                        
+                        const d = dayjs();
+                        const start = d.subtract(select.value.start_date, 'day').toISOString().split('T')[0];
+                        const end = d.toISOString().split('T')[0];
+                        
+                        this.$store.filterDocumentStore.setModified(this.valueFilter, start, end);
+                        this.$store.filterDocumentStore.updateParam();
+                        this.$store.filterDocumentStore.dispatchData();
+                    },
+                    
+                    changeValueCustomModified($e, isDispatch = true, isSetParam = true) {
+                        const $root = $jq(this.$root);
+                        
+                        const cTarget = $e.currentTarget;
+                        const $cTarget = $jq(cTarget);
+                        
+                        let value = $cTarget.val();
+                        let selected = [];
+                        
+                        if (!value) return this.changeDefaultValue();
+                        
+                        value = value.trim();
+                        selected = value.split(';range;');
+                        
+                        const objSelected = selected.map(x => {
+                            const d = dayjs(x);
+                            return {
+                                day: d.date(),
+                                month: d.month(),
+                                year: d.year(),
+                                dayText: d.format('D'),
+                                monthText: d.format('MMMM'),
+                                yearText: d.format('YYYY'),
+                                d,
+                                full: x
+                            };
+                        });
+                        
+                        const [start, end] = objSelected;
+                        
+                        this.valueFilter = 'custom';
+                        this.textFilter = 'Custom Range';
+                        this.valueCustomFilter.start_date = `${start.dayText} ${start.monthText}, ${start.yearText}`;
+                        this.valueCustomFilter.end_date = end ? `${end.dayText} ${end.monthText}, ${end.yearText}` : null;
+                        
+                        $root.find('input[type="radio"]').prop('checked', false);
+                        
+                        this.$store.filterDocumentStore.setModified('custom', start.full, end ? end.full : start.full);
+                        this.$store.filterDocumentStore.updateParam();
+                        this.$store.filterDocumentStore.dispatchData();
+                    },
+                    
+                    changeDefaultValue(notif = false) {
+                        this.valueFilter = $defaultValue.value.label;
+                        this.textFilter = $defaultValue.label;
+                        this.valueCustomFilter.start_date = null;
+                        this.valueCustomFilter.end_date = null;
+                        
+                        $jq(this.$root).find(`input[type="radio"][value="${this.valueFilter}"]`).prop('checked', true);
+                        
+                        this.$store.filterDocumentStore.setModified(this.valueFilter, null, null);
+                        this.$store.filterDocumentStore.updateParam();
+                        this.$store.filterDocumentStore.dispatchData();
+                        
+                        if(notif) {
                             this.$dispatch('customnotify', { variant: 'danger', title: 'Oops!',  message: `...` });
-                            return;
                         }
-                        
-                        if (this.valueFilter == changeValue) {
-                            return;
-                        }
-                        
-                        this.valueFilter = $selectValue.value.label;
-                        this.textFilter = $selectValue.label;
+                    },
+                    
+                    initVanillaCalendar() {
+                        const root = this.$root;
+                        const $root = $jq(root);
+                        const $inputs = $root.find('[data-type-as="date"]');
+                        const acceptMode = ['single', 'multiple', 'multiple-ranged'];
                         
                         const now = new Date();
-                        const start = new Date();
-                        start.setDate(start.getDate() - $selectValue.value.start_date);
                         
-                        const nowISOString = now.toISOString().split('T')[0];
-                        const startISOString = start.toISOString().split('T')[0];
+                        if (! $inputs.length) {
+                            return;
+                        }
                         
-                        
-                        if (isSetParam) {
-                            if (this.valueFilter == $defaultValue.value.label) {
-                                removeParamsQuery('modified');
-                            } else {
-                                const hierarchyModified = [
-                                    {key: 'modified', value: this.valueFilter},
-                                    {key: 'start_date', value: startISOString},
-                                    {key: 'end_date', value: nowISOString},
-                                ];
-                                setHierarchyParam(hierarchyParam, hierarchyModified);
-                                // setParamsQuery('modified', this.valueFilter);
+                        $inputs.each( ($idx, $val) => {
+                            const $input = $jq($val);
+                            const id = $input.attr('id');
+                            const name = $input.attr('name');
+                            const selectMode = $input.attr('data-select-mode');
+                            
+                            let mode = 'single';
+                            if (selectMode) {
+                                mode = acceptMode.filter(x => x == selectMode)[0] ?? mode
                             }
-                        }
-                        
-                        this.$store.filterDocumentStore.setModified(this.valueFilter, startISOString, nowISOString);
-                        console.log(this.$store.filterDocumentStore.filter_modified);
-                        if (isDispatch) {
-                            this.$store.filterDocumentStore.dispatchData();
-                        }
+                            
+                            // $input.attr('type', 'text');
+                            
+                            const calendarInput = new Calendar(`#${id}`, {
+                                inputMode: true,
+                                dateMax: now,
+                                dateToday: now,
+                                positionToInput: ['center', 'left'],
+                                selectedTheme: 'dark',
+                                // selectedWeekends: [-1],
+                                selectedDates: [``],
+                                selectionDatesMode: mode,
+                                
+                                onChangeToInput(self) {
+                                    const ctx = self.context;
+                                    const $main = $jq(ctx.mainElement);
+                                    const $input = $jq(ctx.inputElement);
+                                    const $buttons = $main.find('[data-set-range-type]');
+                                    
+                                    const selected = ctx.selectedDates.filter(Boolean);
+                                    $buttons.removeAttr('disabled');
+                                    
+                                    // Event klik tombol
+                                    $buttons.off('click').on('click', function () {
+                                        const $this = $jq(this);
+                                        const type = $this.attr('data-set-range-type');
+                                        
+                                        if (type === 'close') return self.hide();
+                                        
+                                        ctx.inputElement.value = selected.join(';range;');
+                                        ctx.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                                        ctx.inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+                                        
+                                        $this.prop('disabled', true);
+                                    });
+                                    
+                                },
+                                
+                                layouts: {
+                                    default: `
+                                        <div class="vc-custom-header flex items-center pb-1 mb-1 justify-between border-b border-white">
+                                            <div class="mainHeader font-semibold text-sm">
+                                                <p>Select Date Range</p>
+                                            </div>
+                                            <div class="actionHeader group/buttonActionVC relative">
+                                                <button 
+                                                    class="size-8 rounded-full hover:bg-black/35 hover:contrast-200"
+                                                    type="button"
+                                                    data-set-range-type="close"
+                                                >
+                                                    <div class="mainAction">
+                                                        <div class="icon text-sm">
+                                                            <i class="fas fa-x"></i>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="vc-header" data-vc="header" role="toolbar" aria-label="Calendar Navigation">
+                                            <#ArrowPrev [month] />
+                                            <div class="vc-header__content" data-vc-header="content">
+                                                <#Month /> | <#Year />
+                                            </div>
+                                            <#ArrowNext [month] />
+                                        </div>
+                                        <div class="vc-wrapper" data-vc="wrapper">
+                                            <#WeekNumbers />
+                                            <div class="vc-content" data-vc="content">
+                                                <#Week />
+                                                <#Dates />
+                                                <#DateRangeTooltip />
+                                            </div>
+                                        </div>
+                                        <#ControlTime />
+                                        
+                                        <div class="vc-custom-action space-y-1 mt-2">
+                                            <div class="btnApply group/buttonActionVC flex-grow">
+                                                <button 
+                                                    class="px-4 py-2 w-full rounded-lg bg-blue-600 [&:not(:disabled)]:hover:contrast-200"
+                                                    type="button"
+                                                    data-set-range-type="apply"
+                                                    disabled
+                                                >
+                                                    <div class="cBtnApply">
+                                                        <div class="txApply text-white">
+                                                            <div class="tx text-xs">
+                                                                <p>Apply</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                    `,
+                                },
+                                
+                            });
+                            calendarInput.init();
+                            
+                        });
                     },
                 }
                 
@@ -1551,756 +858,6 @@
         </script>
         
         <script data-navigate-once>
-            // Alpine.data('filterDocument', () => {
-            //     const csrf_token = '{{ csrf_token() }}';
-
-            //     listFilter = {
-            //         status: [
-            //             { label: 'All Status', value: 'all', checked: false },
-            //             { label: 'In Progress', value: 'progress', checked: false },
-            //             { label: 'Completed', value: 'completed', checked: false },
-            //             { label: 'Rejected', value: 'rejected', checked: false },
-            //             { label: 'Draft', value: 'draft', checked: false },
-            //         ],
-            //         type: [
-            //             { label: 'All Type', value: 'all', checked: false },
-            //             { label: 'Signature', value: 'signature', checked: false },
-            //             { label: 'Paraf', value: 'paraf', checked: false },
-            //             { label: 'Uncategorized', value: 'uncategorized', checked: false },
-            //         ],
-            //         modified: [
-            //             { label: 'All Period', 
-            //                 value: {
-            //                     label: 'all',
-            //                     start_date: 'all',
-            //                 }, 
-            //             checked: false },
-            //             { label: 'Last 30 days', 
-            //                 value: {
-            //                     label: 'L30D',
-            //                     start_date: 30,
-            //                 }, 
-            //             checked: false },
-            //             { label: 'Last 3 months', 
-            //                 value: {
-            //                     label: 'L3M',
-            //                     start_date: 90,
-            //                 }, 
-            //             checked: false },
-            //             { label: 'Last 6 months', 
-            //                 value: {
-            //                     label: 'L6M',
-            //                     start_date: 180,
-            //                 }, 
-            //             checked: false },
-            //         ]
-            //     };
-
-            //     return {
-            //         // $filterDocument: [
-            //         //     { filterName: 'status', filterModal: false, filterText: listStatus[0].label, filterValue: listStatus[0].value },
-            //         //     { filterName: 'type', filterModal: false, filterText: listType[0].label, filterValue: listType[0].value },
-            //         //     { filterName: 'owner', filterModal: false, filterText: '', filterValue: '' },
-            //         //     // { filterName: 'modified', filterModal: false, filterText: '', filterValue: '' },
-            //         // ],
-
-            //         $filterDocument: {
-            //             status: { filterModal: false, filterText: listFilter.status[0].label, filterValue: listFilter.status[0].value },
-            //             type: { filterModal: false, filterText: listFilter.type[0].label, filterValue: listFilter.type[0].value },
-            //             owner: { filterModal: false, filterText: '', filterValue: '' },
-            //             modified: { filterModal: false, filterText: listFilter.modified[0].label, 
-            //                 filterValue: {
-            //                     label: listFilter.modified[0].value.label,
-            //                     start_date: '',
-            //                     end_date: '',
-            //                 } 
-            //             },
-            //         },
-
-            //         init() {
-            //             this.firstInitDefaultFilter();
-            //             this.firstInitModifiedFilter();
-
-            //             window.addEventListener('Alpine-Init-Filter-Document', ($val) => {
-            //                 this.dispatchDataFilter();
-            //             });
-            //         },
-
-            //         changeStatusFilter(event) {
-            //             const valInp = event.target.value;
-
-            //             if(listFilter.status.some(x => x.value == valInp)) {
-            //                 findStatus = listFilter.status.find(x => x.value == valInp);
-            //                 this.$filterDocument.status.filterText = findStatus.label;
-            //                 this.$filterDocument.status.filterValue = findStatus.value;
-
-            //                 if (findStatus.value == 'all') {
-            //                     removeParamsQuery('status');
-            //                 } else {
-            //                     setParamsQuery('status', findStatus.value);
-            //                 }
-            //             } else {
-            //                 this.$filterDocument.status.filterText = listFilter.status[0].label;
-            //                 this.$filterDocument.status.filterValue = listFilter.status[0].value;
-            //                 removeParamsQuery('status');
-            //             }
-            //             this.dispatchDataFilter();
-
-            //         },
-
-            //         changeTypeFilter(event, isDispatch = true) {
-            //             const valInp = event.target.value;
-
-            //             if (listFilter.type.some(x => x.value == valInp)) {
-            //                 findType = listFilter.type.find(x => x.value == valInp);
-            //                 this.$filterDocument.type.filterText = findType.label;
-            //                 this.$filterDocument.type.filterValue = findType.value;
-
-            //                 if (findType.value == 'all') {
-            //                     removeParamsQuery('type');
-            //                 } else {
-            //                     setParamsQuery('type', findType.value);
-            //                 }
-            //             } else {
-            //                 this.$filterDocument.type.filterText = listFilter.type[0].label;
-            //                 this.$filterDocument.type.filterValue = listFilter.type[0].value;
-            //                 removeParamsQuery('type');
-            //             }
-
-            //             this.dispatchDataFilter();
-            //         },
-
-            //         changeModifiedFilter(event) {
-            //             const valInp = event.target.value;
-            //             if (listFilter.modified.some(x => x.value.label == valInp) && (valInp != 'all')) {
-            //                 findModified = listFilter.modified.find(x => x.value.label == valInp);
-
-            //                 const now = new Date();
-            //                 const start = new Date();
-            //                 start.setDate(start.getDate() - findModified.value.start_date);
-
-            //                 $formatStart = this.formateDate(start);
-            //                 $formatNow = this.formateDate(now);
-
-            //                 this.$filterDocument.modified.filterText = findModified.label;
-            //                 this.$filterDocument.modified.filterValue.start_date = $formatStart;
-            //                 this.$filterDocument.modified.filterValue.end_date = $formatNow;
-
-            //                 setParamsQuery('modifiedtype', valInp);
-            //                 setParamsQuery('start_date', $formatStart);
-            //                 setParamsQuery('end_date', $formatNow);
-            //             } else {
-            //                 this.$filterDocument.modified.filterText = listFilter.modified[0].label;
-            //                 this.$filterDocument.modified.filterValue.start_date = '';
-            //                 this.$filterDocument.modified.filterValue.end_date = '';
-
-            //                 removeParamsQuery('modifiedtype');
-            //                 removeParamsQuery('start_date');
-            //                 removeParamsQuery('end_date');
-            //             }
-
-            //             this.dispatchDataFilter();
-            //         },
-
-            //         formateDate($time = new Date()) {
-            //             const now = new Date($time);
-
-            //             const day = String(now.getDate()).padStart(2, '0');
-            //             const month = String(now.getMonth() + 1).padStart(2, '0');
-            //             const year = now.getFullYear();
-
-            //             const formattedDate = `${day}-${month}-${year}`;
-            //             return formattedDate;
-            //         },
-
-            //         dispatchDataFilter() {
-            //             $dispatchingData = Object.assign({}, this.$filterDocument);
-            //             Object.assign($dispatchingData, {_token: csrf_token});
-            //             console.log($dispatchingData);
-
-            //             dispatchingDataLivewireTo('Document-Filter-Data', $dispatchingData);
-            //         },
-
-            //         async firstInitDefaultFilter() {
-            //             $paramQueryUrlAll = ['status', 'type'];
-
-            //             $paramQueryUrlAll.forEach(($val) => {
-            //                 if (isParamQueryExists($val)) {
-            //                     $valParamQuery = whatParamQueryValue($val);
-
-            //                     if(listFilter[$val].some(x => x.value == $valParamQuery)) {
-            //                         $filterSelect = listFilter[$val].find(x => x.value == $valParamQuery);
-            //                         $filterSelect.checked = true;
-
-            //                         this.$filterDocument[$val].filterText = $filterSelect.label;
-            //                         this.$filterDocument[$val].filterValue = $filterSelect.value;
-            //                     } else {
-            //                         this.$filterDocument[$val].filterText = listFilter[$val][0].label;
-            //                         this.$filterDocument[$val].filterValue = listFilter[$val][0].label;
-            //                         removeParamsQuery($val);
-            //                     }
-            //                 } else {
-            //                     listFilter[$val][0].checked = true;
-            //                 }
-
-            //             });
-            //         },
-
-            //         async firstInitModifiedFilter() {
-            //             $filterName = 'modifiedtype';
-            //             if (isParamQueryExists($filterName)) {
-            //                 $valParamQuery = whatParamQueryValue($filterName);
-
-            //                 if (listFilter.modified.some(x => x.value.label == $valParamQuery) && $valParamQuery != 'all') {
-            //                     $filterSelect = listFilter.modified.find(x => x.value.label == $valParamQuery);
-            //                     $filterSelect.checked = true;
-
-            //                     const now = new Date();
-            //                     const start = new Date();
-            //                     start.setDate(start.getDate() - $filterSelect.value.start_date);
-
-            //                     $formatStart = this.formateDate(start);
-            //                     $formatNow = this.formateDate(now);
-
-            //                     this.$filterDocument.modified.filterText = $filterSelect.label;
-            //                     this.$filterDocument.modified.filterValue.label = $filterSelect.value.label;
-            //                     this.$filterDocument.modified.filterValue.start_date = $formatStart;
-            //                     this.$filterDocument.modified.filterValue.end_date = $formatNow;
-
-            //                     setParamsQuery('start_date', $formatStart);
-            //                     setParamsQuery('end_date', $formatNow);
-
-            //                 } else {
-            //                     this.$filterDocument.modified.filterText = listFilter.modified[0].label;
-            //                     this.$filterDocument.modified.filterValue.label = listFilter.modified[0].value.label;
-            //                     this.$filterDocument.modified.filterValue.start_date = '';
-            //                     this.$filterDocument.modified.filterValue.end_date = '';
-
-            //                     listFilter.modified[0].checked = true;
-
-            //                     $paramsQuery = ['modifiedtype', 'start_date', 'end_date'];
-            //                     $paramsQuery.forEach(($val) => {
-            //                         removeParamsQuery($val);
-            //                     });
-            //                 }
-            //             } else {
-            //                 this.$filterDocument.modified.filterText = listFilter.modified[0].label;
-            //                 this.$filterDocument.modified.filterValue.label = listFilter.modified[0].value.label;
-            //                 this.$filterDocument.modified.filterValue.start_date = '';
-            //                 this.$filterDocument.modified.filterValue.end_date = '';
-
-            //                 listFilter.modified[0].checked = true;
-            //             }
-            //         },
-
-            //         async firstInitFilter() {
-            //             $listFilterCheck = [
-            //                 {param: 'status', funcFilter: 'changeStatusFilter'}
-            //             ];
-
-            //             $listFilterCheck.forEach(($valFilter) => {
-
-            //             });
-            //         }
-            //     };
-            // });
-
-            // Alpine.data('filterDocument', () => {
-            //     const csrf_token = '{{ csrf_token() }}';
-                
-            //     const $today = new Date();
-            //     const $yesterday = new Date();
-            //     $yesterday.setDate($yesterday.getDate() - 1);
-                
-            //     listFilter = {
-            //         status: [
-            //             {label: 'All Status',value: 'all',checked: false},
-            //             {label: 'In Progress',value: 'progress',checked: false},
-            //             {label: 'Completed',value: 'completed',checked: false},
-            //             {label: 'Rejected',value: 'rejected',checked: false},
-            //             {label: 'Draft',value: 'draft',checked: false},
-            //         ],
-            //         type: [
-            //             {label: 'All Type',value: 'all',checked: false},
-            //             {label: 'Signature',value: 'signature',checked: false},
-            //             {label: 'Paraf',value: 'paraf',checked: false},
-            //             {label: 'Uncategorized',value: 'uncategorized',checked: false},
-            //         ],
-            //         modified: [
-            //             {
-            //                 label: 'All Period',
-            //                 value: {
-            //                     label: 'all',
-            //                     start_date: 'all',
-            //                 },
-            //                 checked: false
-            //             },
-            //             {
-            //                 label: 'Last 30 days',
-            //                 value: {
-            //                     label: 'L30D',
-            //                     start_date: 30,
-            //                 },
-            //                 checked: false
-            //             },
-            //             {
-            //                 label: 'Last 3 months',
-            //                 value: {
-            //                     label: 'L3M',
-            //                     start_date: 90,
-            //                 },
-            //                 checked: false
-            //             },
-            //             {
-            //                 label: 'Last 6 months',
-            //                 value: {
-            //                     label: 'L6M',
-            //                     start_date: 180,
-            //                 },
-            //                 checked: false
-            //             },
-            //         ],
-            //         customModified: [
-            //             {
-            //                 label: 'Start Date',
-            //                 elem: {
-            //                     id: '#customModifiedFilterStartDate',
-            //                     icon: 'fas fa-calendar-days',
-            //                     flatpickrDay: 'hover:bg-gradient-to-r from-[#FFCA28] to-[#D4A927] hover:text-[#533F00]',
-            //                 },
-            //                 value: '',
-            //                 config: {
-            //                     dateFormat: 'd-m-Y',
-            //                     maxDate: $yesterday,
-            //                 }
-            //             },
-            //             {
-            //                 label: 'End Date',
-            //                 elem: {
-            //                     id: '#customModifiedFilterEndDate',
-            //                     icon: 'fas fa-calendar-days',
-            //                     flatpickrDay: 'hover:bg-gradient-to-r from-[#FFCA28] to-[#D4A927] hover:text-[#533F00]',
-            //                 },
-            //                 value: '',
-            //                 config: {
-            //                     dateFormat: 'd-m-Y',
-            //                     maxDate: $today,
-            //                 }
-            //             },
-            //         ]
-            //     };
-                
-            //     const ElementDataCustomInput = [
-            //         {
-            //             label: 'start_date',
-            //             dataValue: 'customModifiedFilterStartDate',
-            //             maxDataValue: {
-            //                 value: $yesterday,
-            //                 stringValue: $yesterday.toISOString().split("T")[0],
-            //                 datepickerValue: '-1',
-            //             },
-            //         },
-            //         {
-            //             label: 'end_date',
-            //             dataValue: 'customModifiedFilterEndDate',
-            //             maxDataValue: {
-            //                 value: $today,
-            //                 stringValue: $today.toISOString().split('T')[0],
-            //                 datepickerValue: '0'
-            //             },
-            //         },
-            //     ];
-            //     // listFilter.customModified.forEach((x) => {
-            //     //     console.log(x);
-                    
-            //     //     $jq(x.elem.id).flatpickr({
-            //     //         dateFormat: x.config.dateFormat,
-            //     //         maxDate: x.config.maxDate,
-            //     //         onReady: function (selectedDates, dateStr, instance) {
-            //     //             let selectClassInstance = instance.calendarContainer.className;
-            //     //             selectClassInstance = selectClassInstance.split(' ')[0];
-
-            //     //             const jqClassInstance = $jq(`.${selectClassInstance}`);
-            //     //             jqClassInstance.addClass([
-            //     //                 // 'bg-blue-100'
-            //     //             ]);
-                            
-            //     //             jqClassInstance.css({
-            //     //                 position: 'absolute'
-            //     //             });
-                            
-            //     //             jqClassInstance.find('.flatpickr-month select').addClass('text-sm');
-            //     //             jqClassInstance.find('.flatpickr-monthDropdown-months option').addClass('text-sm');
-                            
-            //     //             jqClassInstance.find('.flatpickr-innerContainer').addClass('mt-1.5');
-            //     //             jqClassInstance.find('.flatpickr-day').addClass(x.elem.flatpickrDay);
-            //     //         },
-            //     //         onChange: function(selectedDates, dateStr, instance) {
-            //     //             let selectClassInstance = instance.calendarContainer.className;
-            //     //             selectClassInstance = selectClassInstance.split(' ')[0];
-                            
-            //     //             const jqClassInstance = $jq(`.${selectClassInstance}`);
-            //     //             jqClassInstance.addClass([
-            //     //                 // 'bg-blue-100'
-            //     //             ]);
-                            
-            //     //             jqClassInstance.css({
-            //     //                 position: 'absolute',
-            //     //                 right: '0'
-            //     //             });
-                            
-            //     //             jqClassInstance.find('.flatpickr-month select').addClass('text-sm');
-            //     //             jqClassInstance.find('.flatpickr-monthDropdown-months option').addClass('text-sm');
-                            
-            //     //             jqClassInstance.find('.flatpickr-innerContainer').addClass('mt-1.5');
-            //     //             jqClassInstance.find('.flatpickr-day').addClass(x.elem.flatpickrDay);
-            //     //         }
-            //     //     });
-            //     // });
-                
-                
-
-            //     return {
-                    
-            //         $filterDocument: {
-            //             status: {
-            //                 filterModal: false,
-            //                 filterText: listFilter.status[0].label,
-            //                 filterValue: listFilter.status[0].value
-            //             },
-            //             type: {
-            //                 filterModal: false,
-            //                 filterText: listFilter.type[0].label,
-            //                 filterValue: listFilter.type[0].value
-            //             },
-            //             owner: {
-            //                 filterModal: false,
-            //                 filterText: '',
-            //                 filterValue: ''
-            //             },
-            //             modified: {
-            //                 filterModal: false,
-            //                 filterText: listFilter.modified[0].label,
-            //                 filterValue: {
-            //                     label: listFilter.modified[0].value.label,
-            //                     start_date: '',
-            //                     end_date: '',
-            //                 },
-            //                 filterStatus: false
-            //             },
-            //             customModified: {
-            //                 filterModal: false,
-            //                 filterText: 'Custom Period',
-            //                 filterValue: {
-            //                     start_date: {
-            //                         label: 'Start Date',
-            //                         value: ''
-            //                     },
-            //                     end_date: {
-            //                         label: 'End Date',
-            //                         value: ''
-            //                     },
-            //                 },
-            //                 filterStatus: false,
-            //             }
-            //         },
-
-            //         init() {
-            //             this.firstInitFilter();
-            //             window.addEventListener('Alpine-Init-Filter-Document', ($val) => {
-            //                 this.dispatchDataFilter();
-            //             });
-                        
-            //             ElementDataCustomInput.forEach((x) => {
-            //                 const jqElmnt = $jq(`#${x.dataValue}`);
-            //                 // jqElmnt.datepicker({
-            //                 //     changeMonth: true,
-            //                 //     changeYear: true,
-            //                 //     dateFormat: 'dd-mm-yy',
-            //                 //     maxDate: x.maxDataValue.datepickerValue,
-            //                 // });
-            //                 const calendarInput = new Calendar(`#${x.dataValue}`, {
-            //                     inputMode: true,
-            //                     dateMax: x.maxDataValue.value,
-            //                     dateToday: x.maxDataValue.value,
-            //                     positionToInput: 'left',
-            //                     selectedTheme: 'light',
-            //                     selectedWeekends: [-1],
-            //                     onChangeToInput(self) {
-            //                         const input = self.context.inputElement;
-            //                         if (!input) return;
-                                    
-            //                         input.value = self.context.selectedDates[0] || '';
-                                    
-            //                         input.dispatchEvent(new Event('input', { bubbles: true }));
-            //                         input.dispatchEvent(new Event('change', { bubbles: true }));
-            //                         // if (input.value) {
-            //                         // }
-            //                     },
-            //                 });
-                            
-            //                 calendarInput.init();
-            //             });
-            //         },
-
-            //         changeStatusFilter(event, isDispatch = true, isSetParam = true) {
-            //             const valInp = event.target?.value || event;
-            //             if (listFilter.status.some(x => x.value == valInp)) {
-            //                 findStatus = listFilter.status.find(x => x.value == valInp);
-            //                 findStatus.checked = true;
-            //                 this.$filterDocument.status.filterText = findStatus.label;
-            //                 this.$filterDocument.status.filterValue = findStatus.value;
-
-            //                 if (findStatus.value == 'all') {
-            //                     removeParamsQuery('status');
-            //                 } else if (isSetParam) {
-            //                     setParamsQuery('status', findStatus.value);
-            //                 }
-            //             } else {
-            //                 this.$filterDocument.status.filterText = listFilter.status[0].label;
-            //                 this.$filterDocument.status.filterValue = listFilter.status[0].value;
-            //                 removeParamsQuery('status');
-            //             }
-
-            //             if (isDispatch) {
-            //                 this.dispatchDataFilter();
-            //             }
-
-            //         },
-
-            //         changeTypeFilter(event, isDispatch = true, isSetParam = true) {
-            //             const valInp = event.target?.value || event;
-
-            //             if (listFilter.type.some(x => x.value == valInp)) {
-            //                 findType = listFilter.type.find(x => x.value == valInp);
-            //                 findType.checked = true;
-
-            //                 this.$filterDocument.type.filterText = findType.label;
-            //                 this.$filterDocument.type.filterValue = findType.value;
-
-            //                 if (findType.value == 'all') {
-            //                     removeParamsQuery('type');
-            //                 } else if (isSetParam) {
-            //                     setParamsQuery('type', findType.value);
-            //                 }
-            //             } else {
-            //                 this.$filterDocument.type.filterText = listFilter.type[0].label;
-            //                 this.$filterDocument.type.filterValue = listFilter.type[0].value;
-            //                 removeParamsQuery('type');
-            //             }
-
-            //             if (isDispatch) {
-            //                 this.dispatchDataFilter();
-            //             }
-            //         },
-
-            //         changeModifiedFilter(event, isDispatch = true, isSetParam = true) {
-            //             const valInp = event.target?.value || event;
-                        
-            //             if (listFilter.modified.some(x => x.value.label == valInp) && (valInp != 'all') && (!this.$filterDocument.customModified.filterStatus)) {
-            //                 findModified = listFilter.modified.find(x => x.value.label == valInp);
-            //                 findModified.checked = true;
-
-            //                 const now = new Date();
-            //                 const start = new Date();
-            //                 start.setDate(start.getDate() - findModified.value.start_date);
-                            
-            //                 $formatStart = this.formateDate(start);
-            //                 $formatNow = this.formateDate(now);
-
-            //                 this.$filterDocument.modified.filterText = findModified.label;
-            //                 this.$filterDocument.modified.filterValue.label = findModified.value.label;
-            //                 this.$filterDocument.modified.filterValue.start_date = $formatStart;
-            //                 this.$filterDocument.modified.filterValue.end_date = $formatNow;
-            //                 this.$filterDocument.modified.filterStatus = true;
-            //                 this.$filterDocument.customModified.filterStatus = false;
-
-            //                 if (isSetParam) {
-            //                     setParamsQuery('modifiedtype', valInp);
-            //                     setParamsQuery('start_date', $formatStart);
-            //                     setParamsQuery('end_date', $formatNow);
-            //                 }
-            //             } else {
-            //                 listFilter.modified[0].checked = true;
-            //                 this.$filterDocument.modified.filterText = listFilter.modified[0].label;
-            //                 this.$filterDocument.modified.filterValue.label = listFilter.modified[0].value.label;
-            //                 this.$filterDocument.modified.filterValue.start_date = '';
-            //                 this.$filterDocument.modified.filterValue.end_date = '';
-            //                 this.$filterDocument.modified.filterStatus = false;
-
-            //                 removeParamsQuery('modifiedtype');
-            //                 removeParamsQuery('start_date');
-            //                 removeParamsQuery('end_date');
-            //             }
-
-            //             if (isDispatch) {
-            //                 this.dispatchDataFilter();
-            //             }
-            //         },
-                    
-            //         changeCustomModifiedFilter(event, isDispatch = true, isSetParam = true) {
-            //             // console.log();
-            //             // console.log($jq(`#${event.target.attributes.id.value}`).data('custom-label'));
-            //             // // console.log($jq(event.target).attr());
-            //             // console.log(event.target.value);
-            //             // const elemEvent = $jq(`#${event.currentTarget.attributes.id.value}`);
-            //             const elemEvent = $jq(`#${event.currentTarget.id}`);
-            //             const valInp = elemEvent.val();
-            //             const dataCustom = elemEvent.data('custom-label');
-            //             const dataCustomStatus = this.$filterDocument.customModified.filterValue.hasOwnProperty(dataCustom);
-                        
-            //             let formatDateInp = this.formateDate(valInp);
-                        
-            //             if (dataCustomStatus) {
-            //                 const softCopyObjFilterDocument = this.$filterDocument.customModified;
-                            
-            //                 softCopyObjFilterDocument.filterValue[dataCustom].value = formatDateInp
-            //             }
-                        
-            //             // console.log(this.checkValidDateString(valInp));
-            //             // console.log(event);
-            //             // console.log(elemEvent);
-            //             // console.log(valInp);
-            //             // console.log(dataCustom);
-                        
-            //             // let newDateInp = new Date(valInp);
-            //             // let formatDateInp = this.formateDate(valInp);
-                        
-            //             // console.log(newDateInp);
-            //             // console.log(formatDateInp);
-                        
-            //             // if (this.checkValidDateString(valInp)) {
-            //             //     alert('Date format not valid');
-            //             //     return;
-            //             // }
-                        
-            //             // if (dataCustom in this.$filterDocument.customModified.filterValue) {
-                            
-            //             // }
-                        
-            //             // if (listFilter.customModified.some())
-            //         },
-                    
-            //         clearCustomModifiedFilter(event) {
-            //             $elemClear = $jq(`#${event.target.attributes.id.value}`);
-            //             $dataAttr = $elemClear.data('custom-clear');
-            //         },
-                    
-            //         viewModalCustomModifiedFilter() {
-            //             const labelModifiedFilter = this.$filterDocument.modified.filterValue.label;
-            //             let statusModalModifiedFilter = this.$filterDocument.customModified.filterModal;
-            //             console.log(this.$filterDocument.customModified.filterModal);
-            //             if (this.$filterDocument.customModified.filterModal) {
-            //                 this.$filterDocument.customModified.filterModal = false;
-            //             } else {
-            //                 this.$filterDocument.customModified.filterModal = true;
-            //             }
-                        
-            //             if (labelModifiedFilter != 'custom') {
-                            
-            //             }
-            //         },
-                    
-            //         // viewCalendarCustomModifiedFilter(event) {
-            //         //     console.log($jq('#ui-datepicker-div'));
-            //         //     $jq('#ui-datepicker-div').css({ backgroundColor: 'red' });
-            //         //     let elmEvent = event.currentTarget;
-            //         //     let jqElmEvent = $jq(elmEvent);
-            //         //     let valDataCustomInput = jqElmEvent.data('custom-input');
-                        
-            //         //     if (ElementDataCustomInput.some(x => x.dataValue == valDataCustomInput)) {
-            //         //         const $jqInpEvent = $jq(`#${valDataCustomInput}`);
-                            
-            //         //         console.log($jqInpEvent);
-            //         //         $jqInpEvent.focus();
-            //         //         // $jqInpEvent.css({ backgroundColor: 'red' });
-            //         //         // $jqInpEvent.showPicker();
-            //         //     }
-            //         //     // console.dir(elmEvent);
-            //         //     // console.log(valDataCustomInput);
-            //         //     // console.log(elmEvent.attributes);
-            //         //     // console.log(event);
-            //         //     // console.log(event.target.attributes);
-            //         //     // console.log(event.target.className);
-            //         // },
-
-            //         formateDate($time = new Date()) {
-            //             const now = new Date($time);
-
-            //             const day = String(now.getDate()).padStart(2, '0');
-            //             const month = String(now.getMonth() + 1).padStart(2, '0');
-            //             const year = now.getFullYear();
-
-            //             const formattedDate = `${day}-${month}-${year}`;
-            //             return formattedDate;
-            //         },
-                    
-            //         formateDateDefault($time) {
-            //             if (!/^\d{2}-\d{2}-\d{4}$/.test(val)) return false;
-                        
-            //             const [day, month, year] = val.split('-').map(Number);
-            //             const dateObj = new Date(year, month - 1, day);
-            //             const dateString = `${year}-${month}-${day}`;
-                        
-            //             return dateString;
-            //         },
-                    
-            //         checkValidDateString(val) {
-            //             if (!/^\d{2}-\d{2}-\d{4}$/.test(val)) return false;
-                        
-            //             const [day, month, year] = val.split('-').map(Number);
-            //             const dateObj = new Date(year, month - 1, day);
-                        
-            //             return (
-            //                 dateObj.getFullYear() === year &&
-            //                 dateObj.getMonth() === month - 1 &&
-            //                 dateObj.getDate() === day
-            //             );
-            //         },
-
-            //         dispatchDataFilter() {
-            //             $dispatchingData = Object.assign({}, this.$filterDocument);
-            //             Object.assign($dispatchingData, {
-            //                 _token: csrf_token
-            //             });
-            //             console.log($dispatchingData);
-
-            //             dispatchingDataLivewireTo('Document-Filter-Data', $dispatchingData);
-            //         },
-
-            //         async firstInitFilter() {
-            //             let $listFilterCheck = [{
-            //                 filter: 'status',
-            //                 funcFilter: 'changeStatusFilter',
-            //                 dispatch: false,
-            //                 param: false
-            //             },
-            //             {
-            //                 filter: 'type',
-            //                 funcFilter: 'changeTypeFilter',
-            //                 dispatch: false,
-            //                 param: false
-            //             },
-            //             {
-            //                 filter: 'modifiedtype',
-            //                 funcFilter: 'changeModifiedFilter',
-            //                 dispatch: false,
-            //                 param: true
-            //             },
-            //             ];
-
-            //             $listFilterCheck.forEach(($valFilter) => {
-            //                 $valFilterParamQuery = whatParamQueryValue($valFilter.filter) ?? 'all';
-
-            //                 this[$valFilter.funcFilter]($valFilterParamQuery, $valFilter.dispatch,
-            //                     $valFilter.param);
-            //             });
-            //         },
-            //     };
-            // });
-            
-            
-            
             
             Livewire.hook('component.init', (component, cleanup) => {
                 console.log({
