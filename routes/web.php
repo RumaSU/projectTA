@@ -62,13 +62,30 @@ Route::middleware(['auth'])->name('app.')->group(function() {
     
     Route::prefix('mysignature')->name('signature.')->group( function() {
         Route::get('/', App\Livewire\App\Signature\Main::class)->name('main');
+        
+        Route::get('/preview/images/{filename}', [\App\Http\Controllers\Signatures\Images::class, 'viewImage']);
+        Route::get('/preview/images/{filename}/{token}');
     });
-     
+    
     Route::get('/logout', function() {
         Auth::logout();
         
         return redirect('/auth');
     });
+    
+});
+
+Route::prefix('drive')->name('drive.')->group( function() {
+    
+    Route::prefix('/files')->name('files.')->group(function() {
+        
+        // View files image signatures
+        // Route::get('/sg/{filename}/view', [\App\Http\Controllers\Signatures\Images::class, 'viewImage'])->name("preview_signature");
+        // TiFb4QHBq7qzLMqTjFPxzYeKCG9T8h5BI0eG760NR20WC6vQDiUJdcdWtLgU2Rwx
+        Route::get('/sg/{filename}/view', [\App\Http\Controllers\Signature::class, 'viewImage'])->name("preview_signature");
+        
+    });
+    
 });
 
 Route::prefix('/session')->group(function() {

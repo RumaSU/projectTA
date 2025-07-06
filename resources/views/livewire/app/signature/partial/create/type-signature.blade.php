@@ -2,283 +2,287 @@
     x-data="typeNewSignature"
     @typenewsignatureshow.window="showType"
     @typenewsignaturecreate.window="statusCreateSignature($event)"
-    @click.away="hideType"
     
     style="visibility: hidden; opacity: 0"
     :style="modalType ? `visibility: visible; opacity: 1` : `visibility: hidden; opacity: 0` "
     class="wrapper-modalCreateNewSignature fixed z-20 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none transition-all w-screen h-screen bg-gray-800/30 flex items-center justify-center"
     :class="modalType ? `scale-100` : `scale-90` "
     
-    {{-- style="visibility: hidden; opacity: 0"
-    :style="modalType ? `visibility: visible; opacity: 1` : `visibility: hidden; opacity: 0` "
-    class="wrapper-modalCreateNewSignature fixed z-20 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none transition-all w-screen h-screen bg-gray-800/30 flex items-center justify-center"
-        --}}
     data-modal-name="type-signature"
     wire:ignore
     >
     
     <div 
-        class="ctr-modalCreateNewSignature bg-white shadow-md shadow-black/60 w-[32rem] rounded-lg overflow-hidden transition-all"
+        class="ctr-modalCreateNewSignature bg-white shadow-md shadow-black/60 w-[32rem] rounded-lg relative overflow-hidden transition-all"
         {{-- style="visibility: hidden; opacity: 0"
         :style="modalType ? `visibility: visible; opacity: 1` : `visibility: hidden; opacity: 0` "
         :class="modalType ? `scale-100` : `scale-90` " --}}
         >
         <div class="cModalCreateNewSignature">
             
-            <div class="headerModalCreateNewSignature px-4 pt-4">
-                <div class="textHeader flex items-center justify-center">
-                    <div class="txHeader text-lg font-medium">
-                        <p>Type</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mainModalCreateNewSignature my-2 h-[38rem] overflow-auto space-y-4 px-4">
-                
-                <div class="group-inputType grid grid-cols-5 items-center gap-2">
-                    <div class="item-mainModal col-span-3" data-item-name="input-signature">
-                        <div class="headerItem flex items-center justify-between gap-2">
-                            <div class="tx text-sm">
-                                <p>Signature</p>
-                            </div>
-                        </div>
-                        
-                        <div class="inputTypeSignature mt-1 border-2 border-slate-400 rounded-lg focus-within:border-blue-600">
-                            <div class="input">
-                                <input 
-                                    type="text" 
-                                    name="input_signature_type" 
-                                    placeholder="Write your full name"
-                                    data-input-type="signature" 
-                                    @input="updateTypeText"
-                                    class="p-2 w-full text-sm bg-transparent outline-none border-none"
-                                >
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item-mainModal col-span-2" data-item-name="input-paraf">
-                        <div class="headerItem flex items-center justify-between gap-2">
-                            <div class="tx text-sm">
-                                <p>Paraf</p>
-                            </div>
-                        </div>
-                        
-                        <div class="inputTypeParaf mt-1 border-2 border-slate-400 rounded-lg focus-within:border-blue-600">
-                            <div class="input">
-                                <input 
-                                    type="text" 
-                                    name="input_paraf_type" 
-                                    placeholder="Write your initial"
-                                    data-input-type="paraf" 
-                                    @input="updateTypeText"
-                                    class="p-2 w-full text-sm bg-transparent outline-none border-none"
-                                >
-                            </div>
+            <div class="mainContentModalCreateNewSignature">
+                <div class="headerModalCreateNewSignature px-4 pt-4">
+                    <div class="textHeader flex items-center justify-center">
+                        <div class="txHeader text-lg font-medium">
+                            <p>Type</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="group-selectStyleCreateNow grid grid-cols-5 gap-2 items-center relative">
+                <div class="mainModalCreateNewSignature my-2 h-[38rem] overflow-auto space-y-4 px-4">
                     
-                    <!-- Style -->
-                    <div 
-                        class="item-mainModal col-span-3" 
-                        data-item-name="pick-font"
-                        {{-- x-data.self="{modalItem: false}" --}}
-                        >
-                        {{-- <div class="headerItem">
-                            <div class="tx text-sm font-light">
-                                <p>Style</p>
-                            </div>
-                        </div> --}}
-                        <div class="act-selectStyleType">
-                            <button
-                                type="button"
-                                {{-- class="block border border-slate-400 px-4 py-2 rounded-lg w-52" --}}
-                                class="block py-2 w-full border-b border-transparent hover:border-slate-400"
-                                @click="modalChildStyle = !modalChildStyle"
-                                @click.stop
-                            >
-                                <div class="cButtonAct flex items-center justify-between gap-2">
-                                    <div class="textButton flex-grow">
-                                        <div class="tx flex items-center justify-between">
-                                            <p x-text="selectStyle.text" :style="`font-family: var(${selectStyle.font})`">Select Style</p>
-                                            {{-- <p x-text="textLocal" class="text-sm">Select Style</p> --}}
-                                            {{-- <p class="exampleText" style="display: none" :style="textLocal != 'Select Style' ? `font-family: var(${fontLocal})` : 'display: none' " >Example</p> --}}
-                                        </div>
-                                    </div>
-                                    <div class="iconButton shrink-0 ">
-                                        <div class="icon">
-                                            <i class="fas fa-angle-down"></i>
-                                        </div>
-                                    </div>
+                    <div class="group-inputType grid grid-cols-5 items-center gap-2">
+                        <div class="item-mainModal col-span-3" data-item-name="input-signature">
+                            <div class="headerItem flex items-center justify-between gap-2">
+                                <div class="tx text-sm">
+                                    <p>Signature</p>
                                 </div>
-                            </button>
+                            </div>
+                            
+                            <div class="inputTypeSignature mt-1 border-2 border-slate-400 rounded-lg focus-within:border-blue-600">
+                                <div class="input">
+                                    <input 
+                                        type="text" 
+                                        name="input_signature_type" 
+                                        placeholder="Write your full name"
+                                        data-input-type="signature" 
+                                        @input="updateTypeText"
+                                        class="p-2 w-full text-sm bg-transparent outline-none border-none"
+                                    >
+                                </div>
+                            </div>
                         </div>
+                        <div class="item-mainModal col-span-2" data-item-name="input-paraf">
+                            <div class="headerItem flex items-center justify-between gap-2">
+                                <div class="tx text-sm">
+                                    <p>Paraf</p>
+                                </div>
+                            </div>
+                            
+                            <div class="inputTypeParaf mt-1 border-2 border-slate-400 rounded-lg focus-within:border-blue-600">
+                                <div class="input">
+                                    <input 
+                                        type="text" 
+                                        name="input_paraf_type" 
+                                        placeholder="Write your initial"
+                                        data-input-type="paraf" 
+                                        @input="updateTypeText"
+                                        class="p-2 w-full text-sm bg-transparent outline-none border-none"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="group-selectStyleCreateNow grid grid-cols-5 gap-2 items-center relative">
                         
+                        <!-- Style -->
                         <div 
-                            @click.away="modalChildStyle = false"
-                            class="wrapper-selectStyleType absolute z-[2] top-full left-0 w-full pt-0.5 pb-2 pr-2 pl-1 mt-1 bg-[#f1f1f1] rounded-lg overflow-c overflow-c-gray transition-all shadow-inner shadow-black/10"
-                            
-                            style="visibility: hidden; opacity: 0"
-                            :style="modalChildStyle ? `visibility: visible; opacity: 1; scale: 1` : `visibility: hidden; opacity: 0` "
-                            :class="modalChildStyle ? `h-36 overflow-auto` : `h-0 pointer-events-none overflow-hidden` "
+                            class="item-mainModal col-span-3" 
+                            data-item-name="pick-font"
+                            {{-- x-data.self="{modalItem: false}" --}}
                             >
+                            {{-- <div class="headerItem">
+                                <div class="tx text-sm font-light">
+                                    <p>Style</p>
+                                </div>
+                            </div> --}}
+                            <div class="act-selectStyleType">
+                                <button
+                                    type="button"
+                                    {{-- class="block border border-slate-400 px-4 py-2 rounded-lg w-52" --}}
+                                    class="block py-2 w-full border-b border-transparent hover:border-slate-400"
+                                    @click="modalChildStyle = !modalChildStyle"
+                                    @click.stop
+                                >
+                                    <div class="cButtonAct flex items-center justify-between gap-2">
+                                        <div class="textButton flex-grow">
+                                            <div class="tx flex items-center justify-between">
+                                                <p x-text="selectStyle.text" :style="`font-family: var(${selectStyle.font})`">Select Style</p>
+                                                {{-- <p x-text="textLocal" class="text-sm">Select Style</p> --}}
+                                                {{-- <p class="exampleText" style="display: none" :style="textLocal != 'Select Style' ? `font-family: var(${fontLocal})` : 'display: none' " >Example</p> --}}
+                                            </div>
+                                        </div>
+                                        <div class="iconButton shrink-0 ">
+                                            <div class="icon">
+                                                <i class="fas fa-angle-down"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
                             
-                            <div class="selectStyleType space-y-0.5">
-                                <template x-for="style in styles">
-                                    
-                                    <div class="itemPickStyle group">
-                                        <label 
-                                            class="labelPickStyle cursor-pointer block px-4 py-1 rounded-lg bg-white hover:bg-blue-100 group-has-[:checked]:bg-blue-100 shadow-sm shadow-black/40">
-                                            <div class="cLabelPickStyle flex items-center justify-between gap-2">
-                                                <div class="textStyle flex-grow">
-                                                    <div class="tx flex items-center justify-between text-lg">
-                                                        {{-- <p class="nameText flex-grow text-sm" x-text="style.text"></p> --}}
-                                                        <p class="nameText" x-text="style.text" :style="`font-family: var(${style.font})`"></p>
+                            <div 
+                                @click.away="modalChildStyle = false"
+                                class="wrapper-selectStyleType absolute z-[2] top-full left-0 w-full pt-0.5 pb-2 pr-2 pl-1 mt-1 bg-[#f1f1f1] rounded-lg overflow-c overflow-c-gray transition-all shadow-inner shadow-black/10"
+                                
+                                style="visibility: hidden; opacity: 0"
+                                :style="modalChildStyle ? `visibility: visible; opacity: 1; scale: 1` : `visibility: hidden; opacity: 0` "
+                                :class="modalChildStyle ? `h-36 overflow-auto` : `h-0 pointer-events-none overflow-hidden` "
+                                >
+                                
+                                <div class="selectStyleType space-y-0.5">
+                                    <template x-for="style in styles">
+                                        
+                                        <div class="itemPickStyle group">
+                                            <label 
+                                                class="labelPickStyle cursor-pointer block px-4 py-1 rounded-lg bg-white hover:bg-blue-100 group-has-[:checked]:bg-blue-100 shadow-sm shadow-black/40">
+                                                <div class="cLabelPickStyle flex items-center justify-between gap-2">
+                                                    <div class="textStyle flex-grow">
+                                                        <div class="tx flex items-center justify-between text-lg">
+                                                            {{-- <p class="nameText flex-grow text-sm" x-text="style.text"></p> --}}
+                                                            <p class="nameText" x-text="style.text" :style="`font-family: var(${style.font})`"></p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="iconSelect shrink-0 size-6 flex items-center justify-center invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
+                                                        <div class="icon text-lg group-has-[:checked]:text-blue-600">
+                                                            <i class="fas fa-check"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
-                                                <div class="iconSelect shrink-0 size-6 flex items-center justify-center invisible opacity-0 group-has-[:checked]:visible group-has-[:checked]:opacity-100">
-                                                    <div class="icon text-lg group-has-[:checked]:text-blue-600">
-                                                        <i class="fas fa-check"></i>
+                                                <input 
+                                                    type="radio" 
+                                                    name="pickStyleTypeNewSignature" 
+                                                    class="sr-only" 
+                                                    :value="style.value"
+                                                    :checked="style.default"  
+                                                    @change="updateTypeStyle">
+                                            </label>
+                                        </div>
+                                        
+                                    </template>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Color -->
+                        <div class="item-mainModal flex items-center justify-end gap-4 col-span-2" data-item-name="pick-color">
+                            {{-- <div class="headerItem">
+                                <div class="tx text-sm font-light">
+                                    <p>Color</p>
+                                </div>
+                            </div> --}}
+                            <div class="listPickColor flex items-center flex-wrap gap-1">
+                                <template x-for="color in colors">
+                                    
+                                    <div class="itemPickColor group">
+                                        <label
+                                            class="cursor-pointer block p-0.5 rounded-full outline outline-1 outline-gray-400 hover:outline-2 hover:outline-blue-600 group-has-[:checked]:outline-2 group-has-[:checked]:outline-blue-600 group-has-[:checked]:bg-blue-50"
+                                        >
+                                            <div class="cLabelPickCOlor">
+                                                <div class="bulletColor">
+                                                    <div class="color flex items-center justify-center size-6 rounded-full">
+                                                        <i class="size-3/4 rounded-full " :class="`bg-[${color.color}]`"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <input 
+                                                class="sr-only"
                                                 type="radio" 
-                                                name="pickStyleTypeNewSignature" 
-                                                class="sr-only" 
-                                                :value="style.value"
-                                                :checked="style.default"  
-                                                @change="updateTypeStyle">
+                                                name="pickColorTypeNewSignature" 
+                                                :value="color.color"
+                                                :checked="color.default"
+                                                @change="updateTypeColor"
+                                                >
                                         </label>
                                     </div>
-                                    
                                 </template>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Color -->
-                    <div class="item-mainModal flex items-center justify-end gap-4 col-span-2" data-item-name="pick-color">
-                        {{-- <div class="headerItem">
-                            <div class="tx text-sm font-light">
-                                <p>Color</p>
-                            </div>
-                        </div> --}}
-                        <div class="listPickColor flex items-center flex-wrap gap-1">
-                            <template x-for="color in colors">
-                                
-                                <div class="itemPickColor group">
-                                    <label
-                                        class="cursor-pointer block p-0.5 rounded-full outline outline-1 outline-gray-400 hover:outline-2 hover:outline-blue-600 group-has-[:checked]:outline-2 group-has-[:checked]:outline-blue-600 group-has-[:checked]:bg-blue-50"
-                                    >
-                                        <div class="cLabelPickCOlor">
-                                            <div class="bulletColor">
-                                                <div class="color flex items-center justify-center size-6 rounded-full">
-                                                    <i class="size-3/4 rounded-full " :class="`bg-[${color.color}]`"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input 
-                                            class="sr-only"
-                                            type="radio" 
-                                            name="pickColorTypeNewSignature" 
-                                            :value="color.color"
-                                            :checked="color.default"
-                                            @change="updateTypeColor"
-                                            >
-                                    </label>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                    
-                </div>
-                
-                <div class="group-canvasCreate space-y-2">
-                    {{-- Canvas Signature --}}
-                    <div class="item-mainModal size-fit" data-item-name="signature">
-                        <div class="headerItem flex items-center justify-between gap-2">
-                            <div class="tx text-sm">
-                                <p>Signature</p>
                             </div>
                         </div>
                         
-                        <div class="typeSignature mt-1 border border-gray-300 size-fit relative rounded-lg">
-                            <div class="canvasDraw w-96 p-2">
-                                <canvas 
-                                    class="w-full h-full"
-                                    data-set-type="signature"
-                                    {{-- data-set-signature-aspect="16/9" --}}
-                                    ></canvas>
+                    </div>
+                    
+                    <div class="group-canvasCreate space-y-2">
+                        {{-- Canvas Signature --}}
+                        <div class="item-mainModal size-fit" data-item-name="signature">
+                            <div class="headerItem flex items-center justify-between gap-2">
+                                <div class="tx text-sm">
+                                    <p>Signature</p>
+                                </div>
                             </div>
                             
-                        </div>
-                    </div>
-                    
-                    {{-- Canvas Paraf --}}
-                    <div class="item-mainModal size-fit" data-item-name="paraf">
-                        <div class="headerItem flex items-center justify-between gap-2">
-                            <div class="tx text-sm">
-                                <p>Paraf</p>
+                            <div class="typeSignature mt-1 border border-gray-300 size-fit relative rounded-lg">
+                                <div class="canvasDraw w-96 p-2">
+                                    <canvas 
+                                        class="w-full h-full"
+                                        data-set-type="signature"
+                                        {{-- data-set-signature-aspect="16/9" --}}
+                                        ></canvas>
+                                </div>
+                                
                             </div>
                         </div>
                         
-                        <div class="typeSignature mt-1 border border-gray-300 size-fit relative rounded-lg">
-                            <div class="canvasDraw w-52 p-2 aspect-[1/1]">
-                                <canvas 
-                                    class="w-full h-full"
-                                    data-set-type="paraf"
-                                    {{-- data-set-signature-aspect="16/9" --}}
-                                    ></canvas>
+                        {{-- Canvas Paraf --}}
+                        <div class="item-mainModal size-fit" data-item-name="paraf">
+                            <div class="headerItem flex items-center justify-between gap-2">
+                                <div class="tx text-sm">
+                                    <p>Paraf</p>
+                                </div>
+                            </div>
+                            
+                            <div class="typeSignature mt-1 border border-gray-300 size-fit relative rounded-lg">
+                                <div class="canvasDraw w-52 p-2 aspect-[1/1]">
+                                    <canvas 
+                                        class="w-full h-full"
+                                        data-set-type="paraf"
+                                        {{-- data-set-signature-aspect="16/9" --}}
+                                        ></canvas>
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
+                    
                     
                 </div>
                 
-                
+                <div class="actionModalCreateNewSignature flex items-center justify-end gap-2 bg-white px-4 pb-4">
+                    <div class="act-cancelModalCreateNewSignature">
+                        <button 
+                            class="w-32 py-2 rounded-md hover:bg-red-100 outline-none hover:outline-1 hover:outline-red-600"
+                            type="button"
+                            data-action-pad-type="cancel"
+                            @click="hideType"
+                            >
+                            <div class="cButtonActModal">
+                                <div class="textAct">
+                                    <div class="tx text-sm text-red-600">
+                                        <p>Cancel</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="act-saveModalCreateNewSignature">
+                        <button
+                            class="w-32 py-2 rounded-md bg-[#FFCA28] [&:not(:disabled)]:hover:bg-yellow-500"
+                            type="button"
+                            data-action-pad-type="save"
+                            @click="saveNewType"
+                            x-bind:disabled="!saveType"
+                            wire:loading.attr='disabled'
+                            disabled
+                            >
+                            <div class="cButtonActModal">
+                                <div class="textAct">
+                                    <div class="tx text-sm text-[#574300]">
+                                        <p>Save</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
             </div>
             
-            <div class="actionModalCreateNewSignature flex items-center justify-end gap-2 bg-white px-4 pb-4">
-                <div class="act-cancelModalCreateNewSignature">
-                    <button 
-                        class="w-32 py-2 rounded-md hover:bg-red-100 outline-none hover:outline-1 hover:outline-red-600"
-                        type="button"
-                        data-action-pad-type="cancel"
-                        @click="hideType"
-                        >
-                        <div class="cButtonActModal">
-                            <div class="textAct">
-                                <div class="tx text-sm text-red-600">
-                                    <p>Cancel</p>
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="act-saveModalCreateNewSignature">
-                    <button
-                        class="w-32 py-2 rounded-md bg-[#FFCA28] [&:not(:disabled)]:hover:bg-yellow-500"
-                        type="button"
-                        data-action-pad-type="save"
-                        @click="saveNewType"
-                        x-bind:disabled="!saveType"
-                        disabled
-                        >
-                        <div class="cButtonActModal">
-                            <div class="textAct">
-                                <div class="tx text-sm text-[#574300]">
-                                    <p>Save</p>
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            <div 
+                class="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse bg-gray-600/50 hidden"
+                    wire:loading.class.remove='hidden'
+                    {{-- wire:loading.class.add='hidden' --}}
+                ></div>
             
         </div>
     </div>
@@ -388,10 +392,6 @@
                         const rule = ruleType.find(x => x.key == type);
                         const select = this.typeSignature.find(x => x.key == type);
                         
-                        console.log('------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------');
-                        console.log('TEXT: ', text);
-                        console.log('------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------');
-                        
                         for (const canvas of canvases) {
                             
                             const ctx = canvas.getContext('2d');
@@ -480,7 +480,7 @@
                         this.checkNewType();
                     },
                     
-                    saveNewType() {
+                    async saveNewType() {
                         // if (! this.modalType) return console.log('Something error modal');
                         // console.log('Save new type');
                         console.log('---------------------------------------------');
@@ -491,15 +491,18 @@
                         const arrData = [];
                         
                         for (const type of this.typeSignature) {
-                            console.log(type);
-                            const dataPadURL = type.pad.toDataURL();
+                            let originalImage = type.pad.toDataURL();
+                            // let originalImage = await this.convertImageSignaturePad(type.pad, 2, 1, 'image/png', 'rgba(255,255,255,0)');
+                            let thumbnailImage = await this.convertImageSignaturePad(type.pad, 0.1, 1, 'image/png', 'rgba(255,255,255,0)');
+                            // let thumbnailImage = await this.convertImageSignaturePad(type.pad, 0.2, 0.5, 'image/jpeg');
                             
                             const tempData = {
                                 key: type.key,
                                 pad_json: null,
-                                pad_images: [dataPadURL],
-                                // pad_url: dataPadURL,
-                                // pad_svg: dataPadURLSVG,
+                                pad_images: [
+                                    {key: 'original', value: originalImage,},
+                                    {key: 'thumbnail', value: thumbnailImage,},
+                                ],
                             };
                             
                             arrData.push(tempData);
@@ -510,7 +513,10 @@
                             value: arrData,
                         };
                         
-                        console.log(dataSave);
+                        if (this.checkSizeSave(dataSave) ) {
+                            this.$dispatch('customnotify', {variant: 'danger', title: 'Files to big', message: 'this is message',})
+                            return;
+                        };
                         
                         this.$wire.saveType(dataSave);
                         console.log('---------------------------------------------');
@@ -554,6 +560,37 @@
                         this.hideType();
                         
                         // this.hideDraw();
+                    },
+                    
+                    async convertImageSignaturePad(signatureCanvas, scale = 1, quality = 1, format = 'image/png', background = "rgba(255,255,255,1)") {
+                        const dataURL = signatureCanvas.toDataURL();
+                        const originalWidth = signatureCanvas.width;
+                        const originalHeight = signatureCanvas.height;
+                        
+                        const canvas = document.createElement('canvas');
+                        canvas.width = originalWidth * scale;
+                        canvas.height = originalHeight * scale;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = background;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        return new Promise((resolve) => {
+                            const img = new Image();
+                            img.onload = function () {
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                
+                                const result = canvas.toDataURL(format, quality);
+                                resolve(result);
+                            };
+                            img.src = dataURL;
+                        });
+                    },
+                    
+                    checkSizeSave(dataSave) {
+                        const json = JSON.stringify(dataSave);
+                        const sizeInKB = (new TextEncoder().encode(json).length / 1024).toFixed(2);
+                        return sizeInKB > 2048;
                     },
                     
                     

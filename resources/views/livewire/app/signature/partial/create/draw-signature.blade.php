@@ -2,15 +2,8 @@
     x-data="drawNewSignature"
     @drawnewsignatureshow.window="showDraw"
     @drawnewsignaturestroke.window="checkPadValue"
-    {{-- @drawnewsignatureredraw.window="redrawSignatureCanvas" --}}
     @drawnewsignatureresizecanvas.window="resizeAllCanvas"
     @drawnewsignaturecreate.window="statusCreateSignature($event)"
-    @click.away="hideDraw"
-    {{-- x-on:click.away="hideDraw" --}}
-    {{-- x-show="modalDraw" --}}
-    
-    {{-- style="visibility: hidden; opacity: 0; transform:scaleX(0.8) scaleY(0.8);" --}}
-    {{-- :style="modalDraw ? `visibility: visible; opacity: 1; transform:scaleX(1) scaleY(1);` : `visibility: hidden; opacity: 0; transform:scaleX(0.8) scaleY(0.8);` " --}}
     
     style="visibility: hidden; opacity: 0"
     :style="modalDraw ? `visibility: visible; opacity: 1` : `visibility: hidden; opacity: 0` "
@@ -18,7 +11,6 @@
     :class="modalDraw ? `scale-100` : `scale-90` "
     
     data-modal-name="draw-signature"
-    wire:ignore
     >
     
     <div 
@@ -101,13 +93,11 @@
                             </div>
                         </div>
                         
-                        <div class="drawSignature mt-1 border border-gray-300 size-fit relative rounded-lg" wire:ignore>
-                            <div class="canvasDraw w-96 p-2" wire:ignore>
+                        <div class="drawSignature mt-1 border border-gray-300 size-fit relative rounded-lg overflow-hidden">
+                            <div class="canvasDraw w-96 aspect-[16/9]">
                                 <canvas 
-                                    class="w-full h-full"
+                                    class="size-full"
                                     data-set-pad="signature"
-                                    key="signature-pad"
-                                    wire:ignore
                                     ></canvas>
                             </div>
                             
@@ -141,12 +131,11 @@
                             </div>
                         </div>
                         
-                        <div class="drawParaf mt-1 border border-gray-300 size-fit relative rounded-lg" wire:ignore>
-                            <div class="canvasDraw w-52 p-2 aspect-[1/1]" wire:ignore>
+                        <div class="drawParaf mt-1 border border-gray-300 size-fit relative rounded-lg overflow-hidden">
+                            <div class="canvasDraw w-52 aspect-[1/1]">
                                 <canvas 
-                                    class="w-full h-full"
+                                    class="size-full"
                                     data-set-pad="paraf"
-                                    wire:ignore
                                     {{-- data-set-signature-aspect="1/1" --}}
                                     ></canvas>
                             </div>
@@ -302,8 +291,19 @@
                         this.penColor = select;
                         
                         for ( const {key, pad} of this.drawPads ) {
-                            console.log(key, pad);
                             pad.penColor = select.color;
+                            
+                            const padCanvas = pad.canvas;
+                            const ctx = padCanvas.getContext('2d');
+                            ctx.save();
+                            ctx.fillStyle = select.color;
+                            ctx.globalCompositeOperation = 'source-in';
+                            ctx.fillRect(0, 0, padCanvas.width, padCanvas.height);
+                            ctx.restore();
+                            
+                            for (const data of pad._data) {
+                                data.penColor = select.color
+                            }
                         }
                     },
                     
@@ -337,25 +337,38 @@
                         }
                     },
                     
-                    saveNewPad() {
+                    async saveNewPad() {
                         console.log('---------------------------------------------');
                         console.log('Save new pad');
                         console.log('---------------------------------------------');
                         const $token = '{{ csrf_token() }}';
                         
                         const arrData = [];
+                        const convert = [
+                            {key: 'signature', width: 512, height: 288},
+                            // {key: 'signature', width: 768, height: 432},
+                            {key: 'paraf', width: 480, height: 480},
+                        ];
                         
                         for (const draw of this.drawPads) {
                             const dataPad = draw.pad.toData();
                             const dataPadURL = draw.pad.toDataURL();
-                            const dataPadURLSVG = draw.pad.toDataURL("image/svg+xml");
+                            const key = draw.key;
+                            const pad = draw.pad;
+                            const canvas = pad.canvas;
+                            
+                            const width = canvas.width;
+                            const height = canvas.height;
+                            
+                            const convertScaleXThumbnail = await this.convertCanvasScale(canvas, 0.25, 1, 'image/png', 'rgba(255,255,255,0)');
                             
                             const tempData = {
                                 key: draw.key,
                                 pad_json: dataPad,
-                                pad_images: [ dataPadURL, dataPadURLSVG],
-                                // pad_url: dataPadURL,
-                                // pad_svg: dataPadURLSVG,
+                                pad_images: [
+                                    {key: 'original', value: dataPadURL,},
+                                    {key: 'thumbnail', value: convertScaleXThumbnail,},
+                                ],
                             };
                             
                             arrData.push(tempData);
@@ -368,7 +381,14 @@
                         
                         console.log(dataSave);
                         
+                        if (this.checkSizeSave(dataSave) ) {
+                            this.$dispatch('customnotify', {variant: 'danger', title: 'Files to big', message: 'this is message',})
+                            return;
+                        };
+                        
                         this.$wire.saveDraw(dataSave);
+                        
+                        
                         console.log('---------------------------------------------');
                         console.log('---------------------------------------------');
                     },
@@ -392,12 +412,20 @@
                     
                     resizeCanvas(canvas) {
                         const rect = canvas.getBoundingClientRect();
-                        canvas.width = rect.width;
-                        canvas.height = rect.height;
+                        const displayWidth = canvas.clientWidth;
+                        const displayHeight = canvas.clientHeight;
+                        
+                        // canvas.width = rect.width;
+                        // canvas.height = rect.height;
+                        
+                        canvas.width = displayWidth;
+                        canvas.height = displayHeight;
                         
                         const dpr = window.devicePixelRatio || 1;
-                        canvas.width = rect.width * dpr;
-                        canvas.height = rect.height * dpr;
+                        canvas.width = displayWidth * dpr;
+                        canvas.height = displayHeight * dpr;
+                        // canvas.width = rect.width * dpr;
+                        // canvas.height = rect.height * dpr;
                         
                         canvas.getContext('2d').scale(dpr, dpr);
                     },
@@ -438,6 +466,66 @@
                         
                         this.hideDraw();
                     },
+                    
+                    checkSizeSave(dataSave) {
+                        const json = JSON.stringify(dataSave);
+                        const sizeInKB = (new TextEncoder().encode(json).length / 1024).toFixed(2);
+                        return sizeInKB > 2048;
+                    },
+                    
+                    async convertCanvasScale(signatureCanvas, scale = 1, quality = 1, format = 'image/png', background = "rgba(255,255,255,1)") {
+                        const dataURL = signatureCanvas.toDataURL();
+                        
+                        const originalWidth = signatureCanvas.width;
+                        const originalHeight = signatureCanvas.height;
+                        
+                        const canvas = document.createElement('canvas');
+                        canvas.width = originalWidth * scale;
+                        canvas.height = originalHeight * scale;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = background;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        return new Promise((resolve) => {
+                            const img = new Image();
+                            img.onload = function () {
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                
+                                const result = canvas.toDataURL(format, quality);
+                                resolve(result);
+                            };
+                            img.src = dataURL;
+                        });
+                    },
+                    
+                    async convertCanvasSize(padCanvas, width, height) {
+                        const dataURL = padCanvas.toDataURL();
+                        
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = 'rgba(255,255,255,0)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        return new Promise( (resolve) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                
+                                
+                                const result = canvas.toDataURL();
+                                
+                                resolve(result);
+                            }
+                            
+                            img.src = dataURL;
+                        })
+                        
+                    },
+                    
                     
                 };
                 

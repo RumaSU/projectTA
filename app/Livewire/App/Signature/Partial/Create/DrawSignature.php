@@ -2,7 +2,7 @@
 
 namespace App\Livewire\App\Signature\Partial\Create;
 
-use App\Library\SignatureHelper;
+use App\Library\Signatures\Helper as SignatureHelper;
 use App\Library\Helper as LibHelper;
 
 use App\Models\Signatures;
@@ -44,8 +44,6 @@ class DrawSignature extends Component
             $checkData = $this->checkDrawData($objData);
             if (! $checkData->status ) throw new \Exception($checkData->message);
             
-            $dataValues = $objData->value;
-            
             $uuidSignature = LibHelper::generateUniqueUuId('v4', 'id_signature', Signatures\Signature::class);
             $saveSignature = Signatures\Signature::create([
                 'id_signature' => $uuidSignature,
@@ -58,6 +56,7 @@ class DrawSignature extends Component
                 throw new \Exception('Failed to create signature group record. Please try again.');
             }
             
+            $dataValues = $objData->value;
             foreach($dataValues as $value) {
                 $saveResult = SignatureHelper::saveSignatures($value, $uuidSignature);
                 
@@ -66,6 +65,12 @@ class DrawSignature extends Component
                 }
                 
             }
+            
+            Signatures\Signature::where('id_user', '=', Auth::user()->id_user)
+                ->where('id_signature', '!=', $uuidSignature)
+                ->update([
+                    'default' => false,
+                ]);
             
             $this->dispatchNotification(
                 'success',
@@ -77,6 +82,9 @@ class DrawSignature extends Component
                 'status' => true,
                 'message' => 'All signature data saved successfully.',
             ]);
+            
+            $this->dispatch('Refresh-New-Signature');
+            
             return;
             
         } catch (\Exception $e) {

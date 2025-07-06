@@ -40,13 +40,16 @@ class MigrateSelected extends Command
     ];
     
     
+    
+    
+    
     /**
      * Execute the console command.
      */
     public function handle()
     {
         $freshInput = $this->option('fresh');
-        if(!$this->validateFreshOption($freshInput)) {
+        if(!$this->validateBooleanOption($freshInput)) {
             $this->error("Invalid value for --fresh: '{$freshInput}'. Allowed values: true, false, 1, 0.");
             return 1;
         }
@@ -73,11 +76,11 @@ class MigrateSelected extends Command
         $this->line($finalMessage);
     }
     
-    private function validateFreshOption($freshInput) {
-        if (gettype($freshInput) == 'string') strtolower($freshInput);
+    private function validateBooleanOption($input) {
+        if (gettype($input) == 'string') strtolower($input);
         
         $allowed = ['true', 'false', '1', '0', 1, 0, true, false];
-        if (!in_array($freshInput, $allowed, true)) return false;
+        if (!in_array($input, $allowed, true)) return false;
         
         return true;
     }

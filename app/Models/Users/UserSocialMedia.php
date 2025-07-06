@@ -6,25 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserSocialMedia extends Model
 {
-    protected $table = 'users_account_status'; // Nama tabel
+    protected $table = 'users_social_media'; // Nama tabel
 
-    protected $primaryKey = 'id_user_account_status'; // Primary key
+    protected $primaryKey = 'id_user_social_media'; // Primary key
     protected $guard = 'web';
     protected $hidden = [
         'id_user',
     ];
 
     protected $fillable = [
-        'id_user_account_status',
+        'id_user_social_media',
         'id_user',
-        'type',
-        'is_confirmed',
-        'confirm_date',
+        'social_name',
+        'social_link',
+        'social_status',
     ];
     protected function casts(): array
     {
         return [
-            'id_user_account_status' => 'string',
+            'id_user_social_media' => 'string',
             'id_user' => 'string',
         ];
     }

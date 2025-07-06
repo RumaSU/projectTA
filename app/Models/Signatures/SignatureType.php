@@ -20,7 +20,6 @@ class SignatureType extends Model
         'id_signature_type',
         'id_signature',
         'type',
-        'default',
     ];
     protected function casts(): array
     {
@@ -30,9 +29,15 @@ class SignatureType extends Model
         ];
     }
 
-    // Relasi terbalik ke DbUser
-    public function user()
-    {
-        return $this->belongsTo(\App\Models\Users\User::class, 'id_user', 'id_user');
+    
+    public function signature(){
+        // return $this->belongsToMany(\App\Models\Signatures\Signature::class, 'signatures_type_belongs', 'id_signature_type', 'id_signature', 'id_signature_type', 'id_signature');
+        return $this->belongsTo(\App\Models\Signatures\Signature::class, 'id_signature', 'id_signature');
     }
+    
+    
+    public function signature_file() {
+        return $this->hasMany(\App\Models\Signatures\SignatureFile::class, 'id_signature_type', 'id_signature_type');
+    }
+    
 }

@@ -39,4 +39,27 @@ class User extends Authenticatable
             // 'password' => 'hashed',
         ];
     }
+    
+    public function UserData() {
+        return $this->hasOne(\App\Models\Users\UserData::class, 'id_user', 'id_user')->first();
+    }
+    public function UserPersonal() {
+        return $this->hasOne(\App\Models\Users\UserPersonal::class, 'id_user', 'id_user');
+    }
+    public function UserAccountStatus() {
+        return $this->hasOne(\App\Models\Users\UserAccountStatus::class, 'id_user', 'id_user');
+    }
+    public function UserPhone() {
+        return $this->hasMany(\App\Models\Users\UserPhone::class, 'id_user', 'id_user');
+    }
+    public function UserRememberToken() {
+        return $this->hasMany(\App\Models\Users\UserRememberToken::class, 'id_user', 'id_user');
+    }
+    
+    // Signature
+    public function Signature() {
+        return $this->hasMany(\App\Models\Signatures\Signature::class, 'id_user', 'id_user');
+    }
+    
+    
 }

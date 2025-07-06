@@ -35,16 +35,18 @@ return new class extends Migration
             });
         }
         
-        if (!Schema::hasTable('signatures_data')) { 
-            Schema::create('signatures_data', function (Blueprint $table) {
-                $table->uuid('id_signature_data')->primary();
-                $table->uuid('id_signature');
-                $table->json('pad_base64');
+        if (!Schema::hasTable('signatures_pad_data')) { 
+            Schema::create('signatures_pad_data', function (Blueprint $table) {
+                $table->uuid('id_signature_pad_data')->primary();
+                $table->uuid('id_signature_type');
+                $table->string('pad_key'); // key: original, 2x, thumbnail
+                $table->string('pad_mime'); // image/png, image/xvg+xml 
+                $table->longText('pad_base64'); // value: 
                 $table->json('pad_points')->nullable();
                 $table->timestamps();
                 
-                $table->index('id_signature_data');
-                $table->index('id_signature');
+                $table->index('id_signature_pad_data');
+                $table->index('id_signature_type');
             });
         }
         
@@ -53,6 +55,7 @@ return new class extends Migration
                 $table->uuid('id_signature_file')->primary();
                 $table->uuid('id_signature_type');
                 $table->uuid('id_file_signature');
+                $table->string('signature_file_key'); // original, 2x, thumbnail
                 $table->timestamps();
                 
                 $table->index('id_signature_file');

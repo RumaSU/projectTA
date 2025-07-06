@@ -44,27 +44,38 @@
 @endpush
 
 @section('default-layout-body-content')
-    @include('layout.dashboard.header')
     
-    <div class="app">
-        <div class="cApp flex">
-            @include('layout.dashboard.sidebar')
+    {{-- <header class="bg-[#121212] py-2 px-4 z-[1000] sticky top-0"> --}}
+    {{-- <header class="bg-[#002366] py-2 px-4 z-[1000] sticky top-0"> --}}
+    <header class="sticky top-0 z-10 bg-[#E4E4E4] p-2 px-40" wire:ignore.self>
+        @include('layout.dashboard.header')
+    </header>
+    
+    
+    <div class="app  ">
+        <div class="cApp flex ">
+            {{-- <aside class="ctr-sidebarApp bg-[#181818] w-96 h-screen fixed left-0 top-0"> --}}
+            {{-- <aside class="ctr-sidebarApp bg-[#003399] w-96 h-screen fixed left-0 top-0"> --}}
+            <aside class="ctr-sidebarApp shrink-0 p-0 sticky top-[15%] self-start hidden md:block xl:w-96 border border-black">
+                @include('layout.dashboard.sidebar')
+                {{-- <div class="wrapper sticky top-1/2 ">
+                </div> --}}
+            </aside>
             
-            <div class="wrapper-mainApp w-full pl-4 pt-4 min-h-[calc(100vh-5.5rem)]">
-                <main class="mainApp h-full bg-white pl-9 pr-3 py-4 rounded-l-[2rem]">
-                    <div class="cMainApp">                        
+            <div class="wrapper-mainApp w-full pt-4 h-full  min-h-[calc(100vh-5rem)] lg:pl-4">
+                <main class="mainApp min-h-[calc(100vh-7rem)] bg-white px-2 lg:pl-9 lg:pr-3 py-4 lg:rounded-l-[2rem] ">
+                    <div class="cMainApp  h-full">                        
                         @stack('dashboard-top-main-content')
                         
-                        {{-- Optional content: custom via @yield --}}
                         @yield('dashboard-child-template')
                         
                         @stack('dashboard-bottom-main-content')
                         
-                        {{-- Custom content --}}
                         @stack('dashboard-custom-main-content')
                     </div>
                 </main>
             </div>
+            
         </div>
     </div>
     

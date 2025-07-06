@@ -16,24 +16,39 @@
 
 @once
     @push('dashboard-top-main-content')
-        <nav class="navMailDashboard">
+        <nav class="navSignaturesDashboard">
             @include('livewire.app.signature.partial.header')
         </nav>
     @endpush
 @endonce
 
 @section('dashboard-child-template')
-    <div class="wrapper-mailAppDashboard mt-6 p-4 bg-gray-200 rounded-xl">
-        <div class="ctr-headerMailAppDashboard px-6 py-4 bg-white rounded-3xl">
-            <div class="cHeaderMailAppDashboard">
+    {{-- <div class="wrapper-signaturesAppDashboard mt-6 p-4 bg-gray-200 rounded-xl"> --}}
+    <div class="wrapper-signaturesAppDashboard mt-6 p-4 rounded-xl flex flex-col items-center">
+        {{-- <div class="ctr-headerSignaturesAppDashboard px-6 py-4 bg-white rounded-3xl h-full"> --}}
+        <div class="ctr-headerSignaturesAppDashboard w-[36rem]">
+            <div class="cHeaderSignaturesAppDashboard">
                 @include('livewire.app.signature.partial.nav')
             </div>
         </div>
-        <div class="ctr-mainContentMailAppDashbaord mt-8">
-            {{-- @livewire('app.documents.data') --}}
+        
+        {{-- <div class="ctr-mainContentSignaturesAppDashbaord mt-8 flex items-center justify-center"> --}}
+        <div class="ctr-mainContentSignaturesAppDashbaord mt-8">
+            {{-- <div class="cMainContentSignaturesAppDashboard w-[34rem]"> --}}
+            <div class="cMainContentSignaturesAppDashboard w-[36rem]">
+                
+                <div class="wrapper-dataSignaturesAppDashboard">
+                    
+                    @livewire('app.signature.data')
+                
+                </div>
+                
+                
+            </div>
         </div>
     </div>
 @endsection
+
 
 
 @once
@@ -42,6 +57,7 @@
             console.log('signature');
             
         </script>
+        
         {{-- <script data-navigate-once>
             window.addEventListener('mail_spa_nav', event => {
                 let dataPage = [event.detail];

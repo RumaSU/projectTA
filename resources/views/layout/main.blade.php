@@ -50,6 +50,9 @@
             console.log(dayjs())
         </script>
     @endonce
+    
+    @stack('main-layout-head-script')
+    
 </head>
 <body @stack('default-aditional-prop-body')>
     @yield('default-layout-body-content')

@@ -123,6 +123,17 @@ class Helper {
             $data->first() instanceof $modelClass;
     }
     
+    public static function extractBase64($base64String) {
+        if (! str_contains($base64String, ',')) return null;
+        [$meta, $content] = explode(',', $base64String, 2);
+        
+        return (object)[
+            'meta' => $meta,
+            'mime' => str_replace(['data:', ';base64'], '', $meta),
+            'base64' => $content,
+        ];
+    }
+    
     // public static function randomString(int $length, bool $lower = true, bool $number = true, bool $symbol = false) {
     //     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     //     if ($lower) $characters .= 'abcdefghijklmnopqrstuvwxyz';

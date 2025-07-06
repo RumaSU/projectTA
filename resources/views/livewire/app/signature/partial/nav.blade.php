@@ -1,5 +1,5 @@
 <div class="ctr-navSignatureDashboard">
-    <div class="cNavSignatureDashboard flex items-center justify-between">
+    <div class="cNavSignatureDashboard flex justify-between gap-12">
         
         <div class="ctr-leftNavSignatureDashboard">
             <div class="cLeftNavSignatureDashboard -space-y-1">
@@ -19,7 +19,7 @@
             </div>
         </div>
         
-        <div class="ctr-rightNavSignatureDashboard">
+        <div class="ctr-rightNavSignatureDashboard shrink-0">
             <div class="cRightNavSignatureDashboard">
                 <div class="wrapper-actAddNewSignatureDashboard relative" x-data="{ modal: false }">
                     <div class="act-addNewSignatureDashboard">
@@ -109,11 +109,10 @@
 </div>
 
 @once
-    @push('dashboard-custom-main-content')
+    @push('global-custom-content')
         
         @livewire('app.signature.partial.create.draw-signature')
         @livewire('app.signature.partial.create.type-signature')
-        
         
     @endpush
 @endonce

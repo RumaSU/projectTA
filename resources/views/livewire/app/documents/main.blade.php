@@ -4,19 +4,41 @@
 
 @once
     @push('dashboard-top-main-content')
-        <nav class="navMailDashboard">
-            @include('livewire.app.documents.partial.nav')
-        </nav>
+        <header class="headerDocumentDashboard">
+            @include('livewire.app.documents.partial.header')
+        </header>
     @endpush
 @endonce
 
 @section('dashboard-child-template')
-    <div class="wrapper-mailAppDashboard mt-6 p-4 bg-gray-200 rounded-xl">
-        <div class="ctr-headerMailAppDashboard px-6 py-4 bg-white rounded-3xl">
-            <div class="cHeaderMailAppDashboard">
+    <div class="wrapper-DocumentsAppDashboard mt-6 p-4 bg-gray-200 rounded-xl">
+        <div class="ctr-filterDocumentsAppDashboard px-6 py-4 bg-white rounded-3xl">
+            <div class="cFilterDocumentsAppDashboard">
                 @include('livewire.app.documents.partial.filter')
             </div>
         </div>
+        
+        <div class="ctr-headerContentDocuments mt-2 px-6 py-2 bg-white rounded-3xl">
+            <div class="cHeaderContentDocuments grid grid-cols-6">
+                @php
+                    $listTextHeader = [
+                        (object) ['col_span' => '2', 'text' => 'Document'],
+                        (object) ['col_span' => '1', 'text' => 'Type'],
+                        (object) ['col_span' => '1', 'text' => 'Status'],
+                        (object) ['col_span' => '1', 'text' => 'Owner'],
+                        (object) ['col_span' => '1', 'text' => 'Last Modified'],
+                    ];
+                @endphp
+                @foreach ($listTextHeader as $header)
+                    <div class="itemHeader col-span-{{ $header->col_span }}">
+                        <div class="textHeader text-sm">
+                            <p>{{ $header->text }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        
         <div class="ctr-mainContentMailAppDashbaord mt-8">
             @livewire('app.documents.data')
         </div>

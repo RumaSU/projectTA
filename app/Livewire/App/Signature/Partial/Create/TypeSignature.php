@@ -2,7 +2,7 @@
 
 namespace App\Livewire\App\Signature\Partial\Create;
 
-use App\Library\SignatureHelper;
+use App\Library\Signatures\Helper as SignatureHelper;
 use App\Library\Helper as LibHelper;
 
 use App\Models\Signatures;
@@ -56,8 +56,6 @@ class TypeSignature extends Component
         
         $objData = json_decode(json_encode($data));
         
-        // dump($objData);
-        
         try {
             $checkData = $this->checkDrawData($objData);
             if (! $checkData->status ) throw new \Exception($checkData->message);
@@ -84,6 +82,12 @@ class TypeSignature extends Component
                 
             }
             
+            Signatures\Signature::where('id_user', '=', Auth::user()->id_user)
+                ->where('id_signature', '!=', $uuidSignature)
+                ->update([
+                    'default' => false,
+                ]);
+            
             $this->dispatchNotification(
                 'success',
                 'Signature Saved',
@@ -94,6 +98,9 @@ class TypeSignature extends Component
                 'status' => true,
                 'message' => 'All signature data saved successfully.',
             ]);
+            
+            $this->dispatch('Refresh-New-Signature');
+            
             return;
             
         } catch (\Exception $e) {

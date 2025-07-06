@@ -20,8 +20,8 @@ return new class extends Migration
                 $table->string('file_name', 512);
                 $table->string('file_ext'); // png
                 $table->string('file_path', 2048);
-                $table->string('file_type');
-                $table->integer('file_size'); // image/png
+                $table->string('file_mime'); // image/png
+                $table->integer('file_size'); 
                 
                 $table->timestamps();
                 
