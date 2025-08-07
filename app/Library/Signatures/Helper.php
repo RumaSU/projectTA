@@ -60,7 +60,7 @@ class Helper {
                 }
                 
                 $uuidSignaturePadData = LibHelper::generateUniqueUuId('v7', 'id_signature_pad_data', Signatures\SignaturePadData::class);
-                $saveSignaturePadData = Signatures\SignaturePadData::create([
+                $saveSignaturePadData = Signatures\SignatureDrawings::create([
                     'id_signature_pad_data' => $uuidSignaturePadData,
                     'id_signature_type' => $uuidSignatureType,
                     'pad_key' => $imageKey,

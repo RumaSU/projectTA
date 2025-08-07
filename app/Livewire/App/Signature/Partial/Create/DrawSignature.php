@@ -2,160 +2,51 @@
 
 namespace App\Livewire\App\Signature\Partial\Create;
 
-use App\Library\Signatures\Helper as SignatureHelper;
-use App\Library\Helper as LibHelper;
-
-use App\Models\Signatures;
-
-use Illuminate\Support\Facades\Auth;
+use App\Services\SignatureDrawings\SaveService;
+use App\Trait\HasNotify;
 
 use Livewire\Component;
 
-class DrawSignature extends Component
-{
+class DrawSignature extends Component {
+    use HasNotify;
     
-    public $acceptColor;
-    public $statusMount = false;
-    public $keyDraw;
-    private $acceptKey = ['signature', 'paraf'];
+    // public $templateColor = [];
+    // public $typeSignature = [];
     
     public function mount() {
-        if ($this->statusMount) {
-            dump('Component remounted.');
-        }
-        $tempColor = [
-            ['color' => '#000000', 'text' => 'Black', 'default' => true,], 
-            ['color' => '#ff0000', 'text' => 'Red', 'default' => false,], 
-            ['color' => '#00ff00', 'text' => 'Green', 'default' => false,], 
-            ['color' => '#0000ff', 'text' => 'Blue', 'default' => false,], 
-        ];
+        // if ($this->statusMount) {
+        //     dump('Component remounted.');
+        // }
         
-        $this->statusMount = true;
-        $this->keyDraw = json_encode($this->acceptKey);
-        $this->acceptColor = json_encode($tempColor);
+        // $this->statusMount = true;
+        // $this->typeSignature = json_encode(Type::get_map_value());
+        // $this->templateColor = json_encode(Color::get_mapped_colors());
     }
     
-    public function saveDraw($data) {
-        if (! is_array($data) || ! isset($data['value'])) return;
-        
-        $objData = json_decode(json_encode($data));
-        
-        try {
-            $checkData = $this->checkDrawData($objData);
-            if (! $checkData->status ) throw new \Exception($checkData->message);
-            
-            $uuidSignature = LibHelper::generateUniqueUuId('v4', 'id_signature', Signatures\Signature::class);
-            $saveSignature = Signatures\Signature::create([
-                'id_signature' => $uuidSignature,
-                'id_user' => Auth::user()->id_user,
-                'default' => true,
-            ]);
-            
-            if (! $saveSignature) {
-                SignatureHelper::rollbackSignatures($uuidSignature);
-                throw new \Exception('Failed to create signature group record. Please try again.');
-            }
-            
-            $dataValues = $objData->value;
-            foreach($dataValues as $value) {
-                $saveResult = SignatureHelper::saveSignatures($value, $uuidSignature);
-                
-                if (! $saveResult->status) {
-                    throw new \Exception("Failed to save {$value->key}: {$saveResult->message}");
-                }
-                
-            }
-            
-            Signatures\Signature::where('id_user', '=', Auth::user()->id_user)
-                ->where('id_signature', '!=', $uuidSignature)
-                ->update([
-                    'default' => false,
-                ]);
-            
-            $this->dispatchNotification(
-                'success',
-                'Signature Saved',
-                'All signature data has been successfully saved.'
-            );
-
-            $this->dispatch('drawnewsignaturecreate', [
-                'status' => true,
-                'message' => 'All signature data saved successfully.',
-            ]);
-            
-            $this->dispatch('Refresh-New-Signature');
-            
-            return;
-            
-        } catch (\Exception $e) {
-            $message = $e->getMessage();
-            $this->dispatchNotification(
-                'danger',
-                'Signature Failed',
-                "Failed to save signature or paraf: {$message}"
-            );
-            
-            $this->dispatch('drawnewsignaturecreate', [
-                'status' => false,
-                'message' => "Signature submission failed: {$message}"
-            ]);
-            
+    public function saveNewSignature($data) {
+        if (! is_array($data)) {
+            $this->notify('danger', 'Invalid Signature', 'The signature data is not valid.');
             return;
         }
+        
+        $save = SaveService::handle($data);
+        
+        $variant = $save['status'] ? 'info' : 'danger';
+        $title = $save['status'] ? 'Signature Saved' : 'Failed to Save';
+        $message = $save['message'];
+        
+        $this->notify($variant, $title, $message);
+        
+        $this->dispatch('drawnewsignaturecreate', [
+            'status' => $save['status'],
+            'message' => $title,
+        ]);
+        
+        $this->dispatch('Refresh-New-Signature');
     }
     
     public function render()
     {
         return view('livewire.app.signature.partial.create.draw-signature');
-    }
-    
-    
-    
-    // private function
-    
-    private function checkDrawData($data) {
-        try {
-            
-            $properties = ['_token', 'value'];
-            foreach($properties as $property) {
-                if (!property_exists($data, $property)) {
-                    throw new \Exception("Missing required property: '{$property}'");
-                }
-            }
-            
-            if (!is_array($data->value) || empty($data->value)) {
-                throw new \Exception("No signature data found.");
-            }
-            
-            foreach ($data->value as $value) {
-                if (!in_array($value->key, $this->acceptKey)) {
-                    throw new \Exception("Invalid signature type: '{$value->key}' is not accepted.");
-                }
-            }
-            
-            return (object)[
-                'status' => true,
-                'message' => 'Signature data validated successfully.',
-            ];
-            
-        } catch (\Exception $e) {
-            
-            return (object)[
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-            
-        }
-        
-    }
-    
-    // info, success, warning, danger
-    private function dispatchNotification($variant = 'info', $title, $message) {
-        $this->dispatch('customnotify', (object) [
-            'variant' => $variant,
-            'sender' => 'System',
-            'title' => $title,
-            'message' => $message,
-        ]);
     }
 }

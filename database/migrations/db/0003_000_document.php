@@ -12,156 +12,83 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('document')) {
-            Schema::create('document', function (Blueprint $table) {
+        
+        // Main data documents
+        if (!Schema::hasTable('documents')) {
+            Schema::create('documents', function (Blueprint $table) {
                 $table->uuid('id_document')->primary();
-                $table->uuid('id_user');
-                $table->enum('signature_type', ['Signature', 'Initials'])->nullable();
-                $table->enum('document_status', ['Draft', 'Pending', 'Approved', 'Rejected'])->default('Draft');
-                // $table->enum('document_status', ['Draft', 'Pending', 'Expired', 'Approved', 'Rejected'])->default('Draft');
-                $table->json('status_at'); // {done_at: timestamp, .....}
+                $table->uuid('owner_id')->index();
+                $table->boolean('is_delete')->default(false);
                 $table->timestamps();
+            });
+        }
+        
+        if (!Schema::hasTable('documents_information')) {
+            Schema::create('documents_information', function (Blueprint $table) {
+                $table->uuid('id_document')->primary();
+                $table->string('name', 512);
+                $table->integer('name_version')->default(1); // easier check duplicate name, ex {name . v ? (v) : ''}
+                $table->timestamps();
+            });
+        }
+        
+        if (!Schema::hasTable('documents_publicity')) {
+            Schema::create('documents_publicity', function (Blueprint $table) {
+                $table->uuid('id_document')->primary();
+                $table->string('status_publicity')->default('private'); // 'public', 'private'
+                $table->timestamp('status_changed')->useCurrent()->useCurrentOnUpdate();
+                $table->timestamps();
+            });
+        }
+        
+        if (!Schema::hasTable('documents_collaborator')) {
+            Schema::create('documents_collaborator', function (Blueprint $table) { // auto fill with owner
+                $table->uuid('id_document_collaborator')->primary();
+                $table->uuid('id_document')->index();
+                $table->uuid('id_user')->index();
+                $table->string('role')->default('viewer'); // viewer, signer
+                $table->timestamp('role_changed')->useCurrent()->useCurrentOnUpdate();
+                $table->timestamps();
+            });
+        }
+        
+        if (!Schema::hasTable('documents_versions')) {
+            Schema::create('documents_versions', function (Blueprint $table) {
+                $table->uuid('id_document_version')->primary();
+                $table->uuid('id_document')->index();
+                $table->integer('version')->default(1);
+                $table->timestamps();
+            });
+        }
+        
+        if (!Schema::hasTable('documents_file')) {
+            Schema::create('documents_file', function (Blueprint $table) {
+                $table->uuid('id_document_file')->primary();
+                $table->uuid('id_document_version')->index();
+                $table->uuid('id_file_document')->index();
+                $table->timestamps();
+            });
+        }
+        
+        
+        if (! Schema::hasTable('documents_audit_logs')) {
+            Schema::create('documents_audit_logs', function (Blueprint $table) {
+                $table->uuid('id_document_audit_log')->primary();
+                $table->uuid('id_document')->index();
+                $table->uuid('id_user')->nullable();
                 
-                $table->index('id_document');
-                $table->index('id_user');
-            });
-        }
-        
-        // if (!Schema::hasTable('document_disk')) {
-        //     Schema::create('document_disk', function (Blueprint $table) {
-        //         $table->uuid('id_document_disk')->primary();
-        //         $table->uuid('id_document');
-        //         $table->string('disk');
-        //         $table->string('path');
-        //         $table->string('file_name')->unique();
-        //         $table->string('client_name');
-        //         $table->string('extension');
-        //         $table->integer('version')->default(1);
-        //         $table->timestamps();
-        //     });
-        // }
-        if (!Schema::hasTable('document_versions')) {
-            Schema::create('document_versions', function (Blueprint $table) {
-                $table->uuid('id_document_versions')->primary(); // v7
-                $table->uuid('id_document');
-                // $table->uuid('id_file_disk');
-                $table->uuid('id_file_disk_entity');
-                $table->bigInteger('version')->default(1);
-                $table->json('changes')->nullable();
-                $table->timestamps();
+                $table->string('category')->index(); // document, signature, audit
+                $table->string('event_type')->index(); // 'created', 'updated', 'archived', 'status_changed', 'signed', etc.
                 
-                $table->index('id_document_versions');
-                $table->index('id_document');
-                $table->index('id_file_disk_entity');
-            });
-        }
-        
-        if (!Schema::hasTable('document_shared_access')) {
-            Schema::create('document_shared_access', function (Blueprint $table) {
-                $table->uuid('id_document_shared_access')->primary();
-                $table->uuid('id_document');
-                $table->boolean('is_shared')->default(false);
-                $table->enum('access_role', ['Read', 'Edit'])->default('Read')->nullable();
-                $table->timestamps();
+                $table->text('description')->nullable();
+                $table->json('metadata')->nullable();
                 
-                $table->index('id_document_shared_access');
-                $table->index('id_document');
+                $table->timestamp('logged_at')->useCurrent();
+                $table->char('data_hash', 128);
             });
         }
         
-        if (!Schema::hasTable('document_shared_access_user')) {
-            Schema::create('document_shared_access_user', function (Blueprint $table) {
-                $table->uuid('id_document_shared_access_user')->primary();
-                $table->uuid('id_document');
-                $table->uuid('id_user');
-                $table->enum('access_role', ['Read', 'Edit'])->default('Read')->nullable();
-                $table->timestamps();
-                
-                $table->index('id_document_shared_access_user');
-                $table->index('id_document');
-            });
-        }
         
-        if (!Schema::hasTable('document_signed')) {
-            Schema::create('document_signed', function (Blueprint $table) {
-                $table->uuid('id_document_signed')->primary();
-                $table->uuid('id_document');
-                $table->uuid('signed_by'); // uuid user
-                $table->json('signed_data'); // data json {'signature_type': 'Signature'|'Initials', 'signature_id/initial_id':'id_signature|id_initial'} 
-                $table->timestamp('signed_at')->nullable();
-                $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
-                $table->json('status_at'); // {pending_at: timestamp, .....}
-                $table->text('reason_rejected')->nullable();
-                $table->timestamps();
-                
-                $table->index('id_document_signed');
-                $table->index('id_document');
-            });
-        }
-        
-        if (!Schema::hasTable('document_signed_data')) {
-            Schema::create('document_signed_data', function (Blueprint $table) {
-                $table->uuid('id_document_signed_data')->primary();
-                $table->uuid('id_document_signed'); //
-                $table->string('signer_ip')->nullable(); // alamat IP user
-                $table->text('signer_user_agent')->nullable(); // info browser dan sistem
-                $table->string('location')->nullable(); // Lokasi tanda tangan
-                // $table->text('device_info')->nullable(); // Informasi perangkat
-            });
-        }
-        
-        if (!Schema::hasTable('document_signed_access')) {
-            Schema::create('document_signed_access', function (Blueprint $table) {
-                $table->uuid('id_document_signed_access')->primary();
-                $table->uuid('id_document');
-                $table->boolean('is_shared')->default(false);
-                $table->enum('access_role', ['Read', 'Edit'])->default('Read')->nullable();
-                $table->timestamps();
-            });
-        }
-
-        if (!Schema::hasTable('document_signed_access_user')) {
-            Schema::create('document_signed_access_user', function (Blueprint $table) {
-                $table->uuid('id_document_signed_access_user')->primary();
-                $table->uuid('id_document');
-                $table->uuid('user_access');
-                $table->enum('access_role', ['Read', 'Edit'])->default('Read');
-                $table->timestamps();
-            });
-        }
-        
-        // if (!Schema::hasTable('document_withdraw')) {
-        //     Schema::create('document_withdraw', function (Blueprint $table) {
-        //         $table->uuid('id_document_withdraw')->primary();
-        //         $table->uuid('id_document');
-        //         $table->uuid('id_user'); // milik user
-        //         $table->string('reason_withdraw')->nullable();
-        //         $table->string('withdraw_ip')->nullable();
-        //         $table->text('withdraw_user_agent')->nullable();
-        //         $table->timestamps();
-        //     });
-        // }
-        
-        if (!Schema::hasTable('document_qr')) {
-            Schema::create('document_qr', function (Blueprint $table) {
-                $table->uuid('id_qr')->primary();
-                $table->string('qr_identifier')->unique(); // untuk url saat mencari document menggunakan scann qr (random string)
-                $table->json('data_qr'); // encrypt json
-                $table->uuid('id_document');
-                $table->timestamps();
-            });
-        }
-        
-        if (!Schema::hasTable('document_user_profile')) {
-            Schema::create('document_user_profile', function (Blueprint $table) {
-                $table->uuid('id_document_user_profile')->primary();
-                $table->uuid('id_document');
-                $table->uuid('id_user_profile');
-                $table->timestamps();
-            });
-        }
-        
-        // apakah dari tabel document_signed berarti jika ada 2 user yang melakukan tandatangan dan salah satunya ada yang reject maka status document bisa saja menjadi pending dan bisa melakukan pengiriman ulang untuk tanda tangan dan approve, 
     }
 
     /**

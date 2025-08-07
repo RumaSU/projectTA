@@ -9,7 +9,8 @@ class UserPhone extends Model
     protected $table = 'users_phone'; // Nama tabel
 
     protected $primaryKey = 'id_user_phone'; // Primary key
-    protected $guard = 'web';
+    protected $keyType = 'uuid';
+    public $incrementing = false;
     protected $hidden = [
         'id_user',
     ];

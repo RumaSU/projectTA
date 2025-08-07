@@ -202,13 +202,14 @@
 @once
     @push('dashboard-body-script')
         <script data-navigate-once>
-            
             Alpine.data('drawNewSignature', () => {
-                const templateColors = JSON.parse( '{!! $acceptColor !!}' );
-                // const acceptPad = ['signature', 'paraf'];
-                const acceptPad = JSON.parse('{!! $keyDraw !!}');
+                const templateColors =  @json(\App\Enums\Signatures\Color::get_mapped_colors());
+                const typeSignature = @json(\App\Enums\Signatures\Type::get_map_value());
                 
-                console.log(templateColors);
+                const variants = {
+                    original: @json(\App\Enums\Signatures\Variant::ORIGINAL->value),
+                    thumbnail: @json(\App\Enums\Signatures\Variant::THUMBNAIL->value)
+                };
                 
                 return {
                     modalDraw: false,
@@ -257,7 +258,7 @@
                     showDraw() {
                         this.modalDraw = true;
                         
-                        for (const key of acceptPad) {
+                        for (const key of typeSignature) {
                             this.resetPad(key);
                             
                             const select = this.drawPads.find(x => x.key == key);
@@ -273,7 +274,7 @@
                         this.modalDraw = false;
                         
                         setTimeout( () => {
-                            for (const key of acceptPad) {
+                            for (const key of typeSignature) {
                                 this.resetPad(key);
                                 
                                 const select = this.drawPads.find(x => x.key == key);
@@ -323,7 +324,7 @@
                     },
                     
                     redrawCanvas() {
-                        for (const key of acceptPad) {
+                        for (const key of typeSignature) {
                             const select = this.drawPads.find(x => x.key == key);
                             if (!select) continue;
                             
@@ -341,7 +342,7 @@
                         console.log('---------------------------------------------');
                         console.log('Save new pad');
                         console.log('---------------------------------------------');
-                        const $token = '{{ csrf_token() }}';
+                        const $token = @json(csrf_token());
                         
                         const arrData = [];
                         const convert = [
@@ -353,7 +354,6 @@
                         for (const draw of this.drawPads) {
                             const dataPad = draw.pad.toData();
                             const dataPadURL = draw.pad.toDataURL();
-                            const key = draw.key;
                             const pad = draw.pad;
                             const canvas = pad.canvas;
                             
@@ -363,11 +363,17 @@
                             const convertScaleXThumbnail = await this.convertCanvasScale(canvas, 0.25, 1, 'image/png', 'rgba(255,255,255,0)');
                             
                             const tempData = {
-                                key: draw.key,
-                                pad_json: dataPad,
-                                pad_images: [
-                                    {key: 'original', value: dataPadURL,},
-                                    {key: 'thumbnail', value: convertScaleXThumbnail,},
+                                type: draw.key,
+                                points: dataPad,
+                                images: [
+                                    {
+                                        variant: variants.original, 
+                                        value: dataPadURL
+                                    },
+                                    {
+                                        variant: variants.thumbnail, 
+                                        value: convertScaleXThumbnail
+                                    }
                                 ],
                             };
                             
@@ -386,7 +392,7 @@
                             return;
                         };
                         
-                        this.$wire.saveDraw(dataSave);
+                        this.$wire.saveNewSignature(dataSave)
                         
                         
                         console.log('---------------------------------------------');
@@ -433,7 +439,7 @@
                     checkPadValue() {
                         
                         let checkedValue = 0;
-                        for (const key of acceptPad) {
+                        for (const key of typeSignature) {
                             const select = this.drawPads.find(x => x.key == key);
                             if (! select) continue;
                             
@@ -443,7 +449,7 @@
                             checkedValue += 1;
                         }
                         
-                        if (checkedValue != acceptPad.length) { 
+                        if (checkedValue != typeSignature.length) { 
                             this.savePads = false; 
                             return false 
                         }
@@ -460,7 +466,7 @@
                         const detailStatus = $e.detail[0];
                         if (! detailStatus.status ) return this.redrawCanvas();
                         
-                        // for (const key of acceptPad) {
+                        // for (const key of typeSignature) {
                         //     this.resetPad(key);
                         // } 
                         

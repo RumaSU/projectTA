@@ -1,0 +1,109 @@
+<div class="cMainContentDocumentsAppDashbaord"
+
+>
+    
+    @php
+        $tempList = rand(5, 25);
+    @endphp
+    
+    <div class="ctr-listDocumentsApp">
+        <div class="cListDocumentsApp space-y-1" x-data>
+            @for ($i = 0; $i < $tempList; $i++)
+                
+                <div class="itemDocuments group/itemDocs"
+                    @contextmenu=""
+                    >
+                    <label class="labelItemSelect">
+                        <div class="contentLabelSelect px-6 bg-white rounded-lg shadow-sm shadow-black/20 hover:bg-blue-100 relative group-has-[:checked]/itemDocs:bg-blue-100">
+                            <div class="mainContentLabel flex items-center gap-2">
+                                <div class="iconChecked shrink-0 size-6 rounded-lg items-center justify-center border-2 border-blue-600 hidden group-has-[:checked]/itemDocs:flex">
+                                    <i class="fas fa-check text-blue-600"></i>
+                                </div>
+                                <div class="mainContentLabel flex-grow grid grid-cols-6 py-4">
+                                    <div class="nameItem col-span-2">
+                                        <div class="textItem text-sm">
+                                            Document
+                                        </div>
+                                    </div>
+                                    <div class="nameItem">
+                                        <div class="textItem text-sm">
+                                            Type
+                                        </div>
+                                    </div>
+                                    <div class="nameItem">
+                                        <div class="textItem text-sm">
+                                            Status
+                                        </div>
+                                    </div>
+                                    <div class="nameItem">
+                                        <div class="textItem text-sm">
+                                            Owner
+                                        </div>
+                                    </div>
+                                    <div class="nameItem">
+                                        <div class="textItem text-sm">
+                                            {{ Carbon\Carbon::now() }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="additionalCheckedContent absolute top-1/2 -translate-y-1/2 right-6 h-full px-2  items-center gap-2 bg-inherit hidden group-hover/itemDocs:flex group-has-[:checked]/itemDocs:flex">
+                                <div class="item-actionAdditional flex items-center justify-center size-7 relative group/actionDocs">
+                                    <i class="fas fa-signature text-xl text-gray-700"></i>
+                                    <div class="popup bg-white px-2 py-1 rounded-lg absolute -top-[107%] left-1/2 -translate-x-1/2 w-32 flex items-center justify-center shadow-sm shadow-black/40 invisible opacity-0 transition-all group-hover/actionDocs:visible group-hover/actionDocs:opacity-100">
+                                        <span class="text-xs">Sign Documents</span>
+                                    </div>
+                                </div>
+                                <div class="item-actionAdditional flex items-center justify-center size-7 relative group/actionDocs">
+                                    <i class="fas fa-circle-info text-xl text-gray-700"></i>
+                                    <div class="popup bg-white px-2 py-1 rounded-lg absolute -top-[107%] left-1/2 -translate-x-1/2 w-32 flex items-center justify-center shadow-sm shadow-black/40 invisible opacity-0 transition-all group-hover/actionDocs:visible group-hover/actionDocs:opacity-100">
+                                        <span class="text-xs">Info</span>
+                                    </div>
+                                </div>
+                                <div class="item-actionAdditional flex items-center justify-center size-7 relative group/actionDocs">
+                                    <i class="fas fa-trash-can text-xl text-gray-700"></i>
+                                    <div class="popup bg-white px-2 py-1 rounded-lg absolute -top-[107%] left-1/2 -translate-x-1/2 w-32 flex items-center justify-center shadow-sm shadow-black/40 invisible opacity-0 transition-all group-hover/actionDocs:visible group-hover/actionDocs:opacity-100">
+                                        <span class="text-xs">Delete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="checkbox" name="itemDocument" class="sr-only">
+                    </label>
+                </div>
+                
+            @endfor
+        </div>
+    </div>
+    
+</div>
+
+@once
+    @push('')
+        <script data-navigate-once="true">
+            
+            Alpine.data('contextMenu', () => ({
+                x: 0,
+                y: 0,
+                visible: false,
+                hovering: false,
+                
+                showMenu(event) {
+                    this.x = event.clientX;
+                    this.y = event.clientY;
+                    this.visible = true;
+                },
+                
+                hideMenu() {
+                    // Tunggu sejenak jika mouse sedang berada di atas menu
+                    setTimeout(() => {
+                        if (!this.hovering) {
+                            this.visible = false;
+                        }
+                    }, 100);
+                }
+            }))
+            
+        </script>
+    @endpush
+@endonce

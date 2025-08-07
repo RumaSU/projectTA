@@ -27,10 +27,17 @@ function getStateObject() {
 }
 
 function windowPustate($stateObj = getStateObject(), $unused = '', $url) {
+    if ($stateObj === null) {
+        $stateObj = getStateObject();
+    }
     window.history.pushState($stateObj, $unused, $url);
 }
 
 function windowReplacestate($stateObj = getStateObject(), $unused = '', $url) {
+    if ($stateObj === null) {
+        $stateObj = getStateObject();
+    }
+    
     window.history.replaceState($stateObj, $unused, $url);
 }
 

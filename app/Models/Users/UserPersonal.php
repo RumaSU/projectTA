@@ -8,8 +8,7 @@ class UserPersonal extends Model
 {
     protected $table = 'users_personal'; // Nama tabel
 
-    protected $primaryKey = 'id_user'; // Primary key
-    protected $guard = 'web';
+    // protected $primaryKey = 'id_user'; // Primary key
     protected $hidden = [
         'id_user',
     ];

@@ -9,7 +9,8 @@ class UserSocialMedia extends Model
     protected $table = 'users_social_media'; // Nama tabel
 
     protected $primaryKey = 'id_user_social_media'; // Primary key
-    protected $guard = 'web';
+    protected $keyType = 'uuid';
+    public $incrementing = false;
     protected $hidden = [
         'id_user',
     ];

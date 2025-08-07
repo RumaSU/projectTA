@@ -25,9 +25,14 @@ class Main extends Component
         
     }
     
+    #[Attributes\On('Refresh-New-Signature')]
+    public function refreshNewSignature() {
+        $this->mount();
+    }
     
-     
-     
+    
+    
+    
     
     #[Attributes\Layout('livewire.layout.dashboard.template')]
     public function render()

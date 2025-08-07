@@ -5,7 +5,7 @@
 @once
     @push('dashboard-top-main-content')
         <header class="headerDocumentDashboard">
-            @include('livewire.app.documents.partial.header')
+            @include('livewire.app.documents.partial.header', ['totalDocument' => rand(5, 25)])
         </header>
     @endpush
 @endonce
@@ -18,32 +18,18 @@
             </div>
         </div>
         
-        <div class="ctr-headerContentDocuments mt-2 px-6 py-2 bg-white rounded-3xl">
-            <div class="cHeaderContentDocuments grid grid-cols-6">
-                @php
-                    $listTextHeader = [
-                        (object) ['col_span' => '2', 'text' => 'Document'],
-                        (object) ['col_span' => '1', 'text' => 'Type'],
-                        (object) ['col_span' => '1', 'text' => 'Status'],
-                        (object) ['col_span' => '1', 'text' => 'Owner'],
-                        (object) ['col_span' => '1', 'text' => 'Last Modified'],
-                    ];
-                @endphp
-                @foreach ($listTextHeader as $header)
-                    <div class="itemHeader col-span-{{ $header->col_span }}">
-                        <div class="textHeader text-sm">
-                            <p>{{ $header->text }}</p>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-        
-        <div class="ctr-mainContentMailAppDashbaord mt-8">
-            @livewire('app.documents.data')
+        <div class="ctr-mainContentDocumentsAppDashbaord mt-6">
+            @livewire('app.documents.data', ['placeholder' => true])
         </div>
     </div>
 @endsection
+
+
+@once
+    @push('global-custom-content')
+        @livewire('app.sign.tool.configure-type', [null, true])
+    @endpush
+@endonce
 
 
 @once

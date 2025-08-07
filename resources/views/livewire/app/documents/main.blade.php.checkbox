@@ -1,0 +1,71 @@
+@push('default-layout-head-meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
+
+@once
+    @push('dashboard-top-main-content')
+        <header class="headerDocumentDashboard">
+            @include('livewire.app.documents.partial.header', ['totalDocument' => rand(5, 25)])
+        </header>
+    @endpush
+@endonce
+
+@section('dashboard-child-template')
+    <div class="wrapper-DocumentsAppDashboard mt-6 p-4 bg-gray-200 rounded-xl">
+        <div class="ctr-filterDocumentsAppDashboard px-6 py-4 bg-white rounded-3xl">
+            <div class="cFilterDocumentsAppDashboard">
+                @include('livewire.app.documents.partial.filter')
+            </div>
+        </div>
+        
+        {{-- <div class="ctr-headerContentDocuments mt-2 px-6 py-2.5 bg-white rounded-3xl">
+            <div class="cHeaderContentDocuments grid grid-cols-6">
+                @php
+                    $listTextHeader = [
+                        (object) ['col_span' => '2', 'text' => 'Document'],
+                        (object) ['col_span' => '1', 'text' => 'Type'],
+                        (object) ['col_span' => '1', 'text' => 'Status'],
+                        (object) ['col_span' => '1', 'text' => 'Owner'],
+                        (object) ['col_span' => '1', 'text' => 'Last Modified'],
+                    ];
+                @endphp
+                @foreach ($listTextHeader as $header)
+                    <div class="itemHeader col-span-{{ $header->col_span }}">
+                        <div class="textHeader text-sm">
+                            <p>{{ $header->text }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div> --}}
+        
+        <div class="ctr-mainContentDocumentsAppDashbaord mt-6">
+            @livewire('app.documents.data')
+        </div>
+    </div>
+@endsection
+
+
+@once
+    @push('dashboard-body-script')
+        <script data-navigate-once>
+            
+        </script>
+        {{-- <script data-navigate-once>
+            window.addEventListener('mail_spa_nav', event => {
+                let dataPage = [event.detail];
+                console.log('Response from nav:', dataPage);
+                Livewire.dispatch('MailPageSpa', dataPage);
+                // Livewire.dispatch('testDispatchFromInbox', dataPage);
+            });
+            Livewire.hook('component.init', ({ component }) => {
+                console.log("Livewire component initialized", component);
+            });
+            Livewire.hook('message.received', (message, component) => {
+                console.log('Message received:', message, 'by', component);
+            });
+        </script> --}}
+    @endpush
+@endonce
+
+<div></div>

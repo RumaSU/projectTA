@@ -3,7 +3,11 @@
 namespace App\Livewire\Auth\Login;
 
 use App\Library\SessionHelper;
-use App\Library\UserHelper;
+
+use App\Services\AuthServices;
+use App\Enums\AuthField;
+
+use App\Trait\HasNotify;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +17,8 @@ use Livewire\Attributes;
 
 class Main extends Component
 {
+    use HasNotify;
+    
     public $inp_login;
     public $inp_password;
     
@@ -39,78 +45,42 @@ class Main extends Component
             ],
         );
         
-        // $validate_auth = $this->validateAuthForm();
-        
-        // if ($validate_auth->fails()) {
-            
-        //     foreach ($validate_auth->errors()->messages() as $field => $messages) {
-                
-        //         foreach ($messages as $message) {
-        //             $this->addError($field, $message);
-        //         }
-                
-        //     }
-            
-        //     return;
-        // }
-        
-        $field = $this->getFieldType($this->inp_login);
-        
-        $credentialsAuth = [
-            $field => $this->inp_login,
-            'password' => $this->inp_password,
+        $auth = app(AuthServices::class)->auth($this->inp_login, $this->inp_password);
+        // dump(
+        //     $auth,
+        //     [
+        //         'field' => AuthField::detect($this->inp_login)->value,
+        //         'value' => $this->inp_login
+        //     ], [
+        //         'field' => AuthField::detect('oinfeoivwioevcoinasdofnoinefalknsfio402')->value,
+        //         'value' => 'oinfeoivwioevcoinasdofnoinefalknsfio402'
+        //     ], [
+        //         'field' => AuthField::detect('iasnbfioubuio3e@gmail.com')->value,
+        //         'value' => 'iasnbfioubuio3e@gmail.com'
+        //     ]
+        // );
+        $dispatch = [
+            'notification' => [
+                'variant' => $auth->status ? 'info' : 'warning',
+                'sender' => 'System',
+                'title' => $auth->title,
+                'message' => $auth->message,
+            ],
         ];
         
-        $statusAuthAttempt = UserHelper::authUser($credentialsAuth);
-        
-        if (! $statusAuthAttempt->status) {
-            $dataDispatch = [
-                'notification' => [
-                    'variant' => 'warning',
-                    'sender' => 'System',
-                    'title' => $statusAuthAttempt->title,
-                    'message' => $statusAuthAttempt->message,
-                ],
-                // 'redirect' => route($statusCheckStep->route),
-                // 'navigate' => true,
-            ];
+        if ($auth->status) {
+            
+            $dispatch['redirect'] = route('app.dashboard.home');
+            $dispatch['navigate'] = false;
+            
+        } else {
+            
             $this->addError('inp_login', 'Make sure your email are correct');
             $this->addError('inp_password', 'Make sure your password are correct');
-            $this->dispatchProses('form_process', $dataDispatch);
-            // $this->dispatchNotification('danger', $statusAuthAttempt->title, $statusAuthAttempt->message);
             
-            return;
         }
         
-        
-        
-        $dataDispatch = [
-            'notification' => [
-                'variant' => 'success',
-                'sender' => 'System',
-                'title' => $statusAuthAttempt->title,
-                'message' => $statusAuthAttempt->message,
-            ],
-            'redirect' => route('app.dashboard.home'),
-            'navigate' => false,
-        ];
-        $this->dispatchProses('form_process', $dataDispatch);
-        // $this->dispatchNotification('success', $statusAuthAttempt->title, $statusAuthAttempt->message);
-        
-        // $this->authUserLogin();
-        
-        // $field = $this->getFieldType($this->inp_login);
-        
-        // if (Auth::attempt([$field => $this->inp_login, 'password' => $this->inp_password])) {
-        //     session()->regenerate();
-            
-        //     $this->dispatchNotification('success', 'Welcome back!', 'Authentication successful.');
-            
-            
-        //     return;
-        // }
-        
-        // $this->dispatchNotification('danger', 'Oops!', 'Invalid credentials. Please check your login and try again.');
+        $this->dispatch('form_process', $dispatch);
     }
     
     #[Attributes\Layout('livewire.layout.auth.template')]
@@ -121,16 +91,6 @@ class Main extends Component
     
     
     // Private Function
-    private function authUserLogin() {
-        $field = $this->getFieldType($this->inp_login);
-        
-        $credentialsAuth = [
-            $field => $this->inp_login,
-            'password' => $this->inp_password,
-        ];
-        
-        
-    }
     private function validateAuthForm() {
         $validateData = [
             'inp_login'  => $this->inp_login,
@@ -151,15 +111,6 @@ class Main extends Component
         $validator = Validator::make($validateData, $validateRules, $validateMessages);
         
         return $validator;
-    }
-    
-    private function getFieldType($val_login) {
-        if (filter_var($val_login, FILTER_VALIDATE_EMAIL)) return 'email';
-        return 'username';
-    }
-    
-    private function dispatchProses($dispatchName, $data) {
-        $this->dispatch($dispatchName, $data);
     }
     
     // info, success, warning, danger

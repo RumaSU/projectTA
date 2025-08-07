@@ -17,6 +17,12 @@ class CustomConfigProvider extends ServiceProvider
         $this->mergeConfigFrom(
             config_path('custom/form.php'), 'custom_form',
         );
+        $this->mergeConfigFrom(
+            config_path('custom/upload_file.php'), 'custom_upload',
+        );
+        $this->mergeConfigFrom(
+            config_path('custom/document.php'), 'config_document',
+        );
     }
 
     /**

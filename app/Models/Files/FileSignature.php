@@ -11,7 +11,6 @@ class FileSignature extends Model
     protected $keyType = 'uuid';
     public $incrementing = false;
     protected $guarded = ['id_file_signature'];
-    protected $guard = 'web';
     protected $hidden = [
         'id_user',
     ];

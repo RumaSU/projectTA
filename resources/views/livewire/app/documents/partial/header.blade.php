@@ -1,17 +1,38 @@
 <div class="ctr-navDocumentDashboard h-12">
     <div class="cNavDocumentDashboard flex items-center justify-between">
         <div class="ctr-leftNavDocumentDashboard">
-            <div class="cLeftNavDocumentDashboard">
+            <div class="cLeftNavDocumentDashboard flex gap-1">
                 <div class="titleNavDocument">
                     <div class="txTitle text-2xl font-semibold">
                         <h2>Documents</h2>
                     </div>
                 </div>
+                {{-- <div class="countDocument size-fit px-1 py-0.5 rounded-lg bg-blue-600">
+                    <div class="textCount text-sm text-white">
+                        <p>{{ $totalDocument }}</p>
+                    </div>
+                </div> --}}
             </div>
         </div>
         
         <div class="ctr-rightDocumentNavDashboard">
-            <div class="cRightDocumentNavDashboard">
+            <div class="cRightDocumentNavDashboard flex items-center gap-2">
+                
+                {{-- <div class="wrapper-uploadDocumentNavDashboard">
+                    <div class="uploadDocumentNavDashboard">
+                        <button class="act-buttonUploadDocument py-1.5 px-6 overflow-hidden relative transition-all group rounded-xl bg-gray-200">
+                            <div class="actionUpload flex items-center gap-2 text-gray-400">
+                                <div class="actionIcon text-lg size-8 flex items-center justify-center">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <div class="actionText text-sm">
+                                    <p>Upload Document</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div> --}}
+                
                 <div class="wrapper-searchDocumentNavDashboard">
                     <div class="searchDocumentNavDashboard flex py-0.5 pl-2 pr-1 focus-within:ring-1 focus-within:ring-blue-600 border border-black overflow-hidden rounded-full"
                         x-data="search_document"
@@ -50,7 +71,23 @@
 
 
 @once
+    
+    
+    @push('global-custom-content')
+        
+    @endpush
+    
+    
     @push('dashboard-body-script')
+        
+        <script data-navigate-once="true">
+            
+            Alpine.data('uploadDocuments')
+            
+        </script>
+        
+        
+        
         <script data-navigate-once>
             
             Alpine.data('search_document', () => {
@@ -72,7 +109,7 @@
                     inpSearch: paramQV,
                     handleSearchDocument(event) {
                         const valInp = event.target.value;
-                        setParamsQuery('s', valInp);
+                        // setParamsQuery('s', valInp);
                         
                         $dataSearch = {
                             search: valInp,

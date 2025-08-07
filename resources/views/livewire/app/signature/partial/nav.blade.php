@@ -112,7 +112,7 @@
     @push('global-custom-content')
         
         @livewire('app.signature.partial.create.draw-signature')
-        @livewire('app.signature.partial.create.type-signature')
+        @livewire('app.signature.partial.create.typing-signature')
         
     @endpush
 @endonce

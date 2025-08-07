@@ -18,7 +18,6 @@ class User extends Authenticatable
     protected $keyType = 'uuid';
     public $incrementing = false;
     protected $guarded = ['user_id'];
-    protected $guard = 'web';
     
     protected $fillable = [
         'id_user',

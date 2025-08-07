@@ -104,7 +104,9 @@ class UserHelper {
                 $lengthLetter += 1;
             }
             
-            $randomLetter = $letter ? LibHelper::randStr($lengthLetter, lower: false,) : mt_rand(1000, 9999) . mt_rand(1000, 9999);
+            $randomLetter = $letter 
+                ? LibHelper::randStr($lengthLetter, lower: false,) 
+                : mt_rand(1000, 9999) . mt_rand(1000, 9999);
             $username = $accronym . '-' . $randomLetter;
             if( ! (Users\User::where('username', '=' ,  $username )->exists() ) ) {
                 $isUsernameUnique = true;

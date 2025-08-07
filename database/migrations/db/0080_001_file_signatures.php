@@ -11,23 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('files_signature')) {
-            Schema::create('files_signature', function (Blueprint $table) {
+        if (! Schema::hasTable('files_signatures')) {
+            Schema::create('files_signatures', function (Blueprint $table) {
                 $table->uuid('id_file_signature')->primary();
-                $table->uuid('id_user');
+                $table->uuid('id_file_disk')->unique();
+                $table->uuid('id_user')->index();
                 
                 $table->enum('type', ['signature', 'paraf']);
-                $table->string('file_name', 512);
-                $table->string('file_ext'); // png
-                $table->string('file_path', 2048);
-                $table->string('file_mime'); // image/png
-                $table->integer('file_size'); 
+                $table->string('disk');
+                $table->string('path');
+                $table->string('file_name')->unique();
+                $table->string('file_client_name')->nullable();
+                $table->string('extension');
+                $table->string('mime_type')->nullable();
+                $table->unsignedInteger('size_byte');
+                
+                $table->char('hash_row', 172);
+                $table->string('hash_type', 25);
                 
                 $table->timestamps();
-                
-                $table->index('id_file_signature');
-                $table->index('id_user');
-                $table->index('file_path');
             });
         }
         

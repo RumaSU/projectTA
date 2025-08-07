@@ -24,9 +24,15 @@ class UserSeeder extends Seeder
             $name = fake()->name();
             $username = strtolower(implode('', explode(' ', $name)));
             
+            $email = "rijal{$i}@gmail.com";
+            
+            if (Users\User::where('email', '=', $email)->exists()) {
+                continue;
+            }
+            
             Users\User::create([
                 'id_user' => $uuid,
-                'email' => 'rijal'.$i.'@gmail.com',
+                'email' => $email,
                 'username' => $username,
                 'password' => Hash::make('321654987'),
             ]);

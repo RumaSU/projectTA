@@ -10,6 +10,7 @@
     <script src="{{ asset('main/js/urlUtils.js') }}"></script>
     <script src="{{ asset('main/js/cookieUtils.js') }}"></script>
     <script src="{{ asset('main/js/dateUtils.js') }}"></script>
+    <script src="{{ asset('main/js/helper.js') }}"></script>
     <script>
         function dispatchingDataLivewireTo($dispatchKey, $dispatchData) {
             if (typeof $dispatchData !== 'object') {
@@ -31,8 +32,9 @@
             };
         }
     </script>
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> --}}
+    
+    @vite('resources/js/events/processDocuments.js')
+    
     @stack('dashboard-head-css')
     
     @livewireStyles
@@ -85,7 +87,8 @@
         @include('livewire.layout.partial.toast-notification')
     @endpersist()
     
-    @if (! session()->exists('timezone') || ! Cookie::get('timezone'))
+    {{-- @if (! session()->exists('timezone') || ! Cookie::get('timezone')) --}}
+    @if (! session()->exists('timezone'))
         @livewire('layout.partial.set-timezone')
     @endif
     
@@ -107,8 +110,41 @@
                 console.log('[Calendar] Memoized elements cleared after Livewire navigated');
             }
         });
+        
     </script>
+    
+    @vite('resources/js/events/documents/main.js')
+    
+    <script data-navigate-once="true" type="module">
+        window.Echo.private(`process_docs.${window.Laravel.sessionId}`)
+            .listen('ProcessNewDocument', (e) => {
+                console.log('private process new documents...');
+            })
+            .listen('.ProcessNewDocument', (e) => {
+                console.log('private alias process new documents...');
+            });
+        
+            
+        // window.Echo.private(`now-status_upload.${window.Laravel.sessionId}`)
+        //     .listen('Documents.Now.StatusUpload', ($data) => {
+        //         console.log("now process status upload");
+        //         console.log("data: ", $data);
+        //     })
+        //     .listen('Documents.Now.StatusUpload', ($data) => {
+        //         console.log("now namespace process status upload");
+        //         console.log("data: ", $data);
+        //     })
+        //     .listen('.Now_ProcessStatusUpload', ($data) => {
+        //         console.log("now alias process status upload");
+        //         console.log("data: ", $data);
+        //     });
+            
+            
+        // window.Echo.channel(`process_docs.${window.Laravel.sessionId}`)
+        //     .listen("ProcessNewDocument", () => {
+        //         console.log('channel process new documents...');
+        //     });
+    </script>
+    
     @stack('dashboard-body-script')
 @endsection
-
-{{-- <div class="">sa</div> --}}

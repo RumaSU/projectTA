@@ -127,12 +127,96 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
         
+        
+        'log_trace' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/trace.log'),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+        
+        
         'user_log' => [
             'driver' => 'daily',
             'path' => storage_path('logs/user/user_log.log'),
             'level' => 'info',
-            'days' => 1
+            'days' => 14,
+            'replace_placeholders' => true,
         ],
+        
+        'model_log' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/model/model_log.log'),
+            'level' => 'info',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+        
+        'jobs_log' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/jobs/job.log'),
+            'level' => 'info',
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+        
+        'jobs_documents' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/jobs/documents/docs.log'),
+            'level' => 'info',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+        
+        'jobs_documents_exception' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/jobs/documents/docs_exception.log'),
+            'level' => 'info',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        'library_log' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/library/library.log'),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        'log_documents' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/library/documents/lib_docs.log'),
+            'level' => 'info',
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+        
+        'library_log_documents' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/library/documents/lib_docs.log'),
+            'level' => 'info',
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+        
+        
 
     ],
 

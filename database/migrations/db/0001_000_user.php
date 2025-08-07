@@ -21,7 +21,6 @@ return new class extends Migration
                 $table->string('password');
                 $table->timestamps();
                 
-                $table->index('id_user');
                 $table->index('email');
                 $table->index('username');
             });
@@ -29,28 +28,24 @@ return new class extends Migration
         
         if (!Schema::hasTable('users_personal')) { // data dasar user
             Schema::create('users_personal', function (Blueprint $table) {
-                $table->uuid('id_user')->primary();
+                $table->uuid('id_user')->unique();
                 // $table->string('first_name');
                 // $table->string('last_name');
                 $table->string('fullname');
                 $table->enum('gender', ['Male', 'Female', 'Prefer not to say'])->default('Prefer not to say');
                 $table->date('birthdate');
                 $table->timestamps();
-                
-                $table->index('id_user');
             });
         }
         
         if (!Schema::hasTable('users_data')) { // data dasar user
             Schema::create('users_data', function (Blueprint $table) {
-                $table->uuid('id_user')->primary();
+                $table->uuid('id_user')->unique();
                 $table->string('job_regis_number');
                 $table->string('job_type');
                 $table->string('job_institute');
                 // ...
                 $table->timestamps();
-                
-                $table->index('id_user');
             });
         }
         
@@ -59,7 +54,7 @@ return new class extends Migration
                 $table->uuid('id_user_phone')->primary();
                 $table->uuid('id_user');
                 $table->string('phone_number');
-                $table->enum('phone_type', ['Personal']); // 'Office', 'Home', 'Other'
+                $table->string('phone_type'); // 'Office', 'Home', 'Other'
                 $table->timestamps();
                 
                 $table->index('id_user');

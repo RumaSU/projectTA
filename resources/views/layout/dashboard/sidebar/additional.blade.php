@@ -1,14 +1,14 @@
 @php
     $LstNavAdditionalSidebar = [
         (object) array(
-            'titleNav' => 'uploadSign',
-            'descNav' => 'Upload & Sign',
+            'titleNav' => 'addDocuments',
+            'descNav' => 'Add Document',
             'descColor' => 'text-[#533F00]',
             'bgNav' => 'bg-gradient-to-r from-[#FFCA28] to-[#D4A927]',
             'icon' => 'fas fa-upload',
             'iconColor' => 'text-[#533F00]',
-            'routeNav' => '#',
-            'activeRoute' => '',
+            'routeNav' => route('app.uploads.document'),
+            'activeRoute' => 'app.uploads.document',
             'wireNavigate' => true,
         ),
         (object) array(

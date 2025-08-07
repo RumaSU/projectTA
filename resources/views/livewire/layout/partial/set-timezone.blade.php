@@ -15,7 +15,7 @@
                         
                         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         dispatchingDataLivewireTo('Set-New-Timezone', {timezone: timezone});
-                        setNewCookie('timezone_browser', timezone);
+                        // setNewCookie('timezone_browser', timezone);
                     },
                 }
             });

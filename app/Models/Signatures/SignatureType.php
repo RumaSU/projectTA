@@ -11,7 +11,6 @@ class SignatureType extends Model
     protected $keyType = 'uuid';
     public $incrementing = false;
     protected $guarded = ['id_signature_type'];
-    protected $guard = 'web';
     protected $hidden = [
         'id_user',
     ];
@@ -19,7 +18,7 @@ class SignatureType extends Model
     protected $fillable = [
         'id_signature_type',
         'id_signature',
-        'type',
+        'type', // signature, paraf
     ];
     protected function casts(): array
     {

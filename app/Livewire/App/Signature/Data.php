@@ -8,7 +8,14 @@ use App\Library\Helper as LibHelper;
 
 use App\Models\Signatures;
 
+use App\Services\SignatureDrawings\GetService;
+use App\Services\SignatureDrawings\UpdateDefaultService;
+use App\Services\SignatureDrawings\DeleteService;
+use App\Libraries\ArrayHelper;
+use App\Trait\HasNotify;
+
 use Illuminate\Support\Facades\Auth;
+
 
 use Livewire\Component;
 use Livewire\Attributes;
@@ -16,11 +23,15 @@ use Livewire\Attributes;
 #[Attributes\Lazy()]
 class Data extends Component
 {
+    use HasNotify;
+    
     public $list_signatures;
     public $default_signature;
     
     public $load_count = 0;
     public $show_detail = true;
+    
+    private const UPDATE_PARAM = ['_token', 'id'];
     
     
     public function placeholder() {
@@ -28,8 +39,10 @@ class Data extends Component
     }
     
     public function mount() {
-        $this->default_signature = SignatureModelsUtils::getListSignaturesImages(Auth::user()->id_user, true)[0] ?? null;
-        $this->list_signatures = SignatureModelsUtils::getListSignaturesImages(Auth::user()->id_user, false);
+        $values = GetService::default(Auth::user()->id_user);
+        $this->default_signature = array_values($values)[0] ?? null;
+        
+        $this->list_signatures = GetService::list(Auth::user()->id_user);
     }
     
     
@@ -46,31 +59,61 @@ class Data extends Component
     }
     
     public function updateDefaultSignatures($data) {
-        $objData = json_decode(json_encode($data));
-        if ($objData->_token != csrf_token()) return;
-        
-        $resultUpdate = SignatureModelsUtils::updateSignatureDefault($objData->id, Auth::user()->id_user);
-        if ($resultUpdate->status) {
-            $this->dispatchNotification('success', 'Default Signature Set', $resultUpdate->message);
-            return $this->mount();
-        } else {
-            $this->dispatchNotification('danger', 'Failed to Set Default Signature', $resultUpdate->message);
+        if (! is_array($data)) {
+            $this->notify('danger', 'Invalid Data', 'The data provided is invalid.');
             return;
         }
         
+        if (! ArrayHelper::key_exists(static::UPDATE_PARAM, $data)) {
+            $this->notify('danger', 'Incomplete Parameter', 'Update parameter not found.');
+            return;
+        }
+        
+        if (! ArrayHelper::key_exists('_token', $data) || $data['_token'] !== csrf_token()) {
+            $this->notify('danger', 'Invalid Token', 'Authentication token is invalid or has expired.');
+            return;
+        }
+        
+        $resultUpdate = UpdateDefaultService::handle($data['id'], Auth::user()->id_user);
+        $variant = $resultUpdate['status'] ? 'success' : 'danger';
+        $this->notify(
+            $variant,
+            $resultUpdate['status'] ? 'Update Successful' : 'Update Failed',
+            $resultUpdate['message']
+        );
+        
+        if ($resultUpdate['status']) {  
+            return $this->mount();
+        }
     }
     
     public function deleteSignatures($data) {
-        $objData = json_decode(json_encode($data));
-        if ($objData->_token != csrf_token()) return;
-        
-        $resultDelete = SignatureModelsUtils::deleteSignature($objData->id, Auth::user()->id_user);
-        if ($resultDelete->status) {
-            $this->dispatchNotification('success', 'Deleted', $resultDelete->message);
-            return $this->mount();
-        } else {
-            $this->dispatchNotification('danger', 'Failed to Deleted Signature', $resultDelete->message);
+        if (! is_array($data)) {
+            $this->notify('danger', 'Invalid Data', 'The data provided is invalid.');
             return;
+        }
+        
+        if (! ArrayHelper::key_exists(static::UPDATE_PARAM, $data)) {
+            $this->notify('danger', 'Incomplete Parameter', 'Update parameter not found.');
+            return;
+        }
+        
+        if (! ArrayHelper::key_exists('_token', $data) || $data['_token'] !== csrf_token()) {
+            $this->notify('danger', 'Invalid Token', 'Authentication token is invalid or has expired.');
+            return;
+        }
+        
+        
+        $resultDelete = DeleteService::handle($data['id'], Auth::user()->id_user);
+        $variant = $resultDelete['status'] ? 'success' : 'danger';
+        $this->notify(
+            $variant,
+            $resultDelete['status'] ? 'Delete Successful' : 'Delete Failed',
+            $resultDelete['message']
+        );
+        
+        if ($resultDelete['status']) {  
+            return $this->mount();
         }
     }
     

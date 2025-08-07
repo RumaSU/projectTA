@@ -37,13 +37,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-        
-        'signatures' => [
-            'driver' => 'local',
-            'root' => storage_path('app/signatures'),
-            'visibility' => 'private',
-            'throw' => false,
-        ],
 
         'public' => [
             'driver' => 'local',
@@ -63,6 +56,30 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
+            'report' => false,
+        ],
+        
+        'signatures' => [
+            'driver' => 'local',
+            'root' => storage_path('app/signatures'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+        
+        'documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/documents'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+        
+        'chunks.documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/chunks/documents'),
+            'visibility' => 'private',
             'throw' => false,
             'report' => false,
         ],

@@ -14,53 +14,40 @@ return new class extends Migration
         if (!Schema::hasTable('signatures')) { 
             Schema::create('signatures', function (Blueprint $table) {
                 $table->uuid('id_signature')->primary();
-                $table->uuid('id_user');
-                $table->boolean('default')->default(0);
+                $table->uuid('id_user')->index();
+                $table->boolean('is_default')->default(0);
                 $table->timestamps();
-                
-                $table->index('id_signature');
-                $table->index('id_user');
             });
         }
         
         if (!Schema::hasTable('signatures_type')) { 
             Schema::create('signatures_type', function (Blueprint $table) {
                 $table->uuid('id_signature_type')->primary();
-                $table->uuid('id_signature');
+                $table->uuid('id_signature')->index();
                 $table->enum('type', ['signature', 'paraf']);
                 $table->timestamps();
-                
-                $table->index('id_signature_type');
-                $table->index('id_signature');
             });
         }
         
-        if (!Schema::hasTable('signatures_pad_data')) { 
-            Schema::create('signatures_pad_data', function (Blueprint $table) {
-                $table->uuid('id_signature_pad_data')->primary();
-                $table->uuid('id_signature_type');
-                $table->string('pad_key'); // key: original, 2x, thumbnail
-                $table->string('pad_mime'); // image/png, image/xvg+xml 
-                $table->longText('pad_base64'); // value: 
-                $table->json('pad_points')->nullable();
+        if (!Schema::hasTable('signatures_drawings')) { 
+            Schema::create('signatures_drawings', function (Blueprint $table) {
+                $table->uuid('id_signature_drawing')->primary();
+                $table->uuid('id_signature_type')->index();
+                $table->string('variant')->index(); // key: original, 2x, thumbnail
+                $table->string('mime_type'); // image/png, image/xvg+xml 
+                $table->longText('base64_data'); // value: 
+                $table->json('points')->nullable();
                 $table->timestamps();
-                
-                $table->index('id_signature_pad_data');
-                $table->index('id_signature_type');
             });
         }
         
-        if (!Schema::hasTable('signatures_file')) { 
-            Schema::create('signatures_file', function (Blueprint $table) {
+        if (!Schema::hasTable('signatures_files')) { 
+            Schema::create('signatures_files', function (Blueprint $table) {
                 $table->uuid('id_signature_file')->primary();
-                $table->uuid('id_signature_type');
-                $table->uuid('id_file_signature');
-                $table->string('signature_file_key'); // original, 2x, thumbnail
+                $table->uuid('id_signature_type')->index();
+                $table->uuid('id_file_signature')->index();
+                $table->string('variant')->index(); // original, 2x, thumbnail
                 $table->timestamps();
-                
-                $table->index('id_signature_file');
-                $table->index('id_signature_type');
-                $table->index('id_file_signature');
             });
         }
         

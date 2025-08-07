@@ -4,75 +4,74 @@ namespace App\Library;
 
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
+use App\Library\Helper as LibHelper;
 use App\Models\Log\Chunks;
 
 
 class ChunkHelper {
-    public static function setSessionChunkLog($resumableFields, $keyChunk){
-        $nowLog = [$resumableFields];
+    protected static $disk = 'local';
+    
+    
+    /**
+     * Summary of getResumableRequest
+     * @param \Illuminate\Http\Request $request
+     * 
+     * @return array|null
+     */
+    public static function getResumableRequest($request) {
+        $mapResumable = [
+            "resumableChunkNumber",
+            "resumableChunkSize",
+            "resumableCurrentChunkSize",
+            "resumableTotalSize",
+            "resumableType",
+            "resumableIdentifier",
+            "resumableFilename",
+            "resumableRelativePath",
+            "resumableTotalChunks",
+        ];
         
-        if (!Session::has('log_chunk')) {
-            Session::put('log_chunk', []);
-        }
         
-        $sessionLogListChunk = Session::get('log_chunk');
-        if (!array_key_exists($keyChunk, $sessionLogListChunk)) {
-            $sessionLogListChunk[$keyChunk] = $nowLog;
-            
-            Session::put('log_chunk', $sessionLogListChunk);
-            return;
-        }
+        $col = collect($request->all())->filter(function($value, $key) use ($mapResumable) {
+            // return str_starts_with($key, 'resumable');
+            return in_array($key, $mapResumable);
+        })->toArray();
         
-        $logChunkById = $sessionLogListChunk[$keyChunk];
-        $countLogChunk = count($logChunkById);
-        
-        $prevLog = $logChunkById[$countLogChunk - 1];
-        $excludeKey = ['resumableChunkNumber', 'resumableCurrentChunkSize'];
-        foreach ($resumableFields as $resKey => $resData) {
-            if (in_array($resKey, $excludeKey)) {
-                continue;
-            }
-            
-            if ($resData != $prevLog[$resKey]) {
-                $keySplit = preg_split('/(?=[A-Z])/', $resKey);
-                $keyMessage = implode(' ', $keySplit);
-                
-                $errMessage = [
-                    'errorReason' => $keyMessage . " doesn't equal as before",
-                    'dataBefore' => $prevLog[$resKey],
-                    'dataNow' => $resData
-                ];
-                
-                $prevLog['error'] = $errMessage;
-                $sessionLogListChunk[$keyChunk][] = $prevLog;
-                Session::put('log_chunk', $sessionLogListChunk);
-                
-                return $errMessage;
-            }
-        }
-        
-        $sessionLogListChunk[$keyChunk][] = $resumableFields;
-        Session::put('log_chunk', $sessionLogListChunk);
-        
-        return;
+        return count($col) == count($mapResumable) ? $col : null;
     }
     
-    public static function getSessionChunkLog($keyChunk) {
-        $sessionLogListChunk = Session::get('log_chunk');
-        if (array_key_exists($keyChunk, $sessionLogListChunk)) {
-            return $sessionLogListChunk[$keyChunk];
-        }
+    
+    /**
+     * Summary of getMetadataUploadFile
+     * @param \Illuminate\Http\UploadedFile $file
+     * @return array|null
+     */
+    public static function getMetadataUploadFile($file) {
+        $realPath = LibHelper::normalizePath($file->getRealPath());
+        $relativePath = str_replace(LibHelper::normalizePath(Storage::disk(self::$disk)->path('')), '', $realPath);
         
-        return;
+        return $file instanceof \Illuminate\Http\UploadedFile 
+        ? [
+            'originalName' => $file->getClientOriginalName(),
+            'originalExt' => $file->getClientOriginalExtension(),
+            'mime' => $file->getMimeType(),
+            'size' => $file->getSize(),
+            'realPath' => $realPath,
+            'relativePath' => LibHelper::normalizePath($relativePath),
+            'basename' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+        ] 
+        : null;
     }
     
-    public static function forgetSessionChunkLog($keyChunk) {
-        $sessionLogListChunk = Session::get('log_chunk');
-        unset($sessionLogListChunk[$keyChunk]);
-        Session::put('log_chunk', $sessionLogListChunk);
-        return;
-    }
     
-    // public function 
+    /**
+     * Summary of clearChunk
+     * @param string $clienFileName
+     * @return bool
+     */
+    public static function clearChunk($clienFileName) {
+        return Storage::disk('local')->delete('chunks/' . $clienFileName);
+    }
 }

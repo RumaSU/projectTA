@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class SignatureFile extends Model
 {
-    protected $table = 'signatures_file'; // Nama tabel
+    protected $table = 'signatures_files'; // Nama tabel
     protected $primaryKey = 'id_signature_file'; // Primary key
     protected $keyType = 'uuid';
     public $incrementing = false;
     protected $guarded = ['id_signature_file'];
-    protected $guard = 'web';
     protected $hidden = [
         'id_signature_type',
         'id_file_signature',
@@ -21,7 +20,8 @@ class SignatureFile extends Model
         'id_signature_file',
         'id_signature_type',
         'id_file_signature',
-        'signature_file_key',
+        
+        'variant',
     ];
     protected function casts(): array
     {

@@ -8,8 +8,7 @@ class UserData extends Model
 {
     protected $table = 'users_data'; // Nama tabel
 
-    protected $primaryKey = 'id_user'; // Primary key
-    protected $guard = 'web';
+    // protected $primaryKey = 'id_user'; // Primary key
     protected $hidden = [
         'id_user',
     ];

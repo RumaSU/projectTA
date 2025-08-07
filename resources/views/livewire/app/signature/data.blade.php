@@ -2,6 +2,9 @@
     >
     
     @if (! empty($default_signature))
+    
+    
+    
         {{-- <div 
             class="act-showSignaturesDetail group {{ $show_detail ? 'block' : 'hidden' }}"
             >
@@ -36,7 +39,7 @@
         </div> --}}
         
         <div class="ctr-defaultSignaturesSet bg-white shadow-md shadow-black/40 rounded-lg mt-2"
-            wire:key='item-{{ $default_signature->id }}'
+            {{-- wire:key='item-{{ $default_signature->id }}' --}}
         >
             <div class="cDefaultSignaturesSet p-4">
                 
@@ -104,11 +107,11 @@
                                 >
                                 <div 
                                     class="image size-full"
-                                    style="background: url({{ route('drive.files.preview_signature', ['filename' => $default_signature->signature->file_name . '_thumbnail']) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
+                                    style="background: url({{ route('drive.files.entity_signature', [ 'token' => $default_signature['signature']['token_thumbnail'] ] ) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
                                     wire:ignore.self
                                     >
                                     <img 
-                                        src="{{ route('drive.files.preview_signature', ['filename' => $default_signature->signature->file_name]) }}" 
+                                        src="{{ route('drive.files.entity_signature', [ 'token' => $default_signature['signature']['token_original'] ] ) }}" 
                                         @load="show = true; $el.parentElement.removeAttribute('style')"
                                         alt="" 
                                         class="size-full object-cover"
@@ -136,11 +139,11 @@
                                 
                                 >   
                                 <div class="image size-full"
-                                    style="background: url({{ route('drive.files.preview_signature', ['filename' => $default_signature->paraf->file_name . '_thumbnail']) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
+                                    style="background: url({{ route('drive.files.entity_signature', [ 'token' => $default_signature['paraf']['token_thumbnail'] ] ) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
                                     wire:ignore.self
                                     >
                                     <img 
-                                        src="{{ route('drive.files.preview_signature', ['filename' => $default_signature->paraf->file_name]) }}" 
+                                        src="{{ route('drive.files.entity_signature', [ 'token' => $default_signature['paraf']['token_original'] ] ) }}" 
                                         @load="show = true; $el.parentElement.removeAttribute('style')"
                                         alt="" 
                                         class="size-full object-cover"
@@ -176,12 +179,12 @@
     
     @if(! empty($list_signatures))
         <div class="listSignatures mt-6">
-            @foreach ($list_signatures as $signature)
+            @foreach ($list_signatures as $id => $value)
                 
                 <div
                     class="ctr-itemSignaturesSet bg-white shadow-md shadow-black/40 rounded-lg mt-2"
-                    x-data="actionSignatures('{{ $signature->id }}')"
-                    wire:key='item-{{ $signature->id }}'
+                    x-data="actionSignatures('{{ $id }}')"
+                    wire:key='item-{{ $id }}'
                     wire:ignore
                     >
                     
@@ -210,7 +213,7 @@
                             {{-- Images Signature --}}
                             <div class="imageListSignatures mt-2 grid">
                                 <div class="imageDefaultSignature col-span-5 size-full" 
-                                    x-data="{ show: $persist(false).as('item-{{ $signature->id }}') }"
+                                    x-data="{ show: $persist(false).as('item-{{ $id }}') }"
                                     {{-- x-data="{ show: false, imgSrc: '{{ route('drive.files.preview_signature', ['filename' => $signature->signature->file_name]) }}', thumbnailSrc: '{{ route('drive.files.preview_signature', ['filename' => $signature->signature->file_name . '_thumbnail']) }}'}" --}}
                                     >
                                     <div 
@@ -222,11 +225,11 @@
                                         >
                                         <div 
                                             class="image size-full"
-                                            style="background: url({{ route('drive.files.preview_signature', ['filename' => $signature->signature->file_name . '_thumbnail']) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
+                                            style="background: url({{ route('drive.files.entity_signature', [ 'token' => $value['signature']['token_thumbnail'] ]) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
                                             {{-- :style="show ? `` : `background: url('${thumbnailSrc}'); background-repeat: no-repeat; background-position: center; background-size: cover;`" --}}
                                             >
                                             <img 
-                                                src="{{ route('drive.files.preview_signature', ['filename' => $signature->signature->file_name]) }}" 
+                                                src="{{ route('drive.files.entity_signature', [ 'token' => $value['signature']['token_original'] ]) }}" 
                                                 {{-- :src="imgSrc" --}}
                                                 @load="show = true; $el.parentElement.removeAttribute('style')"
                                                 {{-- src="{{ $signature->baseImage->signature }}"  --}}
@@ -258,11 +261,11 @@
                                         
                                         >   
                                         <div class="image size-full"
-                                            style="background: url({{ route('drive.files.preview_signature', ['filename' => $signature->paraf->file_name . '_thumbnail']) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
+                                            style="background: url({{ route('drive.files.entity_signature', [ 'token' => $value['paraf']['token_thumbnail'] ]) }}); background-repeat: no-repeat; background-position: center; background-size: cover;"
                                             {{-- :style="show ? `` : `background: url('${thumbnailSrc}'); background-repeat: no-repeat; background-position: center; background-size: cover;`" --}}
                                             >
                                             <img 
-                                                src="{{ route('drive.files.preview_signature', ['filename' => $signature->paraf->file_name]) }}"
+                                                src="{{ route('drive.files.entity_signature', [ 'token' => $value['paraf']['token_original'] ]) }}"
                                                 {{-- :src="imgSrc" --}}
                                                 @load="show = true; $el.parentElement.removeAttribute('style')"
                                                 alt="" 
@@ -347,58 +350,6 @@
         </div>
     @endif
     
-    {{-- <div class="wrapper-deleteSignature fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/20 size-full z-20 flex items-center justify-center">
-        <div class="ctr-DeleteSignature transition-all animate-fade-in w-96 px-4 py-6 bg-white rounded-lg shadow-sm shadow-black/40">
-            <div class="cDeleteSignature">
-                <div class="titleDelete">
-                    <div class="textTitle text-center text-xl font-semibold">
-                        Delete Signature
-                    </div>
-                </div>
-                
-                <div class="iconDanger flex items-center justify-center mt-4 h-20">
-                    <div class="icon text-6xl text-red-600">
-                        <i class="fas fa-circle-exclamation"></i>
-                    </div>
-                </div>
-                
-                <div class="descriptionDelete mt-12">
-                    <div class="descText text-center text-sm text-gray-700">
-                        <p>
-                            Are you sure you want to delete this signature? <br>
-                            This action <span class="font-semibold text-red-600">cannot be undone</span>.
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="actDeleteSignature flex items-center justify-around mt-12">
-                    <div class="itm-cancelDelete">
-                        <button
-                            class="btn-cancel block w-24 py-1.5 rounded-lg bg-gray-100"
-                        >
-                            <div class="textAction">
-                                <div class="tx text-sm">
-                                    <p>Cancel</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                    <div class="itm-acceptDelete">
-                        <button
-                            class="btn-accept block w-24 py-1.5 rounded-lg bg-red-100"
-                        >
-                            <div class="textAction">
-                                <div class="tx text-sm text-red-600">
-                                    <p>Accept</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-     --}}
 </div>
 
 @once

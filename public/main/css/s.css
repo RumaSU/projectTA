@@ -146,7 +146,12 @@ body::-webkit-scrollbar-thumb:hover {
     font-size: auto !important;
 }
 
-
+.no-tailwind-css, .no-tailwind-css * {
+    all: unset;
+    /* display: revert;
+    font-family: revert;
+    color: revert; */
+}
 
 
 

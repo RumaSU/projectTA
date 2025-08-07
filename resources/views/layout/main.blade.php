@@ -12,9 +12,24 @@
     
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
+    @vite('resources/js/app.js')
+    
     {{-- <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@3.0.4/index.min.js"></script> --}}
     <script src="{{ asset('vendor/vanillaCalendarPro/index.js') }}"></script>
     <script src="{{ asset('vendor/dayjs/dayjs.min.js') }}"></script>
+    <script src="{{ asset('vendor/dayjs/plugin/utc.js') }}"></script>
+    
+    <script>
+        const utc = window.dayjs_plugin_utc;
+        dayjs.extend(utc);
+    </script>
+    
+    <script>
+        window.Laravel = {
+            sessionId: '{{ session()->getId() }}'
+        };
+    </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -1,7 +1,10 @@
 <div 
     x-data="notificationElemnt"
-    @customnotify.window="addNotification($event)"
+    {{-- @customnotify.window="addNotification($event)" --}}
+    {{ "@" . \App\Enums\CustomToastNotification::get_dispatch_name() . '.window=addNotification($event)' }}
 >
+
+
     <div 
         x-on:mouseenter="$dispatch('pause-auto-dismiss')" 
         x-on:mouseleave="$dispatch('resume-auto-dismiss')" 
