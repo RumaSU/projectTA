@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import laravel from 'laravel-vite-plugin';
 import fs from 'fs';
 import path from 'path';
@@ -21,12 +22,24 @@ export default defineConfig({
                 
                 
                 'resources/js/events/processDocuments.js',
-                'resources/js/pdf-viewer.js'
+                'resources/js/pdf-viewer.js',
+                // 'resources/js/pdf.js/build/pdf.worker.mjs',
                 // 'resources/js/events/processDocuments.js'
                 // ...getFilesFromDir("resources/js/events"),
             ],
             // refresh: true,
             refresh: false,
         }),
+        viteStaticCopy({
+            targets: [
+                {
+                    src: 'node_modules/pdfjs-dist/build/pdf.worker.mjs',
+                    dest: ''
+                }
+            ]
+        })
     ],
+    optimizeDeps: {
+        exclude: ['pdfjs-dist'] // supaya tidak error path
+    }
 });

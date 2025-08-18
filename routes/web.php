@@ -30,12 +30,14 @@ Route::middleware(['guest'])->prefix('auth')->name('auth.')->group(function() {
             });
             
             Route::get('/basic_info', App\Livewire\Auth\Register\Form\BasicInformation::class)->name('basic_info');
+            Route::get('/location', App\Livewire\Auth\Register\Form\Location::class)->name("locations");
             Route::get('/credentials', App\Livewire\Auth\Register\Form\Credentials::class)->name('credentials');
         });
         
     });
     
 });
+
 
 Route::middleware(['auth'])->name('app.')->group(function() {
 // Route::name('app.')->group(function() {
@@ -57,6 +59,8 @@ Route::middleware(['auth'])->name('app.')->group(function() {
     
     Route::prefix('documents')->name('documents.')->group(function() {
         Route::get('/', App\Livewire\App\Documents\Main::class)->name('main');
+        
+        Route::get('/{id}/audit', App\Livewire\App\Audit\Audit\Main::class)->name('audit');
         
         // Route::get('/{id}/sign', \App\Livewire\App\Sign\Main::class)->name('sign');
     });
@@ -102,6 +106,18 @@ Route::prefix('drive')->name('drive.')->group( function() {
     });
     
 });
+
+Route::get('s/{identifier}', function($identifier) {
+    return redirect()->route('signed.v1.find', ['identifier' => $identifier]);
+})->name('qr_signed'); 
+
+Route::prefix('signed')->name('signed.')->group(function() {
+    Route::prefix('v1')->name('v1.')->group(function() {
+        Route::get('find/{identifier}', App\Livewire\App\Audit\Verify\Main::class)->name('find');
+    });
+});
+
+
 
 Route::prefix('/session')->group(function() {
     

@@ -190,4 +190,18 @@ class UniqueValueGenerator {
         return $string;
     }
     
+    
+    public static function number(int $min = 1, string $column, string $table, string|null $connection = null, int $max = PHP_INT_MAX) {
+        $number = random_int($min, $max);
+        
+        $tableInstance = DatabaseUtils::connection($connection)
+            ->database->table($table);
+        
+        while($column && $table && $tableInstance->where($column, '=', $number)->exists()) {
+            $number = random_int($min, $max);
+        }
+        
+        return $number;
+    }
+    
 }

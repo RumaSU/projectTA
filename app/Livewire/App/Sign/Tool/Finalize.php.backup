@@ -1,0 +1,554 @@
+<?php
+
+namespace App\Livewire\App\Sign\Tool;
+
+use Livewire\Component;
+use Livewire\Attributes;;
+
+use App\Enums\Hash;
+use App\Libraries\ArrayHelper;
+use App\Services\Certificates\Service as CertificateService;
+use App\Services\QrCodes\EndroidServices;
+use App\Utils\ModelUtils;
+use App\Trait\HasNotify;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
+
+use Symfony\Component\Mime\MimeTypes;
+
+use Stevebauman\Location\Facades\Location;
+use Carbon\Carbon;
+
+use TCPDI;
+use TCPDF_STATIC;
+
+class Finalize extends Component
+{
+    use HasNotify;
+    
+    public string $id_document;
+    
+    public $title = '';
+    public $message = '';
+    public $progress = null;
+    public $additional_message = '';
+    
+    public $document_version;
+    public $document_file;
+    public $file_document;
+    public $file_disk;
+    
+    public $owner;
+    public $user;
+    public TCPDI $pdf;
+    public array $pdfInfo;
+    public $totalPage;
+    
+    // public function 
+    public function mount($id_document) {
+        $this->id_document = $id_document;
+    }
+    // id_signature_type
+    #[Attributes\On('Finalize-Sign-Document')]
+    public function finalize($event) {
+        
+        $token = csrf_token();
+        $request = request();
+        $this->user = Auth::user();
+        
+        $this->validateEvent($event, $token);
+        
+        $this->preparePDF();
+        
+        $identifier = $this->generateIdentifier($event['id_signature_type'], $token);
+        $qrImage = $this->generateQrImage($identifier);
+        
+        $this->applySignatureVisual($event['sign_info'], $qrImage);
+        $this->applyMetadata($identifier, $request);
+        
+        $this->applyCertificateSignature();
+        
+        $this->saveSignedFile();
+        
+        $this->streamStep('Process complete');
+        
+        
+        
+        
+        
+        // $this->stream('title', 'Process Signing Document', true);
+        // $this->stream('message', 'Validating Process Finalize', true);
+        // $this->stream('additional_message', null, true);
+        
+        // $this->stream('additional_message', 'Validating Parameter', true);
+        // if (
+        //     ! is_array($event) || 
+        //     empty($event['sign_info']) || 
+        //     empty($event['token']) ||
+        //     empty($event['id_signature_type']) 
+        //     ) {
+        //     return $this->notify('danger', 'Invalid event data received', 'Please check your event data');
+        // }
+        
+        // $this->stream('additional_message', 'Validating Sign Info', true);
+        // if (! ArrayHelper::key_exists(['page', 'pdfSize', 'qrSize', 'x', 'y'], $event['sign_info'])) {
+        //     return $this->notify('danger', '', '');
+        // }
+        
+        // $this->stream('additional_message', 'Validating Token', true);
+        // if ($event['token'] !== $token) {
+        //     return $this->notify('danger', 'Invalid CSRF token', 'Please refresh the page and try again');
+        // }
+        
+        // $this->stream('additional_message', 'Validating Signature Image', true);
+        // if (! $this->checkSignatureType($event['id_signature_type'])) {
+        //     return $this->notify('danger', 'Invalid', '');
+        // }
+        
+        // $this->stream('additional_message', 'Validating Certificate', true);
+        // if (! CertificateService::handler()->isCertificateUserValid($this->user->id_user)) {
+        //     return $this->notify('danger', '', '');
+        // }
+        
+        // $this->stream('additional_message', null, true);
+        // usleep(75 * 1000);
+        
+        
+        // $this->stream('message', 'Process getting file', true);
+        // $this->getFileDisk();
+        // usleep(75 * 1000);
+        
+        // $sign_info = $event['sign_info'];
+        // $id_signature_type = $event['id_signature_type'];
+        
+        // $path = Storage::disk($this->file_document->disk)->path($this->file_document->path);
+        // $pdf = new TCPDI();
+        // $pdf->setPrintHeader(false);
+        // $pdf->setPrintFooter(false);
+        // $pdf->SetMargins(0, 0, 0);
+        // $pdf->SetAutoPageBreak(false, 0);
+        
+        // $totalPage = $pdf->setSourceFile($path);
+        // if (! $totalPage) {
+        //     return $this->notify('danger', '', '');
+        // }
+        
+        // $countChunk = 1;
+        // $chunk = $totalPage / 100;
+        
+        // $progressElement = 
+        // <<<'HTML'
+        //     <div 
+        //         class='h-2 rounded-full bg-[#3730a3] transition-all'
+        //         :style="`width: ${progress}%`"
+        //         ></div>
+        // HTML;
+        
+        // $this->stream('message', 'Setup File', true);
+        // $this->stream('progressElement', $progressElement, false);
+        
+        // for ($page = 1; $page <= $totalPage; $page++) {
+        //     $tplIndex = $pdf->importPage($page);
+        //     $size = $pdf->getTemplateSize($tplIndex);
+            
+        //     $orientation = ($size['w'] > $size['h']) ? 'L' : 'P';
+        //     $pdf->AddPage($orientation, [$size['w'], $size['h']]);
+        //     $pdf->useTemplate($tplIndex, 0, 0, $size['w'], $size['h'], true);
+            
+        //     $countChunk += 1;
+        //     if ($countChunk >= $chunk) {
+        //         $countChunk = 1;
+                
+        //         $progress = ($page / $totalPage) * 100;
+        //         $progressAlpine = "<div x-init='progress = $progress'></div>";
+                
+        //         $this->stream('progressAlpine', $progressAlpine, true);
+                
+        //         usleep(75 * 1000);
+        //     }
+            
+        // }
+        // usleep(75 * 1000);
+        
+        // $progressAlpine = "<div x-init='progress = 0'></div>";
+        // $this->stream('progressAlpine', $progressAlpine, true);
+        // usleep(1);
+        
+        // $this->stream('progressAlpine', null, true);
+        // $this->stream('progressElement', null, true);
+        // usleep(75 * 1000);
+        
+        // $this->stream('message', 'Setup Identifier', true);
+        // $this->stream('additional_message', 'Get Hash file', true);
+        // $hash_file = $this->file_disk->hash_file;
+        
+        // $this->stream('additional_message', 'Create data identifier', true);
+        // $owner_id = '';
+        // if ($this->owner) {
+        //     $owner_id = $this->owner->id_user;
+        // }
+        
+        // $data = "?hash={$hash_file}&owner_id={$owner_id}&id_user={$this->user->id_user}&id_signature_type={$id_signature_type}&time=" . Carbon::now() . "&token={$token}";
+        // $identifier = Hash::SHA256->hash($data);
+        // usleep(75 * 1000);
+        
+        // $this->stream('message', 'Create Visual Signature', true);
+        // $this->stream('additional_message', 'Create QR Image', true);
+        // $route = route('qr_signed', ['identifier' => $identifier]);
+        // $qr = new EndroidServices($route, 600);
+        // $result = $qr->write('png');
+        // usleep(75 * 1000);
+        
+        // $this->stream('additional_message', 'Setup Image Binary Info', true);
+        // $extension = MimeTypes::getDefault()->getExtensions($result->getMimeType())[0];
+        // $imgData = "@{$result->getString()}";
+        // $this->stream('additional_message', null, true);
+        
+        // $pdf->Image(
+        //     $imgData,
+        //     $sign_info['x'],
+        //     $sign_info['y'],
+        //     $sign_info['qrSize']['width'],
+        //     $sign_info['qrSize']['height'],
+        //     strtoupper($extension)
+        // );
+        
+        // $this->stream('message', 'Setup Metadata Info', true);
+        // $this->stream('additional_message', 'Setup Signer Info', true);
+        // $info = [
+        //     'Name' => $this->user->UserPersonal->fullname,
+        //     'Reason' => 'Signing Document',
+        //     'ContactInfo' => $this->user->email,
+        //     'ApplicationName' => env('APP_NAME') ?? 'Digital Signature',
+        //     'ApplicationSite' => $request->server('SERVER_NAME'),
+        //     'ApplicationVersion' => env('APP_VERSION') ?? 1,
+        //     'ApplicationIdentifier' => $identifier,
+        // ];
+        // usleep(75 * 1000);
+        
+        
+        // $this->stream('additional_message', 'Get Your Location by IP Based Providers', true);
+        // $location = Location::get($request->ip());
+        // $locationString = 'Private Location';
+        // if ($location) {
+        //     $locationString = "{$location->regionName}, {$location->countryName}";
+        // }
+        
+        // $info['Location'] = $locationString;
+        
+        // if ($this->owner) {
+        //     $this->stream('additional_message', 'Setup owner info', true);
+            
+        //     $info['OwnerName'] = $this->owner->UserPersonal->fullname;
+        //     $info['OwnerContactInfo'] = $this->owner->email;
+            
+        // }
+        
+        // usleep(75 * 1000);
+        // $this->stream('additional_message', null, true);
+        
+        
+        // $this->stream('additional_message', null, true);
+        // usleep(75 * 1000);
+        
+        // $this->stream('message', 'Getting certificate', true);
+        // $certificate = CertificateService::handler()->getLatestCertificateUser($this->user->id_user);
+        // $private_key = Crypt::decryptString($certificate->private_key);
+        // usleep(75 * 1000);
+        
+        // $this->stream('message', 'Process signing', true);
+        
+        // $pdf->setSignature(
+        //     $certificate->certificate,
+        //     $private_key,
+        //     '',
+        //     '',
+        //     2,
+        //     $info
+        // );
+        // usleep(75 * 1000);
+        
+        // $this->stream('message', 'Saving file', true);
+        // $this->stream('additional_message', 'Setup save path', true);
+        // $fileOutput = Str::random(64) . ".pdf";
+        // // $outputPath = Storage::disk('documents_signed')->path($path);
+        // $outputPath = Storage::disk('documents_signed')->path($this->file_document->path);
+        // usleep(75 * 1000);
+        
+        // $this->stream('additional_message', 'Saving file to path', true);
+        // $pdf->Output($outputPath, 'F');
+        // usleep(75 * 1000);
+        
+        
+        
+        // $this->stream('message', 'Process complete', true);
+        // $this->stream('additional_message', null, true);
+        
+    }
+    
+    
+    
+    public function render()
+    {
+        return view('livewire.app.sign.tool.finalize');
+    }
+    
+    private function getFileDisk() {
+        $this->document_version = ModelUtils::createInstanceModel(\App\Models\Documents\DocumentVersions::class)
+            ->where('id_document', '=', $this->id_document)
+            ->latest('version')
+            ->first();
+        
+        if (! $this->document_version) {
+            return $this->notify('danger', '', '');
+        }
+        
+        $this->document_file = ModelUtils::createInstanceModel(\App\Models\Documents\DocumentFile::class)
+            ->where('id_document_version', '=', $this->document_version->id_document_version)
+            ->first();
+        
+        if (! $this->document_file) {
+            return $this->notify('danger', '', '');
+        }
+        
+        $this->file_document = ModelUtils::createInstanceModel(\App\Models\Files\Entity\Documents::class)
+            ->find($this->document_file->id_file_document);
+        
+        if (! $this->file_document) {
+            return $this->notify('danger', '', '');
+        }
+        
+        $this->file_disk = ModelUtils::createInstanceModel(\App\Models\Files\Disk::class)
+            ->find($this->file_document->id_file_disk);
+        
+        if (! $this->file_disk) {
+            return $this->notify('danger', '', '');
+        }
+    }
+    
+    private function getOwnerDocument() {
+        $document = ModelUtils::createInstanceModel(\App\Models\Documents\Document::class)
+            ->find($this->id_document);
+        
+        if (! $document) {
+            return $this->notify('danger', '', '');
+        }
+        
+        $this->owner = ModelUtils::createInstanceModel(\App\Models\Users\User::class)
+            ->find($document->owner_id);
+    }
+    
+    private function checkSignatureType(string $id_signature_type) {
+        
+        $signatureType = ModelUtils::createInstanceModel(\App\Models\Signatures\SignatureType::class)
+            ->where('id_signature_type', '=', $id_signature_type)
+            ->first();
+        
+        if (! $signatureType) {
+            return false;
+        }
+        
+        $signature = ModelUtils::createInstanceModel(\App\Models\Signatures\Signature::class)
+            ->find($signatureType->id_signature);
+        
+        if (! $signature) {
+            return false;
+        }
+        
+        return $signature->id_user === $this->user->id_user;
+    }
+    
+    
+    
+    /* ============================================================
+    | === HELPER FUNCTIONS =======================================
+    ============================================================ */
+    
+    protected function validateEvent($event, $token) {
+        $this->streamStep('Validating Process Finalize');
+        
+        if (!is_array($event) || empty($event['sign_info']) || empty($event['token']) || empty($event['id_signature_type'])) {
+            return $this->notify('danger', 'Invalid event data received', 'Please check your event data');
+        }
+        
+        if (! ArrayHelper::key_exists(['page', 'pdfSize', 'qrSize', 'x', 'y'], $event['sign_info'])) {
+            return $this->notify('danger', 'Invalid Sign Info', '');
+        }
+        
+        if ($event['token'] !== $token) {
+            return $this->notify('danger', 'Invalid CSRF token', 'Please refresh the page and try again');
+        }
+        
+        if (! $this->checkSignatureType($event['id_signature_type'])) {
+            return $this->notify('danger', 'Invalid signature type', '');
+        }
+        
+        if (! CertificateService::handler()->isCertificateUserValid($this->user->id_user)) {
+            return $this->notify('danger', 'Invalid certificate', '');
+        }
+    }
+    
+    protected function preparePdf() {
+        $this->streamStep('Process getting file');
+        $this->getFileDisk();
+        
+        $this->pdf = new TCPDI();
+        $this->pdf->setPrintHeader(false);
+        $this->pdf->setPrintFooter(false);
+        $this->pdf->SetMargins(0, 0, 0);
+        $this->pdf->SetAutoPageBreak(false, 0);
+        
+        $path = Storage::disk($this->file_document->disk)->path($this->file_document->path);
+        $this->totalPage = $this->pdf->setSourceFile($path);
+        
+        if (! $this->totalPage) {
+            return $this->notify('danger', 'Failed to open PDF', '');
+        }
+        
+        $this->renderPdfPages();
+    }
+    
+    protected function renderPdfPages() {
+        $this->streamStep('Setup File', 'Rendering pages with progress bar');
+        
+        $progressElement = 
+        <<<'HTML'
+            <div 
+                class='h-2 rounded-full bg-[#3730a3] transition-all'
+                :style="`width: ${progress}%`"
+                ></div>
+        HTML;
+        $this->stream('progressElement', $progressElement, false);
+        
+        $countChunk = 1;
+        $chunk = $this->totalPage / 100;
+        
+        for ($page = 1; $page <= $this->totalPage; $page++) {
+            $tplIndex = $this->pdf->importPage($page);
+            $size     = $this->pdf->getTemplateSize($tplIndex);
+            
+            $orientation = ($size['w'] > $size['h']) ? 'L' : 'P';
+            $this->pdf->AddPage($orientation, [$size['w'], $size['h']]);
+            $this->pdf->useTemplate($tplIndex, 0, 0, $size['w'], $size['h'], true);
+            
+            if (++$countChunk >= $chunk) {
+                $countChunk = 1;
+                $progress   = ($page / $this->totalPage) * 100;
+                $this->updateProgress($progress);
+            }
+        }
+        
+        // Reset progress bar
+        $this->updateProgress(0, true);
+    }
+    
+    protected function generateIdentifier($idSignatureType, $token) {
+        $this->streamStep('Setup Identifier', 'Generate file hash & identifier');
+        
+        $hash_file = $this->file_disk->hash_file;
+        $owner_id  = $this->owner ? $this->owner->id_user : '';
+        
+        $data = "?hash={$hash_file}&owner_id={$owner_id}&id_user={$this->user->id_user}&id_signature_type={$idSignatureType}&time=" 
+            . Carbon::now() . "&token={$token}";
+        
+        return Hash::SHA256->hash($data);
+    }
+    
+    protected function generateQrImage($identifier) {
+        $this->streamStep('Create Visual Signature', 'Generate QR image');
+        
+        $route  = route('qr_signed', ['identifier' => $identifier]);
+        $qr     = new EndroidServices($route, 600);
+        $result = $qr->write('png');
+        
+        $extension = MimeTypes::getDefault()->getExtensions($result->getMimeType())[0];
+        $imgData   = "@{$result->getString()}";
+        
+        return compact('extension', 'imgData');
+    }
+
+    protected function applySignatureVisual($signInfo, $qrImage) {
+        $this->pdf->Image(
+            $qrImage['imgData'],
+            $signInfo['x'],
+            $signInfo['y'],
+            $signInfo['qrSize']['width'],
+            $signInfo['qrSize']['height'],
+            strtoupper($qrImage['extension'])
+        );
+    }
+
+    protected function applyMetadata($identifier, $request) {
+        $this->streamStep('Setup Metadata Info', 'Add signer info');
+        
+        $info = [
+            'Name'                 => $this->user->UserPersonal->fullname,
+            'Reason'               => 'Signing Document',
+            'ContactInfo'          => $this->user->email,
+            'ApplicationName'      => env('APP_NAME', 'Digital Signature'),
+            'ApplicationSite'      => $request->server('SERVER_NAME'),
+            'ApplicationVersion'   => env('APP_VERSION', 1),
+            'ApplicationIdentifier'=> $identifier,
+        ];
+        
+        $location = Location::get($request->ip());
+        $info['Location'] = $location ? "{$location->regionName}, {$location->countryName}" : 'Private Location';
+        
+        if ($this->owner) {
+            $info['OwnerName']       = $this->owner->UserPersonal->fullname;
+            $info['OwnerContactInfo']= $this->owner->email;
+        }
+        
+        $this->pdfInfo = $info;
+    }
+    
+    protected function applyCertificateSignature() {
+        $this->streamStep('Getting certificate', 'Apply certificate to PDF');
+        
+        $certificate = CertificateService::handler()->getLatestCertificateUser($this->user->id_user);
+        $private_key = Crypt::decryptString($certificate->private_key);
+        
+        $this->streamStep('Process signing');
+        $this->pdf->setSignature(
+            $certificate->certificate,
+            $private_key,
+            '',
+            '',
+            2,
+            $this->pdfInfo
+        );
+    }
+    
+    protected function saveSignedFile() {
+        $this->streamStep('Saving file', 'Saving to disk');
+        
+        $outputPath = Storage::disk('documents_signed')->path($this->file_document->path);
+        $this->pdf->Output($outputPath, 'F');
+    }
+    
+    
+    /* ============================================================
+    | === SMALL UTILS ============================================
+    ============================================================ */
+    protected function streamStep($message, $additional = null) {
+        $this->stream('message', $message, true);
+        $this->stream('additional_message', $additional, true);
+        usleep(75 * 1000);
+    }
+    
+    protected function updateProgress($progress, $reset = false) {
+        if ($reset) {
+            $this->stream('progressAlpine', "<div x-init='progress = 0'></div>", true);
+            $this->stream('progressElement', null, true);
+            return;
+        }
+        
+        $progressAlpine = "<div x-init='progress = $progress'></div>";
+        $this->stream('progressAlpine', $progressAlpine, true);
+        usleep(75 * 1000);
+    }
+    
+}

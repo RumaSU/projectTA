@@ -3,58 +3,8 @@
 >
     
     {{-- List --}}
-    @php
-        $tempList = rand(5, 25);
-    @endphp
-    
     <div class="ctr-listDocumentsApp">
         <div class="cListDocumentsApp space-y-1" x-data>
-            
-            @php
-                $tempType = [
-                    [
-                        'background' => 'bg-indigo-100',
-                        'textColor' => 'text-indigo-800',
-                        'text' => 'Signature',
-                    ], 
-                    [
-                        'background' => 'bg-yellow-100',
-                        'textColor' => 'text-yellow-800',
-                        'text' => 'Paraf',
-                    ], 
-                    [
-                        'background' => 'bg-gray-200',
-                        'textColor' => 'text-gray-800',
-                        'text' => 'Uncategorized',
-                    ],
-                ];
-                $tempStatus = [
-                    [
-                        'background' => 'bg-blue-100',
-                        'textColor' => 'text-blue-800',
-                        'text' => 'In Progress',
-                    ], 
-                    [
-                        'background' => 'bg-green-100',
-                        'textColor' => 'text-green-800',
-                        'text' => 'Completed',
-                    ], 
-                    [
-                        'background' => 'bg-red-100',
-                        'textColor' => 'text-red-800',
-                        'text' => 'Rejected',
-                    ],
-                    [
-                        'background' => 'bg-gray-200',
-                        'textColor' => 'text-gray-800',
-                        'text' => 'Draft',
-                    ],
-                ];
-                
-                $tempRandLoop = rand(2, 5);
-            @endphp
-            
-            
             
             @if($this->listDocument)
                 
@@ -88,11 +38,7 @@
                                             <a href="#" class="cursor-pointer border-b hover:border-blue-600 hover:text-blue-600">{{ $ownerName }}</a> 
                                         </p>
                                     </div>
-                                    @php
-                                        $selectTempType = json_decode(json_encode($tempType[rand(0, count($tempType) -1)]));
-                                        $selectTempStatus = json_decode(json_encode($tempStatus[rand(0, count($tempStatus) -1)]));
-                                        
-                                    @endphp
+                                    
                                     <div class="listInfoDocuments flex items-center flex-wrap gap-1 mt-1">
                                         <div class="infoStatusDocuments px-4 py-1.5 rounded-lg {{ $styleStatus['background'] }}">
                                             <div class="textStatus text-xs {{ $styleStatus['textColor'] }}">

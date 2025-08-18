@@ -69,7 +69,6 @@ class SignServices {
             ->where($version->getKeyName(), '=', $findVersion->{$version->getKeyName()})
             ->first()
             ;
-        
         if (! $findPivot) {
             return null;
         }

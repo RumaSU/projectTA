@@ -193,9 +193,9 @@ class FileDiskSupport {
         ];
         
         $hashEnum = Hash::get_default_case();
-        if (! $this->add_hash_row($payload, $hashEnum)) {
-            return null;
-        }
+        // if (! $this->add_hash_row($payload, $hashEnum)) {
+        //     return null;
+        // }
         
         $hashFile = $hashEnum->hash_file($path);
         if (! $hashFile) {
@@ -203,6 +203,7 @@ class FileDiskSupport {
         }
         
         $payload['hash_file'] = $hashFile;
+        $payload['hash_type'] = $hashEnum->value;
         $payload['status'] = true;
         $payload['last_check'] = Carbon::now();
         
@@ -258,9 +259,9 @@ class FileDiskSupport {
             'id_entity' => $id_entity,
             'file_client_name' => $file_client_name,            
         ];
-        if (! $this->add_hash_row($payload, Hash::get_default_case())) {
-            return null;
-        }
+        // if (! $this->add_hash_row($payload, Hash::get_default_case())) {
+        //     return null;
+        // }
         
         ModelUtils::create($this->model_class_entity, $payload);
         
@@ -302,9 +303,9 @@ class FileDiskSupport {
             'shared_user_id' => $shared_user_id,
             'token' => $token,
         ];
-        if (! $this->add_hash_row($payload, Hash::get_default_case())) {
-            return null;
-        }
+        // if (! $this->add_hash_row($payload, Hash::get_default_case())) {
+        //     return null;
+        // }
         if ($expired_days) {
             $payload['expired_at'] = Carbon::now()->addDays($expired_days);
         }

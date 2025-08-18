@@ -2,18 +2,33 @@
 
 namespace App\Livewire\App\Sign;
 
+use App\Trait\HasNotify;
 use Livewire\Component;
 use Livewire\Attributes;
 
 use App\Services\SignServices;
 
 use App\Enums\Documents\Signature\Type as DocType;
+use App\Enums\Documents\Signature\Status as DocStatus;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 use Symfony\Component\Mime\MimeTypes;
+
+use TCPDF;
+use TCPDI;
+use LibreSign\TcpdiParser\tcpdi_parser;
+
+use Com\Tecnick\Pdf\Parser\Parser;
+// use Smalot\PdfParser\Parser;
 
 class Show extends Component
 {
-    public string $id_document ;
+    use HasNotify;
+    
+    public string $id_document;
+    public string $id_signature_type;
     public string $filename;
     
     public $document_version;
@@ -24,6 +39,11 @@ class Show extends Component
     public $is_owner;
     
     public DocType $doc_type;
+    public DocStatus $doc_status;
+    
+    
+    
+    
     
     public function mount(string $id_document) {
         $this->id_document = $id_document;
@@ -35,6 +55,14 @@ class Show extends Component
             $this->file_disk, 
             $this->file_disk_token
         ] = SignServices::get_file($id_document);
+        
+        // dump(
+        //     $this->document_version,
+        //     $this->file_entity, 
+        //     $this->file_disk_entity, 
+        //     $this->file_disk, 
+        //     $this->file_disk_token
+        // );
         
         if (
             ! $this->document_version ||
@@ -48,7 +76,8 @@ class Show extends Component
                 'status' => false
             ]);
             
-            return;
+            return $this->redirectRoute('app.signs.main', ['id_document' => 'not-found'], navigate: true);
+            // return redirect()->route('app.signs.main', ['id_document' => 'not-found']);
         }
         
         $this->doc_type = DocType::get_signature_type($id_document);
@@ -58,6 +87,8 @@ class Show extends Component
             ]);
         }
         
+        $this->doc_status = DocStatus::get_signature_status($id_document);
+        
         $this->is_owner = SignServices::is_owner($id_document, Auth::user()->id_user);
         
         $filename = $this->file_entity->file_client_name;
@@ -65,7 +96,32 @@ class Show extends Component
 
     }
     
-     
+    #[Attributes\On('Add-Id-Signature-Type')]
+    public function update_to_finalize($event) {
+        if (!is_array($event) || empty($event['signature_type_id'] || empty($event['token']))) {
+            return $this->notify('danger', 'Invalid event data received', 'Please check your event data');
+        }
+        
+        if ($event['token'] !== csrf_token()) {
+            return $this->notify('danger', 'Invalid CSRF token', 'Please refresh the page and try again');
+        }
+        
+        $id = $event['signature_type_id'];
+        
+        
+        $this->id_signature_type = $id;
+    }
+    
+    #[Attributes\On('Update-Show-File')]
+    public function update_show_file($data) {
+        if (! is_array($data)) {
+            return;
+        }
+        
+        if ($data['status']) {
+            return $this->redirectRoute('app.signs.main', ['id_document' => $this->id_document], navigate: true);
+        }
+    }
     
     public function render()
     {

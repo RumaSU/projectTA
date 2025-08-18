@@ -30,8 +30,8 @@ class Signatures extends Model
         'mime_type',
         'size_byte',
         
-        'hash_row',
-        'hash_type'
+        // 'hash_row',
+        // 'hash_type'
     ];
     
     protected function casts(): array
@@ -58,25 +58,25 @@ class Signatures extends Model
         ];
     }
     
-    public function is_hash_valid(): bool {
+    // public function is_hash_valid(): bool {
         
-        $hash = $this->hash_row;
-        $hash_type = $this->hash_type;
+    //     $hash = $this->hash_row;
+    //     $hash_type = $this->hash_type;
         
-        $hashEnum = Hash::from_value($hash_type);
-        if (! $hashEnum) {
-            return false;
-        }
+    //     $hashEnum = Hash::from_value($hash_type);
+    //     if (! $hashEnum) {
+    //         return false;
+    //     }
         
-        $payload = collect($this->get_column_to_hash())
-            ->mapWithKeys(fn($key) => [$key => $this->{$key}])
-            ->all();
+    //     $payload = collect($this->get_column_to_hash())
+    //         ->mapWithKeys(fn($key) => [$key => $this->{$key}])
+    //         ->all();
         
-        ksort($payload);
+    //     ksort($payload);
         
-        $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $check = $hashEnum->hash($json);
+    //     $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    //     $check = $hashEnum->hash($json);
         
-        return $hashEnum->equals($hash, $check);
-    }
+    //     return $hashEnum->equals($hash, $check);
+    // }
 }

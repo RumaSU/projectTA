@@ -25,8 +25,8 @@ class DiskEntity extends Model
         'id_entity',
         'file_client_name',
         
-        'hash_row',
-        'hash_type'
+        // 'hash_row',
+        // 'hash_type'
     ];
     protected function casts(): array
     {
@@ -49,29 +49,29 @@ class DiskEntity extends Model
         ];
     }
     
-    public function is_hash_valid(): bool {
-        $hash = $this->hash_row;
-        $hash_type = $this->hash_type;
+    // public function is_hash_valid(): bool {
+    //     $hash = $this->hash_row;
+    //     $hash_type = $this->hash_type;
          
-        $hashEnum = Hash::from_value($hash_type);
-        if (! $hashEnum) {
-            return false;
-        }
+    //     $hashEnum = Hash::from_value($hash_type);
+    //     if (! $hashEnum) {
+    //         return false;
+    //     }
         
-        $payload = collect($this->get_column_to_hash())
-            ->mapWithKeys(fn($key) => [$key => $this->{$key}])
-            ->all();
+    //     $payload = collect($this->get_column_to_hash())
+    //         ->mapWithKeys(fn($key) => [$key => $this->{$key}])
+    //         ->all();
         
-        ksort($payload);
+    //     ksort($payload);
         
-        $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        if ($json === false) {
-            return false;
-        }
+    //     $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    //     if ($json === false) {
+    //         return false;
+    //     }
         
-        $check = $hashEnum->hash($json);
+    //     $check = $hashEnum->hash($json);
         
-        return $hashEnum->equals($hash, $check);
-    }
+    //     return $hashEnum->equals($hash, $check);
+    // }
     
 }

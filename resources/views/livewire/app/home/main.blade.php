@@ -4,154 +4,19 @@
         <div class="cHeaderMainContent space-y-0.5">
             <div class="welcome-user">
                 <div class="txWelcomeUser text-xl poppins-semibold">
-                    <h2>Welcome @{{ $user->name }}</h2>
+                    <h2>Welcome {{ auth()->user()->userPersonal->fullname }}</h2>
                 </div>
             </div>
             <div class="descWelcome-user">
                 <div class="txDescWelcome text-sm">
-                    <p>Hi @{{ $user->name }} Discover your progress and important updates in your dashboard.</p>
+                    <p>Hi {{ auth()->user()->userPersonal->fullname }} Discover your progress and important updates in your dashboard.</p>
                 </div>
             </div>
         </div>
     </header>
     
-    @php
-        $randStatus = rand(0, 1);
-        $descCertStatus = [
-            'Your certificate is currently active and ready for use.',
-            'Your certificate will expire in <b>'. rand(1, 30) .' days</b>. Please renew soon.',
-            'Please generate a valid certificate to enable digital signing of documents.'
-        ];
-        $listInfoAction = [
-            (object) [
-                'title' => 'Digital Signature Quota',
-                'icon' => 'fas fa-signature',
-                'quota' => rand(0, 10),
-                'quotaSize' => 'text-3xl',
-                'description' => 'Each time you sign a document or request a signature, one quota will be used.',
-                'optDesc' => (object) [
-                    'status' => false,
-                    'text' => '',
-                ],
-                'action' => (object) [
-                    'ref' => '#',
-                    'bgColor' => 'bg-[#FFCA28]',
-                    'txColor' => 'text-[#533F00]',
-                    'padding' => 'px-4 py-1',
-                    'icon' => 'fas fa-signature',
-                    'iconSize' => 'text-base',
-                    'label' => 'Sign Document',
-                ],
-                'bgColor' => 'bg-gradient-to-tr from-[#004DA6] to-[#1E76DA]',
-            ],
-            (object) [
-                'title' => 'Documents Quota',
-                'icon' => 'fas fa-book-open',
-                'quota' => rand(0, 10),
-                'quotaSize' => 'text-3xl',
-                'description' => 'This quota limits the total number of documents you can store and manage.',
-                'optDesc' => (object) [
-                    'status' => false,
-                    'text' => '',
-                ],
-                'action' => (object) [
-                    'ref' => '#',
-                    'bgColor' => 'bg-[#FFCA28]',
-                    'txColor' => 'text-[#533F00]',
-                    'padding' => 'px-4 py-1',
-                    'icon' => 'fas fa-book-open',
-                    'iconSize' => 'text-base',
-                    'label' => 'Upload Document',
-                ],
-                'bgColor' => 'bg-gradient-to-tr from-[#004DA6] to-[#1E76DA]',
-            ],
-            (object) [
-                'title' => 'Certificate Status',
-                'icon' => 'fas fa-certificate',
-                'quota' => $randStatus ? 'Active' : 'Not Active',
-                'quotaSize' => 'text-xl',
-                'description' => $randStatus ? $descCertStatus[rand(0,1)] : end($descCertStatus),
-                'optDesc' => (object) [
-                    'status' => true,
-                    'text' => 'Check yout certificate',
-                ],
-                'action' => (object) [
-                    'ref' => $randStatus ? '#check' : '#activate',
-                    'bgColor' => 'bg-transparent',
-                    'txColor' => 'text-white',
-                    'padding' => '',
-                    'icon' => 'fas fa-arrow-up-right-from-square',
-                    'iconSize' => 'text-2xl',
-                    'label' => '',
-                ],
-                'bgColor' => 'bg-gradient-to-tr from-[#'. ($randStatus ? '004DA6' : '676767') . '] to-[#'. ($randStatus ? '1E76DA' : '272727') .']',
-            ],
-        ];
-    @endphp
-    
-    
-    <section class="sec-userMainInfo mt-8 grid gap-6 2xl:grid-cols-4 sm:grid-cols-3 grid-cols-1 pb-4 border-b-2 border-slate-200">
-        @foreach ($listInfoAction as $itemInfoAction)
-            <div class="itm-cardInfoAction{{ implode('', explode(' ', $itemInfoAction->title)) }}
-                    px-4 py-3 {{ $itemInfoAction->bgColor }} text-white rounded-xl shadow-md shadow-black/40
-                ">
-                
-                <div class="cCardInfoAction">
-                    <div class="topMainCardInfo flex justify-between h-[5.5rem]">
-                        <div class="leftCardInfo">
-                            <div class="titleCardInfo">
-                                <div class="txTitle text-xl">
-                                    <p>{{ $itemInfoAction->title }}</p>
-                                </div>
-                            </div>
-                            <div class="quotaStatusCardInfo mt-4">
-                                <div class="txQuota {{ $itemInfoAction->quotaSize }}">
-                                    <p>{{ $itemInfoAction->quota }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rightCardInfo">
-                            <div class="iconCardInfo flex items-center justify-center size-16 p-2 rounded-full border border-white">
-                                <div class="icon text-4xl">
-                                    <i class="{{ $itemInfoAction->icon }}"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="descCardInfo mt-2 h-12">
-                        <div class="txDescCardInfo text-xs tracking-tighter">
-                            <p>{!! $itemInfoAction->description !!}</p>
-                            @if ($itemInfoAction->optDesc->status && $randStatus)
-                                <p class="mt-1">{{ $itemInfoAction->optDesc->text }}</p>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <div class="actionCardInfo">
-                        <a href="{{ $itemInfoAction->action->ref }}" class="hrefActionCardInfo{{ implode('', explode(' ', $itemInfoAction->title)) }}
-                                block w-fit rounded-lg {{ $itemInfoAction->action->padding . ' ' . $itemInfoAction->action->bgColor . ' ' . $itemInfoAction->action->txColor }}
-                            ">
-                            <div class="cHrefActionCardInfo flex items-center gap-3">
-                                <div class="icnHrefActionCardInfo">
-                                    <div class="icon {{ $itemInfoAction->action->iconSize }}">
-                                        <i class="{{ $itemInfoAction->action->icon }}"></i>
-                                    </div>
-                                </div>
-                                @if ($itemInfoAction->action->label)
-                                    <div class="lblHrefActionCardInfo">
-                                        <div class="txLblHref text-sm">
-                                            <p>{{ $itemInfoAction->action->label }}</p>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </a>
-                    </div>
-                    
-                </div>
-            </div>
-        @endforeach
+    <section class="section-card-user-info mt-8 pb-4 border-b-2 border-slate-200">
+        @livewire('app.home.component.cards')
     </section>
     
     

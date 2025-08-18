@@ -1,5 +1,5 @@
 {{-- <div class="wrapper-contentSidebarApp w-80 fixed left-0 top-1/2 -translate-y-1/2"> --}}
-<div class="wrapper-contentSidebarApp w-fit xl:w-80 border border-black">
+<div class="wrapper-contentSidebarApp w-fit xl:w-80">
     <div class="cSidebarApp">
         <div class="ctr-additionalNav">
             <div class="cAdditionalNav space-y-0.5">

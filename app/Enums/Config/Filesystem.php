@@ -17,6 +17,7 @@ enum Filesystem: string implements BaseEnumInterface, HasDefaultEnum{
     case S3 = 's3';
     case SIGNATURES = 'signatures';
     case DOCUMENTS = 'documents';
+    case DOCUMENTS_SIGNED = 'documents_signed';
     
     public static function get_default(): string {
         return static::from_value(FilesystemConfig::getConfigDefault())->value;

@@ -22,7 +22,7 @@ return new class extends Migration
                 $table->unsignedInteger('size_byte');
                 
                 $table->char('hash_file', 172);
-                $table->char('hash_row', 172);
+                // $table->char('hash_row', 172);
                 $table->string('hash_type', 25);
                 
                 $table->boolean('status'); // status file found
@@ -41,8 +41,8 @@ return new class extends Migration
                 
                 $table->string('file_client_name')->index();
                 
-                $table->char('hash_row', 172);
-                $table->string('hash_type', 25);
+                // $table->char('hash_row', 172);
+                // $table->string('hash_type', 25);
                 
                 
                 $table->timestamps();
@@ -56,8 +56,8 @@ return new class extends Migration
                 $table->uuid('shared_user_id')->nullable()->index();
                 $table->string('token')->unique();
                 
-                $table->char('hash_row', 172);
-                $table->string('hash_type', 25);
+                // $table->char('hash_row', 172);
+                // $table->string('hash_type', 25);
                 
                 $table->boolean('is_expired')->default(false);
                 $table->timestamp('expired_at')->nullable();

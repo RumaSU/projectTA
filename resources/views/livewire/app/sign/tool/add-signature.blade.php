@@ -83,7 +83,7 @@
                         @endphp
                         
                         <div class="item-default-signature flex items-center gap-2 mt-2 cursor-pointer bg-white hover:brightness-95 rounded-sm"
-                            @click="click_add({{ json_encode($default_value[$doc_type->value]) }})"
+                            @click="click_add({{ json_encode($default_value[$doc_type->value]['id_signature_type']) }})"
                         >
                             
                             <div class="image-default-signature w-24 aspect-square" 
@@ -146,7 +146,7 @@
                             @endphp
                             
                             <div class="item-list-signature flex items-center gap-2 mt-2 cursor-pointer bg-white hover:brightness-95 rounded-sm"
-                                @click="click_add({{ json_encode($item[$doc_type->value]) }})"
+                                @click="click_add({{ json_encode( $item[$doc_type->value]['id_signature_type'] ) }})"
                                 
                             >
                                 
@@ -218,6 +218,8 @@
                     
                     current_id: null,
                     current_page: 1,
+                    pdf_scale: 1,
+                    scale: 1, 
                     
                     init() {
                         
@@ -236,11 +238,11 @@
                                 entries.forEach(entry => {
                                     if (entry.isIntersecting) {
                                         console.log('Element viewed');
-                                        this.$wire.mounting(id);
+                                        $wire.mounting(id);
                                         
                                         Observer.unobserve($el)
                                     }
-                                })
+                                });
                             }, {
                                 root: null,
                                 threshold: 0.1
@@ -255,21 +257,24 @@
                     
                     update_current_page($e) {
                         const detail = $e?.detail;
-                        
                         if (detail) {
                             
                             this.current_page = detail.current_page;
+                            this.pdf_scale = detail.pdf_scale;
                             
                         }
                     },
                     
-                    click_add(signature_item) {
+                    click_add(signature_type_id) {
                         
-                        this.current_id = signature_item;
+                        this.current_id = signature_type_id;
+                        const token = @json(csrf_token());
                         
                         Livewire.dispatch('Add-Image-To-PDF', {
                             event: {
-                                signature_item,
+                                signature_type_id,
+                                token,
+                                pdf_scale: this.pdf_scale,
                                 page: this.current_page
                             }
                         });

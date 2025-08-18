@@ -183,8 +183,6 @@
                     },
                     
                     withRedirect($e) {
-                        console.log('KOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
-                        
                         if (typeof $e !== 'object') {
                             return;
                         }

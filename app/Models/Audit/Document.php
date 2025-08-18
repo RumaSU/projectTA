@@ -37,7 +37,7 @@ class Document extends Model
             'id_document_audit_log' => 'string',
             'id_document' => 'string',
             'id_user' => 'string',
-            'metadata' => 'string',
+            'metadata' => 'json',
         ];
     }
 }

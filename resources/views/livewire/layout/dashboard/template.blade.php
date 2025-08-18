@@ -58,7 +58,7 @@
         <div class="cApp flex ">
             {{-- <aside class="ctr-sidebarApp bg-[#181818] w-96 h-screen fixed left-0 top-0"> --}}
             {{-- <aside class="ctr-sidebarApp bg-[#003399] w-96 h-screen fixed left-0 top-0"> --}}
-            <aside class="ctr-sidebarApp shrink-0 p-0 sticky top-[15%] self-start hidden md:block xl:w-96 border border-black">
+            <aside class="ctr-sidebarApp shrink-0 p-0 sticky top-[15%] self-start hidden md:block xl:w-96">
                 @include('layout.dashboard.sidebar')
                 {{-- <div class="wrapper sticky top-1/2 ">
                 </div> --}}

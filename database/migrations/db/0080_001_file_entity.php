@@ -26,8 +26,8 @@ return new class extends Migration
                 $table->string('mime_type')->nullable();
                 $table->unsignedInteger('size_byte');
                 
-                $table->char('hash_row', 172);
-                $table->string('hash_type', 25);
+                // $table->char('hash_row', 172);
+                // $table->string('hash_type', 25);
                 
                 $table->timestamps();
             });
@@ -47,8 +47,8 @@ return new class extends Migration
                 $table->string('mime_type')->nullable();
                 $table->unsignedInteger('size_byte');
                 
-                $table->char('hash_row', 172);
-                $table->string('hash_type', 25);
+                // $table->char('hash_row', 172);
+                // $table->string('hash_type', 25);
                 
                 $table->timestamps();
             });

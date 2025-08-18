@@ -10,6 +10,9 @@ use App\Enums\Signatures\Variant;
 use App\Utils\ModelUtils;
 
 use App\Services\SignatureDrawings\GetService;
+
+use App\Services\QrCodes\EndroidServices;
+
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes;
@@ -25,8 +28,11 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\ValidationException;
 
+use App\Trait\HasNotify;
+
 class AddSignature extends Component
 {
+    use HasNotify;
     
     public bool $is_loaded = false;
     public bool $is_have_signature;
@@ -46,7 +52,7 @@ class AddSignature extends Component
         $this->doc_type = DocType::get_signature_type($id_document);
         
         if ($this->doc_type && $this->doc_type !== DocType::UNCATEGORIZED) {
-            $this->dispatch('rough-get-list-signature-user');
+            $this->dispatch('Rough-Get-List-Signature-User');
             
         }
         
@@ -62,7 +68,7 @@ class AddSignature extends Component
     }
     
     
-    #[Attributes\On('rough-get-list-signature-user')]
+    #[Attributes\On('Rough-Get-List-Signature-User')]
     public function get_signature() {
         $model = ModelUtils::createInstanceModel(\App\Models\Signatures\Signature::class);
         $id_user = Auth::user()->id_user;
@@ -83,46 +89,39 @@ class AddSignature extends Component
         $this->default_signature = GetService::default($id_user);
         $this->list_signature = GetService::list($id_user);
         
+        
         $this->is_list_loaded = true;
     }
     
     
     #[Attributes\On('Add-Image-To-PDF')]
     public function listen_add_image_to_pdf($event) {
-        
-        if (!is_array($event) || empty($event['signature_item'])) {
-            return;
+        if (!is_array($event) || empty($event['signature_type_id'] || empty($event['token']))) {
+            return $this->notify('danger', 'Invalid event data received', 'Please check your event data');
         }
         
-        $signature_type = reset($event);
+        if ($event['token'] !== csrf_token()) {
+            return $this->notify('danger', 'Invalid CSRF token', 'Please refresh the page and try again');
+        }
         
-        $model = ModelUtils::createInstanceModel(\App\Models\Signatures\SignatureDrawings::class);
-        $drawing = $model->query()
-            ->where('id_signature_type', '=', $signature_type['id_signature_type'])
+        $id = $event['signature_type_id'];
+        
+        $drawing = ModelUtils::createInstanceModel(\App\Models\Signatures\SignatureDrawings::class)
+            ->query()
+            ->where('id_signature_type', '=', $id)
             ->where('variant', '=', Variant::ORIGINAL->value)
             ->first();
         
-        if (!$drawing) return;
+        if (! $drawing) {
+            return $this->notify('danger', 'Signature not found', 'Please check the signature type ID');
+        }
         
-        $data = "placholder;{$signature_type['id_signature_type']}";
+        $data = "placeholder;{$id}";
         
-        $writer = new PngWriter();
+        $qr = new EndroidServices($data);
+        $result = $qr->write('png');
         
-        $qrCode = new QrCode(
-            $data,
-            new Encoding('UTF-8'),
-            ErrorCorrectionLevel::Low,
-            250,
-            0,
-            RoundBlockSizeMode::Margin,
-            new Color(0, 0, 0),
-            new Color(255, 255, 255, 127)
-        );
-        
-        $result = $writer->write($qrCode);
-        
-        
-        $this->dispatch('signature_added_to_pdf', [
+        $this->dispatch('update_pdf_sign_add', [
             'base64' => $result->getDataUri(),
             'mime' => $result->getMimeType(),
             'page' => $event['page'] ?? 1,
@@ -130,12 +129,54 @@ class AddSignature extends Component
             'y' => $event['y'] ?? 0.5,
         ]);
         
+        $this->dispatch('Add-Id-Signature-Type', [
+            'signature_type_id' => $id,
+            'token' => $event['token']
+        ]);
+        
+        
+        
+        // $signature_type = reset($event);
+        
+        // $model = ModelUtils::createInstanceModel(\App\Models\Signatures\SignatureDrawings::class);
+        // $drawing = $model->query()
+        //     ->where('id_signature_type', '=', $signature_type['id_signature_type'])
+        //     ->where('variant', '=', Variant::ORIGINAL->value)
+        //     ->first();
+        
+        // if (!$drawing) return;
+        
+        // $data = "placholder;{$signature_type['id_signature_type']}";
+        
+        // $writer = new PngWriter();
+        
+        // $qrCode = new QrCode(
+        //     $data,
+        //     new Encoding('UTF-8'),
+        //     ErrorCorrectionLevel::Low,
+        //     250,
+        //     0,
+        //     RoundBlockSizeMode::Margin,
+        //     new Color(0, 0, 0),
+        //     new Color(255, 255, 255, 127)
+        // );
+        
+        // $result = $writer->write($qrCode);
+        
+        
+        // $this->dispatch('update_pdf_sign_add', [
+        //     'base64' => $result->getDataUri(),
+        //     'mime' => $result->getMimeType(),
+        //     'page' => $event['page'] ?? 1,
+        //     'x' => $event['x'] ?? 0.5,
+        //     'y' => $event['y'] ?? 0.5,
+        // ]);
+        
         // dump($this->update_signer_data($signature_type['id_signature_type'], $drawing));
     }
     
     
     private function update_signer_data($id_signature_type, $drawing) {
-        
         $id_user = Auth::user()->id_user;
         $is_owner = false;
         
@@ -158,7 +199,7 @@ class AddSignature extends Component
         if (! $find_collab) {
             
             if (! $is_owner) {
-                
+                // ...
                 return;
             }
             

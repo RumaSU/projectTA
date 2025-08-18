@@ -27,7 +27,6 @@
             console.log(window.Echo);
             window.Echo.channel('Testing').listen('TestingEventPusher', (data) => {
                 // alert(data);
-                console.log('KONTOL');
                 console.log(data);
                 console.log(window.Echo); 
             });

@@ -5,7 +5,9 @@
     @process_pdf_load.window="pdf_process_load($event)"
     @visible_pdf_page_change.window="pdf_visible_page"
     
-    @signature_added_to_pdf.window="pdf_add_sign"
+    @update_pdf_sign_add.window="pdf_add_sign"
+    @update_pdf_sign_info.window="pdf_sign_info"
+    
     >
     
     {{-- <div class="header-filename text-center">
@@ -97,27 +99,84 @@
                 <div class="right-header-sign shrink-0 lg:w-1/4 flex items-center justify-end"
                     x-data="tool_sign_document"
                     >
-                    <div class="content-right-header-sign">
+                    <div class="content-right-header-sign flex items-center gap-2">
                         
-                        @if ($this->doc_type !== \App\Enums\Documents\Signature\Type::UNCATEGORIZED)
+                        @if ($doc_type !== \App\Enums\Documents\Signature\Type::UNCATEGORIZED)
                             
-                            <div class="tool-add-signature">
-                                <button class="flex items-center gap-2 border border-black rounded px-2"
-                                    @click="tool_add_signature"
-                                >
+                            @if ($doc_status !== \App\Enums\Documents\Signature\Status::COMPLETED &&
+                                 $doc_status !== \App\Enums\Documents\Signature\Status::REJECTED
+                            )
+                                
+                                <div class="tool-add-signature">
+                                    <button class="border border-blue-500 text-blue-500 px-4 py-0.5 rounded-lg flex items-center gap-2 hover:bg-blue-50"
+                                        @click="tool_add_signature"
+                                    >
+                                        
+                                        <div class="icon-signature flex items-center justify-center size-8 ">
+                                            <div class="icon text-xl">
+                                                <i class="fas fa-file-signature"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-tool text-sm">
+                                            <p>Add {{ $doc_type->label() }}</p>
+                                        </div>
+                                        
+                                    </button>
+                                </div>
+                                
+                                @if ($id_signature_type)
                                     
-                                    <div class="icon-signature flex items-center justify-center size-8 ">
-                                        <div class="icon text-xl">
-                                            <i class="fas fa-file-signature"></i>
+                                    <div class="tool-finalize-signature">
+                                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-0.5 rounded-lg flex items-center gap-2"
+                                            @click="pdf_finalize_sign('{{ $id_signature_type }}')"
+                                        >
+                                            
+                                            <div class="icon-signature flex items-center justify-center size-8 ">
+                                                <div class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="text-tool text-sm">
+                                                <p>Finalize</p>
+                                            </div>
+                                            
+                                        </button>
+                                    </div>
+                                    
+                                @endif
+                                
+                            @endif
+                            
+                            @if ($doc_status === \App\Enums\Documents\Signature\Status::COMPLETED ||
+                                $doc_status === \App\Enums\Documents\Signature\Status::REJECTED
+                            )
+                                <div class="info-status-signature px-4 py-2.5 rounded-lg {{ $doc_status->get_style()['background'] }}">
+                                    <div class="textStatus text-xs {{ $doc_status->get_style()['textColor'] }}">
+                                        <p>{{ $doc_status->get_style()['text'] }}</p>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                            @if (
+                                \App\Utils\ModelUtils::createInstanceModel(\App\Models\Documents\Signed::class)
+                                    ->where('id_document', '=', $id_document)
+                                    ->exists()
+                            )
+                                
+                                <div class="info-status-signature px-4 py-2.5 rounded-lg bg-green-600 flex items-center gap-2">
+                                    <div class="icon-signed flex items-center justify-center text-white">
+                                        <div class="icon text-xs">
+                                            <i class="fas fa-signature"></i>
                                         </div>
                                     </div>
-                                    
-                                    <div class="text-tool text-sm">
-                                        <p>Add {{ $doc_type->label() }}</p>
+                                    <div class="textStatus text-xs text-white">
+                                        <p>Document Signed</p>
                                     </div>
-                                    
-                                </button>
-                            </div>
+                                </div>
+                                
+                            @endif
                             
                         @endif
                             
@@ -161,6 +220,8 @@
     
     <div class="main-sign mt-2"
         x-show="status_pdf_load"
+        wire:ignore
+        
         >
         
         <div class="content-main-sign flex items-center justify-center relative">
@@ -181,7 +242,7 @@
                 x-init="window.addEventListener('scroll', () => isSticky = window.scrollY > 42 )"
                 :class="isSticky ? 'top-14 max-h-[calc(100%-3.75rem)]' : 'top-32 max-h-[calc(100%-8.25rem)]' "
             >
-                @if ($this->doc_type !== \App\Enums\Documents\Signature\Type::UNCATEGORIZED)
+                @if ($doc_type !== \App\Enums\Documents\Signature\Type::UNCATEGORIZED)
                     @livewire('app.sign.tool.add-signature', ['id_document' => $id_document])
                 @endif
                 
@@ -194,35 +255,41 @@
         
     </div>
     
-    <div 
-        class="loading-element-pdf bg-white px-8 py-4 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md shadow-black/40 rounded-md"
-        x-ref="loading_element_status"
-        
-        >
-        <div class="content-loading-element-pdf">
+    @if (! $id_signature_type)
+        <div 
+            class="loading-element-pdf bg-white px-8 py-4 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md shadow-black/40 rounded-md"
+            x-ref="loading_element_status"
             
-            <div class="icon-loading relative flex items-center justify-center">
-                <div class="icon animate-spin text-2xl text-gray-400">
-                    <i class="fas fa-circle-notch"></i>
+            >
+            <div class="content-loading-element-pdf">
+                
+                <div class="icon-loading relative flex items-center justify-center">
+                    <div class="icon animate-spin text-2xl text-gray-400">
+                        <i class="fas fa-circle-notch"></i>
+                    </div>
+                </div>
+                
+                <div class="text-loading text-center mt-2">
+                    <p>Preparing your document...</p>
+                    <p class="text-sm text-gray-500">
+                        Rendering page 
+                        {{-- <span x-text="processed_page"></span> of <span x-text="total_page"></span> --}}
+                    </p>
                 </div>
             </div>
-            
-            <div class="text-loading text-center mt-2">
-                <p>Preparing your document...</p>
-                <p class="text-sm text-gray-500">
-                    Rendering page 
-                    {{-- <span x-text="processed_page"></span> of <span x-text="total_page"></span> --}}
-                </p>
-            </div>
         </div>
-    </div>
+    @endif
+    
     
     
     @if ($doc_type === \App\Enums\Documents\Signature\Type::UNCATEGORIZED)
-        
         @livewire('app.sign.tool.configure-type', ['id_document' => $id_document])
-        
     @endif
+    
+    @if ($id_signature_type)
+        @livewire('app.sign.tool.finalize', ['id_document' => $id_document])
+    @endif
+    
     
     
 </div>
@@ -231,7 +298,7 @@
 @once
     
     @push('sign-body-script')
-
+        
         @if (
             $this->document_version ||
             $this->file_entity ||
@@ -271,23 +338,21 @@
                         total_page: 0,
                         processed_page: 0,
                         current_page: 0,
+                        pdf_scale: 1,
+                        
+                        value_pdf_sign_info: null,
                         
                         init() {
                             
                         },
                         
                         pdf_next_page() {
-                            
                             this.current_page += 1;
                             if (this.current_page > this.total_page) {
                                 this.current_page = this.total_page;
                             }
                             
-                            this.$dispatch('update_current_page', {
-                                current_page: this.current_page
-                            });
-                            
-                            renderPage(this.current_page);
+                            this.pdf_render_page();
                         },
                         
                         pdf_prev_page() {
@@ -295,10 +360,15 @@
                             if (this.current_page < 1) {
                                 this.current_page = 1;
                             }
-                            this.$dispatch('update_current_page', {
-                                current_page: this.current_page
-                            });
                             
+                            this.pdf_render_page();
+                        },
+                        
+                        pdf_render_page() {
+                            this.$dispatch('update_current_page', {
+                                current_page: this.current_page,
+                                pdf_scale: this.pdf_scale
+                            });
                             
                             renderPage(this.current_page);
                         },
@@ -309,17 +379,23 @@
                             this.status_pdf_load = true;
                             this.$refs.loading_element_status.remove();
                             this.current_page = 1;
-                            
                         },
                         
                         pdf_process_load($e) {
                             const detail = $e?.detail;
-                            
                             if (detail) {
                                 
                                 this.total_page = detail.total_page;
                                 this.processed_page = detail.current_page;
                                 this.current_page = detail.current_page;
+                                this.pdf_scale = detail.pdfScale || 1;
+                                
+                                
+                                this.$dispatch('update_current_page', {
+                                    current_page: this.current_page,
+                                    pdf_scale: this.pdf_scale
+                                });
+                                
                             }
                         },
                         
@@ -336,25 +412,39 @@
                             }
                         },
                         
-                        
                         pdf_add_sign($e) {
-                            
                             const detail = $e?.detail;
                             
                             if (detail) {
                                 const data = detail[0];
                                 
-                                
-                                
                                 // const base64 = `data:${data.mime};base64,${data.base64}`;
                                 const base64 = data.base64;
-                                
-                                console.log(base64);
-                                console.log(data);
                                 
                                 addSignatureToPage(data.page, data.x, data.y, base64)
                                 
                             }
+                        },
+                        
+                        pdf_sign_info($e) {
+                            const detail = $e?.detail;
+                            if (detail) {
+                                this.value_pdf_sign_info = detail;
+                            }
+                        },
+                        
+                        pdf_finalize_sign(id_signature_type) {
+                            if (! this.value_pdf_sign_info) {
+                                return;
+                            }
+                            
+                            const detail = {
+                                pdf_sign_info: this.value_pdf_sign_info,
+                                id_signature_type
+                            }
+                            
+                            this.$dispatch('event_tool_sign_finalize_signature', detail);
+                            
                         }
                         
                     };
@@ -365,7 +455,6 @@
             </script>
             
         @endscript
-        
         
         @script
             
@@ -386,6 +475,7 @@
                             this.$dispatch("show_tool_sign_add_signature");
                             
                         },
+                        
                     }
                     
                 });
@@ -405,7 +495,7 @@
                         return {
                             
                             init() {
-
+                                
                             },
                             
                             configure() {

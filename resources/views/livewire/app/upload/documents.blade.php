@@ -54,6 +54,8 @@
                         tabindex="-1" 
                         @change="selectfile($event)"
                         class="sr-only text-xs placeholder:text-xs"
+                        accept=".pdf"
+                        multiple
                         >
                 </div>
                 
@@ -196,8 +198,8 @@
     @livewire('app.upload.partials.document-function')
     
     @php
-        $acceptTypeFile = json_encode(['application/pdf']);
-
+        $acceptTypeFile = ['application/pdf', 'application/acrobat', 'application/nappdf', 'application/x-pdf', 'image/pdf'];
+        $limitSize = 10 * 1024 * 1024;
     @endphp
     
 @endsection
@@ -208,7 +210,8 @@
         <script data-navigate-once="true">
             Alpine.data('placeholderUploadFile', () => {
                 
-                const acceptTypeFile = JSON.parse('{!! $acceptTypeFile !!}');
+                const acceptTypeFile = @json($acceptTypeFile);
+                const limitSize = @json($limitSize);
                 
                 return {
                     dragover: false,
@@ -222,14 +225,17 @@
                         
                         for (const item of listFiles) {
                             if (! item instanceof File) return;
-                            // if (!acceptTypeFile.includes(item.type)) {
-                            //     this.dispatchNotify(
-                            //         'danger',
-                            //         'Unsupported File Type',
-                            //         `The file "${item.name}" (${item.type}) is not allowed. Only PDF files are supported.`
-                            //     );
-                            //     continue;
-                            // }
+                            if (!acceptTypeFile.includes(item.type)) {
+                                this.dispatchNotify(
+                                    'danger',
+                                    'Unsupported File Type',
+                                    `The file "${item.name}" (${item.type}) is not allowed. Only PDF files are supported.`
+                                );
+                                continue;
+                            }
+                            
+                            
+                            
                             
                             this.dispatchNewFile(item);
                         }
@@ -244,14 +250,14 @@
                         for (const item of listFiles) {
                             
                             if (! item instanceof File) continue;
-                            // if (!acceptTypeFile.includes(item.type)) {
-                            //     this.dispatchNotify(
-                            //         'danger',
-                            //         'Unsupported File Type',
-                            //         `The file "${item.name}" (${item.type}) is not allowed. Only PDF files are supported.`
-                            //     );
-                            //     continue;
-                            // }
+                            if (! acceptTypeFile.includes(item.type)) {
+                                this.dispatchNotify(
+                                    'danger',
+                                    'Unsupported File Type',
+                                    `The file "${item.name}" (${item.type}) is not allowed. Only PDF files are supported.`
+                                );
+                                continue;
+                            }
                             
                             this.dispatchNewFile(item);
                         }
@@ -294,7 +300,8 @@
             
             Alpine.data('containerListUploadFile', () => {
                 
-                const acceptTypeFile = JSON.parse('{!! $acceptTypeFile !!}');
+                const acceptTypeFile = @json($acceptTypeFile);
+                
                 
                 return {
                     
@@ -305,14 +312,14 @@
                         if (! detail) return;
                         if (! ('tokenUpload' in detail && 'tokenResumable' in detail && 'newFile' in detail)) return;
                         if (! detail.file instanceof File) return;
-                        // if (! acceptTypeFile.includes(detail.newFile.type)) {
-                        //     this.dispatchNotify(
-                        //         'danger',
-                        //         'Unsupported File Type',
-                        //         `The file "${detail.newFile.name}" (${detail.newFile.type}) is not allowed. Only PDF files are supported.`
-                        //     );
-                        //     return;
-                        // }
+                        if (! acceptTypeFile.includes(detail.newFile.type)) {
+                            this.dispatchNotify(
+                                'danger',
+                                'Unsupported File Type',
+                                `The file "${detail.newFile.name}" (${detail.newFile.type}) is not allowed. Only PDF files are supported.`
+                            );
+                            return;
+                        }
                         
                         const $token = "{{ csrf_token() }}";
                         const $route = "{{ route('app.uploads.chunk', ['type' => 'documents']) }}";
@@ -329,8 +336,9 @@
                                 token_upload: detail.tokenUpload,
                                 originalFilename: detail.newFile.name,
                             },
-                            testChunks: true,
-                            testTarget: $routeTest,
+                            // testChunks: true,
+                            // testTarget: $routeTest,
+                            testChunks: false,
                             chunkSize: 1 * 1024 * 1024,
                             simultaneousUploads: 4,
                             // throttleProgressCallbacks: 1,
@@ -338,6 +346,8 @@
                             chunkRetryInterval: 2000,
                             autoStart: false,
                         });
+                        
+                        console.log(detail);
                         
                         window[detail.tokenResumable].addFile(detail.newFile);
                         

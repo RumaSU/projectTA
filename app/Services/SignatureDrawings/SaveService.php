@@ -234,11 +234,11 @@ class SaveService {
                 'size_byte' => $imageInfo['byte_size'],
             ];
             
-            ksort($payload);
-            $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            // ksort($payload);
+            // $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             
-            $payload['hash_row'] = Hash::get_default_case()->hash($json);
-            $payload['hash_type'] = Hash::get_default();
+            // $payload['hash_row'] = Hash::get_default_case()->hash($json);
+            // $payload['hash_type'] = Hash::get_default();
             
             $instanceFileSignatures->create($payload);
             

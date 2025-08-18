@@ -60,6 +60,22 @@ return [
             'report' => false,
         ],
         
+        'app_qr' => [
+            'driver' => 'local',
+            'root' => storage_path('app/qr'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+        
+        'certs' => [
+            'driver' => 'local',
+            'root' => storage_path('app/certs'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+        
         'signatures' => [
             'driver' => 'local',
             'root' => storage_path('app/signatures'),
@@ -76,6 +92,14 @@ return [
             'report' => false,
         ],
         
+        'documents_signed' => [
+            'driver' => 'local',
+            'root' => storage_path('app/signed'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+        
         'chunks.documents' => [
             'driver' => 'local',
             'root' => storage_path('app/chunks/documents'),
@@ -83,6 +107,14 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        
+        'temp_qr' => [
+            'driver' => 'local',
+            'root' => storage_path('app/temp/qr'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ]
 
     ],
 
