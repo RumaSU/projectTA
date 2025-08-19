@@ -135,113 +135,7 @@
                 <div class="ctr-dMainRecentDocument bg-[#F1F1F1] p-2 mt-2 rounded-2xl">
                     <div class="cDMainRecentDocument">
                         
-                        @if ($haveDoc)
-                            <div class="lblDMainRecentDocument bg-white px-4 py-2 rounded-full">
-                                <div class="lstLabelRecentDocument grid grid-cols-4 gap-2 text-gray-700 text-lg">
-                                    <div class="itmLabelRecentDocument col-span-2">
-                                        <div class="txLabel">
-                                            <p>Document</p>
-                                        </div>
-                                    </div>
-                                    <div class="itmLabelRecentDocument">
-                                        <div class="txLabel">
-                                            <p>Status</p>
-                                        </div>
-                                    </div>
-                                    <div class="itmLabelRecentDocument">
-                                        <div class="txLabel">
-                                            <p>Last accessed</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="lstDMainRecentDocument mt-4">
-                                @for ($i = 0; $i < ($totalDoc > 5 ? 5 : $totalDoc); $i++)
-                                    <div class="itm-dMainRecentDocument bg-white px-4 py-2 my-1 rounded-xl relative group/parentItem">
-                                        <div class="cItmDMainRecenetDocument grid grid-cols-4 gap-2 text-gray-700">
-                                            <div class="itmDocName col-span-2">
-                                                <div class="txDocName">
-                                                    <p>@{{ $document->name }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="itmStatusDoc">
-                                                <div class="txStatusDoc">
-                                                    <p>@{{ $document->status }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="itmLastAccessDoc">
-                                                <div class="txAccessDoc">
-                                                    <p>@{{ $document->accessDate }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="wrapperActionDMainRecentDocument bg-white pl-4 absolute right-2 top-1/2 -translate-y-1/2 hidden group-hover/parentItem:block">
-                                            <div class="lstActionDMainRecentDocument flex items-center gap-2">
-                                                <div class="itm-actionDMainRecentDocument" aria-label="view document">
-                                                    <button class="buttonAction size-8 flex items-center justify-center rounded-lg group/actionItem hover:bg-slate-200">
-                                                        <div class="iconView">
-                                                            <div class="icon text-lg text-gray-600 group-hover/actionItem:text-gray-900">
-                                                                <i class="fas fa-eye"></i>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                                <div class="itm-actionDMainRecentDocument" aria-label="info document">
-                                                    <button class="buttonAction size-8 flex items-center justify-center rounded-lg group/actionItem hover:bg-slate-200">
-                                                        <div class="iconInfo flex items-center justify-center rounded-full size-7 border border-black">
-                                                            <div class="icon  text-gray-600 group-hover/actionItem:text-gray-900">
-                                                                <i class="fas fa-info"></i>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endfor
-                                
-                                @if ($totalDoc > 5)
-                                    <a href="" class="viewMoreDocument mt-2 p-2 flex items-center justify-center bg-white hover:bg-slate-200 rounded-xl">
-                                        <div class="cViewMoreDocument flex items-center gap-4">
-                                            <div class="iconViewMore flex items-center justify-center size-8 rounded-full border border-black">
-                                                <div class="icon text-xl">
-                                                    <i class="fas fa-ellipsis"></i>
-                                                </div>
-                                            </div>
-                                            <div class="txViewMore">
-                                                <p>View More</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                @endif
-                            </div>
-                            
-                        @else
-                            
-                            <div class="wrapper-noDocumentYet flex items-center justify-center">
-                                <div class="cNoDocumentYet p-6">
-                                    <div class="imgNoDocument flex items-center justify-center">
-                                        <div class="img size-64">
-                                            <img src="{{ asset('components/icon/page.png') }}" class="size-full object-cover object-center" alt="No Document Yet">
-                                        </div>
-                                    </div>
-                                    <div class="descNoDocument">
-                                        <div class="txTitleNoDocument text-center">
-                                            <div class="txTitle text-xl font-semibold">
-                                                <p>There is no document yet</p>
-                                            </div>
-                                        </div>
-                                        <div class="txInfoNoDocument text-center mt-4">
-                                            <div class="txInfo poppins-light text-gray-600">
-                                                <p>Your documents will be shown here.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        @endif
+                        @livewire('app.documents.data')
                         
                     </div>
                 </div>
@@ -290,5 +184,11 @@
     
     
 @endpush
+
+@once
+    @push('global-custom-content')
+        @livewire('app.sign.tool.configure-type', [null, true])
+    @endpush
+@endonce
 
 <div></div>
