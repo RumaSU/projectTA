@@ -5,8 +5,7 @@
     {{-- List --}}
     <div class="ctr-listDocumentsApp">
         <div class="cListDocumentsApp space-y-1" x-data>
-            
-            @if($this->listDocument)
+            @if(count($this->listDocument))
                 
                 @foreach($this->listDocument as $item)
                     @php
@@ -18,6 +17,32 @@
                         $timestamp = \Carbon\Carbon::create($item->created_at)->timezone(session()->get('timezone'))->format('d M, Y - H:m:s');
                         
                         $isNew = \Carbon\Carbon::create($item->created_at)->diffInMinutes() < 1;
+                        
+                        $version = \App\Utils\ModelUtils::createInstanceModel(\App\Models\Documents\DocumentVersions::class)
+                            ->query()
+                            ->where('id_document', '=', $item->id_document)
+                            ->latest('version')
+                            ->first();
+                        
+                        $doc_file = \App\Utils\ModelUtils::createInstanceModel(\App\Models\Documents\DocumentFile::class)
+                            ->query()
+                            ->where('id_document_version', '=', $version->id_document_version)
+                            ->first();
+                        
+                        $file_doc = \App\Utils\ModelUtils::createInstanceModel(\App\Models\Files\Entity\Documents::class)
+                            ->query()
+                            ->where('id_file_document', '=', $doc_file->id_file_document)
+                            ->first();
+                        
+                        $file_entity = \App\Utils\ModelUtils::createInstanceModel(\App\Models\Files\DiskEntity::class)
+                            ->query()
+                            ->where('id_file_disk', '=', $file_doc->id_file_disk)
+                            ->first();
+                        
+                        $file_token = \App\Utils\ModelUtils::createInstanceModel(\App\Models\Files\DiskToken::class)
+                            ->query()
+                            ->where('id_file_disk_entity', '=', $file_entity->id_file_disk_entity)
+                            ->first();
                         
                     @endphp
                     
@@ -112,7 +137,59 @@
                                             </div>
                                         </div>
                                     </div> --}}
-                                    <div class="item-actionDocuments flex items-center relative group" aria-label="Action Delete">
+                                    <a 
+                                        href="{{ route('app.documents.audit', ['id' => $item->id_document]) }}"
+                                        class="item-actionDocuments flex items-center relative group" 
+                                        aria-label="Action Signature"
+                                        target="_blank" rel="noopener noreferrer"
+                                        >
+                                        <div role="button" tabindex="0" class="actionDocuments size-10 flex items-center justify-center rounded-lg group-hover:bg-blue-100">
+                                            <div class="actionIcon text-gray-600 group-hover:text-blue-600 group-hover:contrast-200">
+                                                <i class="fas fa-gavel text-xl"></i>
+                                            </div>
+                                        </div>
+                                        <div class="actionTooltip px-2 py-0.5 rounded-md absolute bg-white bottom-[105%] left-1/2 -translate-x-1/2 hidden group-hover:block shadow-sm shadow-black/40">
+                                            <div class="textTooltip  text-xs">
+                                                <p>Audit</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a 
+                                        href="{{ route('drive.files.entity_document', ['token' => $file_token->token]) }}"
+                                        class="item-actionDocuments flex items-center relative group" 
+                                        aria-label="Action Signature"
+                                        target="_blank" rel="noopener noreferrer"
+                                        >
+                                        <div role="button" tabindex="0" class="actionDocuments size-10 flex items-center justify-center rounded-lg group-hover:bg-blue-100">
+                                            <div class="actionIcon text-gray-600 group-hover:text-blue-600 group-hover:contrast-200">
+                                                <i class="fas fa-eye text-xl"></i>
+                                            </div>
+                                        </div>
+                                        <div class="actionTooltip px-2 py-0.5 rounded-md absolute bg-white bottom-[105%] left-1/2 -translate-x-1/2 hidden group-hover:block shadow-sm shadow-black/40">
+                                            <div class="textTooltip  text-xs">
+                                                <p>View</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a 
+                                        href="{{ route('drive.files.download_entity_document', ['token' => $file_token->token]) }}"
+                                        class="item-actionDocuments flex items-center relative group" 
+                                        aria-label="Action Signature"
+                                        target="_blank" rel="noopener noreferrer"
+                                        >
+                                        <div role="button" tabindex="0" class="actionDocuments size-10 flex items-center justify-center rounded-lg group-hover:bg-blue-100">
+                                            <div class="actionIcon text-gray-600 group-hover:text-blue-600 group-hover:contrast-200">
+                                                <i class="fas fa-download text-xl"></i>
+                                            </div>
+                                        </div>
+                                        <div class="actionTooltip px-2 py-0.5 rounded-md absolute bg-white bottom-[105%] left-1/2 -translate-x-1/2 hidden group-hover:block shadow-sm shadow-black/40">
+                                            <div class="textTooltip  text-xs">
+                                                <p>Download</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    
+                                    {{-- <div class="item-actionDocuments flex items-center relative group" aria-label="Action Delete">
                                         <div role="button" tabindex="0" class="actionDocuments size-10 flex items-center justify-center rounded-lg group-hover:bg-red-100">
                                             <div class="actionIcon text-gray-600 group-hover:text-red-600 group-hover:contrast-200">
                                                 <i class="fas fa-trash text-xl"></i>
@@ -123,7 +200,8 @@
                                                 <p>Delete</p>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
+                                    
                                 </div>
                             </div>
                         </div>
@@ -138,7 +216,30 @@
                         
                     </div>
                 @endforeach
-                
+            
+            
+            @else
+                <div class="wrapper-noDocumentYet flex items-center justify-center">
+                    <div class="cNoDocumentYet p-6">
+                        <div class="imgNoDocument flex items-center justify-center">
+                            <div class="img size-64">
+                                <img src="{{ asset('components/icon/page.png') }}" class="size-full object-cover object-center" alt="No Document Yet">
+                            </div>
+                        </div>
+                        <div class="descNoDocument">
+                            <div class="txTitleNoDocument text-center">
+                                <div class="txTitle text-xl font-semibold">
+                                    <p>There is no document yet</p>
+                                </div>
+                            </div>
+                            <div class="txInfoNoDocument text-center mt-4">
+                                <div class="txInfo poppins-light text-gray-600">
+                                    <p>Your documents will be shown here.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endif
             
             
